@@ -9,7 +9,7 @@ namespace EateryPOSSystem.Data.Migrations
     using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
     using System;
 
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(EateryPOSDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
