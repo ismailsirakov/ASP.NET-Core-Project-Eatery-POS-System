@@ -1,0 +1,21 @@
+﻿@model AddMeasurementFormModel
+
+@{
+    ViewData["Title"] = "Add Measurement";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center">Добави мерна единица</h2>
+
+            <div class="form-group">
+                <label asp-for="Name">Мерна единица</label>
+                <input asp-for="Name" class="form-control" placeholder="м, бр. ...">
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="Save" />
+        </form>
+    </div>
+</div>    
+

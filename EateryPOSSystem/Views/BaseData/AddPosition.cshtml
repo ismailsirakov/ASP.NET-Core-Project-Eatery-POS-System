@@ -1,0 +1,21 @@
+﻿@model AddPositionFormModel
+
+@{
+    ViewData["Title"] = "Add Position";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center">Добави длъжност</h2>
+
+            <div class="form-group">
+                <label asp-for="Name">Длъжност</label>
+                <input asp-for="Name" class="form-control" placeholder="касиер, сервитьор...">
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="Save" />
+        </form>
+    </div>
+</div>
+

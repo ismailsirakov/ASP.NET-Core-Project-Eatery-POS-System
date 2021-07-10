@@ -18,6 +18,22 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Add Base Data
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddCity">Add city</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddDocumentType">Add document type</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddMeasurement">Add measurement</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddPaymentType">Add payment type</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddPosition">Add user position</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddProductType">Add product type</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddStore">Add store</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddWarehouse">Add warehouse</a>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="BaseData" asp-action="AddCity">Add city</a>
                         </li>
@@ -35,7 +51,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; @DateTime.UtcNow.Year - EateryPOSSystem
+            &copy; @DateTime.UtcNow.Year - Eatery POS System
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
