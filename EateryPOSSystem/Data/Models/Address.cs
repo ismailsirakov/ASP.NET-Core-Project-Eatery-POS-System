@@ -2,6 +2,7 @@ namespace EateryPOSSystem.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static Data.DataConstants;
 
     public class Address
     {
@@ -16,7 +17,7 @@ namespace EateryPOSSystem.Data.Models
         public City City { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(AddressDetailsMaxLength)]
         public string AddressDetails { get; set; }
 
         public ICollection<Provider> Providers { get; set; }

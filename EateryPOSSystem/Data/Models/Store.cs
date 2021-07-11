@@ -2,6 +2,7 @@ namespace EateryPOSSystem.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static Data.DataConstants;
 
     public class Store
     {
@@ -12,7 +13,7 @@ namespace EateryPOSSystem.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(StoreNameMaxLength)]
         public string Name { get; set; }
 
         public ICollection<Product> Products { get; set; }

@@ -2,6 +2,7 @@ namespace EateryPOSSystem.Data.Models
 {
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
+    using static Data.DataConstants;
 
     public class MaterialReceipt
     {

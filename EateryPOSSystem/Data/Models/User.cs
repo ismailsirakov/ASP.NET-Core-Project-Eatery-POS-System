@@ -2,6 +2,7 @@ namespace EateryPOSSystem.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static Data.DataConstants;
 
     public class User
     {
@@ -13,19 +14,19 @@ namespace EateryPOSSystem.Data.Models
         public int UserId { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [MaxLength(UserFirstNameMaxLength)]
         public string FirstName { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [MaxLength(UserLastNameMaxLength)]
         public string LastName { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [MaxLength(UsernameMaxLength)]
         public string UserName { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(UserPasswordMaxLength)]
         public string Password { get; set; }
 
         public int PositionId { get; set; }

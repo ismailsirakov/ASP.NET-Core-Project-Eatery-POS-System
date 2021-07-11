@@ -2,6 +2,7 @@ namespace EateryPOSSystem.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static Data.DataConstants;
 
     public class Material
     {
@@ -14,7 +15,7 @@ namespace EateryPOSSystem.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(MaterialNameMaxLength)]
         public string Name { get; set; }
 
         public int MeasurementId { get; set; }

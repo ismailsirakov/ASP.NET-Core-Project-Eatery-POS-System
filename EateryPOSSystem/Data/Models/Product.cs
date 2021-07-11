@@ -3,6 +3,7 @@ namespace EateryPOSSystem.Data.Models
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using static Data.DataConstants;
 
     public class Product
     {
@@ -14,7 +15,7 @@ namespace EateryPOSSystem.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(ProductNameMaxLength)]
         public string Name { get; set; }
 
         public int StoreId { get; set; }
@@ -32,7 +33,7 @@ namespace EateryPOSSystem.Data.Models
 
         public Measurement Measurement { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
+        [Column(TypeName = "decimal(18,3)")]
         public decimal Quantity { get; set; }
 
         public ICollection<Recipe> Recipes { get; set; }

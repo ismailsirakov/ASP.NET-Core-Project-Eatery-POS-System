@@ -2,6 +2,7 @@ namespace EateryPOSSystem.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static Data.DataConstants;
 
     public class PaymentType
     {
@@ -12,7 +13,7 @@ namespace EateryPOSSystem.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(20)]
+        [MaxLength(PaymentTypeNameMaxLength)]
         public string Name { get; set; }
 
         public ICollection<Bill> Bills { get; set; }

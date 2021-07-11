@@ -2,6 +2,7 @@ namespace EateryPOSSystem.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using static Data.DataConstants;
 
     public class DocumentType
     {
@@ -13,7 +14,7 @@ namespace EateryPOSSystem.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [MaxLength(DocumentTypeNameMaxLength)]
         public string Name { get; set; }
 
         public ICollection<MaterialReceipt> MaterialReceipts { get; set; }
