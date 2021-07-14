@@ -21,21 +21,31 @@
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Add Base Data
+                                Базови данни
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddCity">Add city</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddDocumentType">Add document type</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddMeasurement">Add measurement</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddPaymentType">Add payment type</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddPosition">Add user position</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddProductType">Add product type</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddStore">Add store</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddWarehouse">Add warehouse</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddCity">Добави град</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddDocumentType">Добави тип документ</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddMeasurement">Добави мерна единица</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddPaymentType">Добави тип плащане</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddPosition">Добави длъжност</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddProductType">Добави тип продукт</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddStore">Добави обект</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="BaseData" asp-action="AddWarehouse">Добави склад</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Склад
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddMaterialToWarehouse">Добави материал в склад</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddMaterial">Добави нов материал</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddProvider">Добави нов доставчик</a>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="BaseData" asp-action="AddCity">Add city</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Storekeeper" asp-action="AddMaterialToWarehouse">Склад</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

@@ -1,21 +1,62 @@
 ﻿@model AddMaterialToWarehouseFormModel
 
-@{ 
-    ViewData["Title"] = "Add City";
+@{
+    ViewData["Title"] = "Add Material To Warehouse";
 }
 
 <div class="row">
-    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-2 col-xl-8">
         <form method="post">
-            <h2 class="text-center">Добави град</h2>
+            <div class="row">
+                <div class="form-group col-4">
+                    <label asp-for="DocumentNumber">Номер на документ</label>
+                    <input asp-for="DocumentNumber" class="form-control">
+                </div>
+                <div class="form-group col-4">
+                    <label asp-for="DocumentTypeId">Тип документ</label>
+                    <select class="form-control">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="form-group col-4">
+                    <label asp-for="DocumentDate">Дата на документ</label>
+                    <input asp-for="DocumentDate" class="form-control">
+                </div>
+            </div>
 
             <div class="form-group">
-                <label asp-for="Name">Град</label>
-                <input asp-for="Name" class="form-control" placeholder="София, Пловдив...">
+                <label asp-for="ProviderId">Доставчик</label>
+                <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="PostalCode">Пощенски код</label>
-                <input asp-for="PostalCode" class="form-control" placeholder="1000">
+                <label asp-for="WarehouseId">В склад</label>
+                <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaterialId">Материал</label>
+                <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
             </div>
 
             <input class="btn btn-primary" type="submit" value="Save" />

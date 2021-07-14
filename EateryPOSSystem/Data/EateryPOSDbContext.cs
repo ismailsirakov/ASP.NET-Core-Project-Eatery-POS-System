@@ -22,8 +22,6 @@
 
         public DbSet<Material> Materials { get; init; }
 
-        public DbSet<WarehouseReceipt> MaterialReceipts { get; init; }
-
         public DbSet<Measurement> Measurements { get; init; }
 
         public DbSet<PaymentType> PaymentTypes { get; init; }
@@ -47,6 +45,8 @@
         public DbSet<Warehouse> Warehouses { get; init; }
 
         public DbSet<WarehouseMaterial> WarehouseMaterials { get; init; }
+
+        public DbSet<WarehouseReceipt> WarehouseReceipts { get; init; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

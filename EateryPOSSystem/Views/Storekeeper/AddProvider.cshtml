@@ -1,7 +1,7 @@
-﻿@model AddCityFormModel
+﻿@model AddProviderFormModel
 
 @{ 
-    ViewData["Title"] = "Add City";
+    ViewData["Title"] = "Add Provider";
 }
 
 <div class="row">
@@ -10,12 +10,16 @@
             <h2 class="text-center">Добави град</h2>
 
             <div class="form-group">
-                <label asp-for="Name">Град</label>
-                <input asp-for="Name" class="form-control" placeholder="София, Пловдив...">
+                <label asp-for="Name">Име на доставчик</label>
+                <input asp-for="Name" class="form-control">
             </div>
             <div class="form-group">
-                <label asp-for="PostalCode">Пощенски код</label>
-                <input asp-for="PostalCode" class="form-control" placeholder="1000">
+                <label asp-for="Number">Номер на доставчик</label>
+                <input asp-for="Number" class="form-control">
+            </div>
+            <div class="form-group">
+                <label asp-for="AddressId">Адрес</label>
+                <input asp-for="AddressId" class="form-control" >
             </div>
 
             <input class="btn btn-primary" type="submit" value="Save" />
