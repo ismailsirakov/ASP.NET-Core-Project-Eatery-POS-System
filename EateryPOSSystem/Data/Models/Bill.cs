@@ -11,11 +11,9 @@ namespace EateryPOSSystem.Data.Models
         }
         public int Id { get; set; }
 
-        public int BillNumber { get; set; }
+        public DateTime OpenDateTime { get; set; }
 
-        public DateTime BillOpenDateTime { get; set; }
-
-        public DateTime BillCloseDateTime { get; set; }
+        public DateTime CloseDateTime { get; set; }
 
         public int UserId { get; set; }
 
@@ -25,7 +23,7 @@ namespace EateryPOSSystem.Data.Models
 
         public PaymentType PaymentType { get; set; }
 
-        public bool IsClosed { get; set; }
+        public bool Closed { get; set; }
 
         public ICollection<SoldProduct> SoldProducts { get; set; }
     }
