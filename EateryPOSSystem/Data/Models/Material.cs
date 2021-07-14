@@ -8,9 +8,9 @@ namespace EateryPOSSystem.Data.Models
     {
         public Material()
         {
-            WarehouseMaterials = new HashSet<WarehouseMaterial>();
-            MaterialReceipts = new HashSet<MaterialReceipt>();
             Recipes = new HashSet<Recipe>();
+            WarehouseMaterials = new HashSet<WarehouseMaterial>();
+            WarehouseReceipts = new HashSet<WarehouseReceipt>();
         }
         public int Id { get; set; }
 
@@ -22,10 +22,10 @@ namespace EateryPOSSystem.Data.Models
 
         public Measurement Measurement { get; set; }
 
-        public ICollection<WarehouseMaterial> WarehouseMaterials { get; set; }
-
         public ICollection<Recipe> Recipes { get; set; }
 
-        public ICollection<MaterialReceipt> MaterialReceipts { get; set; }
+        public ICollection<WarehouseMaterial> WarehouseMaterials { get; set; }
+
+        public ICollection<WarehouseReceipt> WarehouseReceipts { get; set; }
     }
 }

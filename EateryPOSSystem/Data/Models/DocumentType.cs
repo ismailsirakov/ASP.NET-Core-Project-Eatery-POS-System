@@ -8,7 +8,7 @@ namespace EateryPOSSystem.Data.Models
     {
         public DocumentType()
         {
-            MaterialReceipts = new HashSet<MaterialReceipt>();
+            MaterialReceipts = new HashSet<WarehouseReceipt>();
         }
 
         public int Id { get; set; }
@@ -17,6 +17,6 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(DocumentTypeNameMaxLength)]
         public string Name { get; set; }
 
-        public ICollection<MaterialReceipt> MaterialReceipts { get; set; }
+        public ICollection<WarehouseReceipt> MaterialReceipts { get; set; }
     }
 }

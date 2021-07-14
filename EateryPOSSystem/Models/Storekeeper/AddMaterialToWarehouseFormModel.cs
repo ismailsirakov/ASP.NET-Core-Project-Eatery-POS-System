@@ -2,10 +2,12 @@ namespace EateryPOSSystem.Models.Storekeeper
 {
     using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants;
-    public class AddMeasurementFormModel
+    public class AddMaterialToWarehouseFormModel
     {
         [Required]
-        [StringLength(MeasurementNameMaxLength, MinimumLength = MeasurementNameMinLength)]
+        [StringLength(CityNameMaxLength,  MinimumLength = CityNameMinLength)]
         public string Name { get; init; }
+
+        public int? PostalCode { get; init; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
-    using EateryPOSSystem.Models.BaseData;
+    using EateryPOSSystem.Models.Storekeeper;
     using Microsoft.AspNetCore.Mvc;
 
     public class BaseDataController : Controller

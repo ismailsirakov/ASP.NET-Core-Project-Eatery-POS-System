@@ -4,9 +4,15 @@ namespace EateryPOSSystem.Data.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using static Data.DataConstants;
 
-    public class MaterialReceipt
+    public class WarehouseReceipt
     {
         public int Id { get; set; }
+
+        public int ReceiptNumber { get; set; }
+
+        public int WarehouseId { get; set; }
+
+        public Warehouse Warehouse { get; set; }
 
         public int MaterialId { get; set; }
 

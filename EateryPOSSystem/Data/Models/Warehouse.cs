@@ -9,6 +9,7 @@ namespace EateryPOSSystem.Data.Models
         public Warehouse()
         {
             WarehouseMaterials = new HashSet<WarehouseMaterial>();
+            WarehouseReceipts = new HashSet<WarehouseReceipt>();
         }
 
         public int Id { get; set; }
@@ -18,5 +19,7 @@ namespace EateryPOSSystem.Data.Models
         public string Name { get; set; }
 
         public ICollection<WarehouseMaterial> WarehouseMaterials { get; set; }
+
+        public ICollection<WarehouseReceipt> WarehouseReceipts { get; set; }
     }
 }

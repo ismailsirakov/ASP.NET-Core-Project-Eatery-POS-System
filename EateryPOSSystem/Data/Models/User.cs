@@ -9,7 +9,7 @@ namespace EateryPOSSystem.Data.Models
         public User()
         {
             Bills = new HashSet<Bill>();
-            MaterialReceipts = new HashSet<MaterialReceipt>();
+            WarehouseReceipts = new HashSet<WarehouseReceipt>();
         }
         public int UserId { get; set; }
 
@@ -35,7 +35,7 @@ namespace EateryPOSSystem.Data.Models
 
         public ICollection<Bill> Bills { get; set; }
 
-        public ICollection<MaterialReceipt> MaterialReceipts { get; set; }
+        public ICollection<WarehouseReceipt> WarehouseReceipts { get; set; }
 
     }
 }

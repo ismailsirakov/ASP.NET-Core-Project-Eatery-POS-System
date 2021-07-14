@@ -6,6 +6,11 @@ namespace EateryPOSSystem.Data.Models
 
     public class Provider
     {
+        public Provider()
+        {
+            WarehouseReceipts = new HashSet<WarehouseReceipt>();
+        }
+
         public int Id { get; set; }
 
         [Required]
@@ -19,6 +24,6 @@ namespace EateryPOSSystem.Data.Models
 
         public Address Address { get; set; }
 
-        public ICollection<MaterialReceipt> MaterialReceipts { get; set; }
+        public ICollection<WarehouseReceipt> WarehouseReceipts { get; set; }
     }
 }
