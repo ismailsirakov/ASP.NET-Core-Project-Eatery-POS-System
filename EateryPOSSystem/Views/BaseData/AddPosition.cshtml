@@ -12,6 +12,7 @@
             <div class="form-group">
                 <label asp-for="Name">Длъжност</label>
                 <input asp-for="Name" class="form-control" placeholder="касиер, сервитьор...">
+                <span asp-validation-for="Name" class="small text-danger"></span>
             </div>
 
             <input class="btn btn-primary" type="submit" value="Save" />
