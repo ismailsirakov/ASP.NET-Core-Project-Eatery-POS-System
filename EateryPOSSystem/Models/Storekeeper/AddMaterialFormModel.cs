@@ -7,9 +7,9 @@ namespace EateryPOSSystem.Models.Storekeeper
     {
         [Required]
         [StringLength(MaterialNameMaxLength, MinimumLength =MaterialNameMinLength)]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public int MeasurementId { get; set; }
+        public int MeasurementId { get; init; }
 
         public ICollection<MeasurementViewModel> Measurements { get; set; }
     }

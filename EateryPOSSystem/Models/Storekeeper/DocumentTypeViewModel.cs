@@ -1,6 +1,6 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
-    public class MeasurementViewModel
+    public class DocumentTypeViewModel
     {
         public int Id { get; init; }
         public string Name { get; init; }

@@ -1,6 +1,6 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
-    using EateryPOSSystem.Models.Storekeeper;
+    using EateryPOSSystem.Models.BaseData;
     using Microsoft.AspNetCore.Mvc;
 
     public class BaseDataController : Controller
@@ -14,36 +14,36 @@
         public IActionResult AddDocumentType() => View();
 
         [HttpPost]
-        public IActionResult AddDocumentType(AddCityFormModel city) => View();
+        public IActionResult AddDocumentType(AddDocumentTypeFormModel document) => View();
 
         public IActionResult AddMeasurement() => View();
 
         [HttpPost]
-        public IActionResult AddMeasurement(AddCityFormModel city) => View();
+        public IActionResult AddMeasurement(AddMeasurementFormModel measurement) => View();
 
         public IActionResult AddPaymentType() => View();
 
         [HttpPost]
-        public IActionResult AddPaymentType(AddCityFormModel city) => View();
+        public IActionResult AddPaymentType(AddPaymentTypeFormModel paymentType) => View();
 
         public IActionResult AddPosition() => View();
 
         [HttpPost]
-        public IActionResult AddPosition(AddCityFormModel city) => View();
+        public IActionResult AddPosition(AddPositionFormModel position) => View();
 
         public IActionResult AddProductType() => View();
 
         [HttpPost]
-        public IActionResult AddProductType(AddCityFormModel city) => View();
+        public IActionResult AddProductType(AddProductTypeFormModel productType) => View();
 
         public IActionResult AddStore() => View();
 
         [HttpPost]
-        public IActionResult AddStore(AddCityFormModel city) => View();
+        public IActionResult AddStore(AddStoreFormModel store) => View();
 
         public IActionResult AddWarehouse() => View();
 
         [HttpPost]
-        public IActionResult AddWarehouse(AddCityFormModel city) => View();
+        public IActionResult AddWarehouse(AddWarehouseFormModel warehouse) => View();
     }
 }

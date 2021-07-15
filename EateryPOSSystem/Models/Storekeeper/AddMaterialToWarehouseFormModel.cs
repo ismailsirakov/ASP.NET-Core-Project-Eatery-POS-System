@@ -2,47 +2,46 @@ namespace EateryPOSSystem.Models.Storekeeper
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using EateryPOSSystem.Data.Models;
     public class AddMaterialToWarehouseFormModel
     {
-        public int ReceiptNumber { get; set; }
+        public int ReceiptNumber { get; init; }
 
-        public int WarehouseId { get; set; }
+        public int WarehouseId { get; init; }
 
-        public Warehouse Warehouse { get; set; }
-
-        public int MaterialId { get; set; }
-
-        public Material Material { get; set; }
+        public int MaterialId { get; init; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal UnitPrice { get; set; }
+
+        public decimal UnitPrice { get; init; }
 
         [Column(TypeName = "decimal(18,3)")]
-        public decimal Quantity { get; set; }
 
-        public int ProviderId { get; set; }
+        public decimal Quantity { get; init; }
 
-        public Provider Provider { get; set; }
+        public int ProviderId { get; init; }
 
-        public int UserId { get; set; }
+        public int UserId { get; init; }
 
-        public User User { get; set; }
+        public int DocumentNumber { get; init; }
 
-        public int DocumentNumber { get; set; }
+        public int DocumentTypeId { get; init; }
 
-        public int DocumentTypeId { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
 
-        public DocumentType DocumentType { get; set; }
+        public DateTime DocumentDate { get; init; }
 
-        public DateTime DocumentDate { get; set; }
+        public DateTime DateTime { get; init; }
 
-        public DateTime DateTime { get; set; }
+        public ICollection<ProviderViewModel> Providers { get; set; }
 
-        public ICollection<Provider> Providers { get; set; }
-        public ICollection<Warehouse> Warehouses { get; set; }
-        public ICollection<Material> Materials { get; set; }
-        public ICollection<DocumentType> DocumentTypes { get; set; }
+        public ICollection<WarehouseViewModel> Warehouses { get; set; }
+
+        public ICollection<MaterialViewModel> Materials { get; set; }
+
+        public ICollection<DocumentTypeViewModel> DocumentTypes { get; set; }
+
+        public ICollection<MeasurementViewModel> Measurements { get; set; }
     }
 }

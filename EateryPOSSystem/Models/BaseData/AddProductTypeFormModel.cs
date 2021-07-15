@@ -1,4 +1,4 @@
-namespace EateryPOSSystem.Models.Storekeeper
+namespace EateryPOSSystem.Models.BaseData
 {
     using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants;
