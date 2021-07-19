@@ -1,0 +1,21 @@
+﻿@model AddAddressFormModel
+
+@{ 
+    ViewData["Title"] = "Add Address Details";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center">Добави адрес</h2>
+
+            <div class="form-group">
+                <label asp-for="AddressDetail">Име на материала</label>
+                <input asp-for="AddressDetail" class="form-control">
+                <span asp-validation-for="AddressDetail" class="small text-danger"></span>
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="Save" />
+        </form>
+    </div>
+</div>

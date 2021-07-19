@@ -6,7 +6,7 @@ namespace EateryPOSSystem.Models.Storekeeper
     public class AddMaterialFormModel
     {
         [Required]
-        [StringLength(MaterialNameMaxLength, MinimumLength =MaterialNameMinLength)]
+        [StringLength(MaterialNameMaxLength, MinimumLength = MaterialNameMinLength)]
         public string Name { get; init; }
 
         public int MeasurementId { get; init; }

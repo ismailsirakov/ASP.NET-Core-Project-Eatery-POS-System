@@ -1,8 +1,8 @@
 namespace EateryPOSSystem.Data.Models
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using static Data.DataConstants;
 
     public class WarehouseReceipt
     {
@@ -38,6 +38,7 @@ namespace EateryPOSSystem.Data.Models
 
         public DocumentType DocumentType { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime DocumentDate { get; set; }
 
         public DateTime DateTime { get; set; }

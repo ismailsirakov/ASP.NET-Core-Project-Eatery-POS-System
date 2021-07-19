@@ -11,11 +11,15 @@ namespace EateryPOSSystem.Models.Storekeeper
         [StringLength(ProviderNameMaxLength, MinimumLength = ProviderNameMinLength)]
         public string Name { get; init; }
 
-
+        [Range(0, int.MaxValue)]
         public int Number { get; init; }
+
+        public int CityId { get; init; }
 
         public int AddressId { get; init; }
 
-        public ICollection<Address> Addresses { get; set; }
+        public ICollection<AddressViewModel> Addresses { get; set; }
+
+        public ICollection<CityViewModel> Cities { get; set; }
     }
 }

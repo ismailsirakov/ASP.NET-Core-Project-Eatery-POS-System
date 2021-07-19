@@ -12,10 +12,6 @@ namespace EateryPOSSystem.Data.Models
         }
         public int Id { get; set; }
 
-        public int CityId { get; set; }
-
-        public City City { get; set; }
-
         [Required]
         [MaxLength(AddressDetailsMaxLength)]
         public string AddressDetails { get; set; }

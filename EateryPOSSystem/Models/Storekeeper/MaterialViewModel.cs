@@ -10,6 +10,8 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public int MeasurementId { get; set; }
 
+        public string MeasurementName { get; set; }
+
         public ICollection<MeasurementViewModel> Measurements { get; set; }
     }
 }

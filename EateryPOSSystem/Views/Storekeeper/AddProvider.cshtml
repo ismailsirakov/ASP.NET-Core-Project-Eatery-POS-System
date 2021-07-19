@@ -12,14 +12,36 @@
             <div class="form-group">
                 <label asp-for="Name">Име на доставчик</label>
                 <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="small text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Number">Номер на доставчик</label>
                 <input asp-for="Number" class="form-control">
+                <span asp-validation-for="Number" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CityId">Град</label>
+                <select asp-for="CityId" class="form-control">
+                    @foreach (var city in Model.Cities)
+                    {
+                        <option value="@city.Id">@city.Name</option>
+                    }
+                </select>
+                <span>
+                    <a asp-controller="BaseData" asp-action="AddCity" class="btn btn-sm btn-outline-primary">Добави нов град</a>
+                </span>
             </div>
             <div class="form-group">
                 <label asp-for="AddressId">Адрес</label>
-                <input asp-for="AddressId" class="form-control" >
+                <select asp-for="AddressId" class="form-control">
+                    @foreach (var address in Model.Addresses)
+                    {
+                        <option value="@address.AddressId">@address.AddressDetails</option>
+                    }
+                </select>
+                <span>
+                    <a asp-controller="StoreKeeper" asp-action="AddAddress" class="btn btn-sm btn-outline-primary">Добави нов адрес</a>
+                </span>
             </div>
 
             <input class="btn btn-primary" type="submit" value="Save" />

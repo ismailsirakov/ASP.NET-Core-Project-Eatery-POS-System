@@ -8,7 +8,7 @@ namespace EateryPOSSystem.Data
         public const int CityNameMaxLength = 30;
         public const int DocumentTypeNameMinLength = 2;
         public const int DocumentTypeNameMaxLength = 30;
-        public const int MaterialNameMinLength = 5;
+        public const int MaterialNameMinLength = 2;
         public const int MaterialNameMaxLength = 50;
         public const int MeasurementNameMinLength = 1;
         public const int MeasurementNameMaxLength = 10;

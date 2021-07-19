@@ -42,6 +42,8 @@
 
         public DbSet<Store> Stores { get; init; }
 
+        public DbSet<TempWarehouseReceipt> TempWarehouseReceipts { get; init; }
+
         public DbSet<Warehouse> Warehouses { get; init; }
 
         public DbSet<WarehouseMaterial> WarehouseMaterials { get; init; }
@@ -50,14 +52,6 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Address>(x =>
-            {
-                x.HasOne(x => x.City)
-                .WithMany(x => x.Addresses)
-                .HasForeignKey(x => x.CityId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
             modelBuilder.Entity<Bill>(x =>
             {
                 x.HasOne(x => x.PaymentType)
@@ -81,48 +75,6 @@
                 .HasForeignKey(x => x.MeasurementId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
-
-            
-            modelBuilder.Entity<WarehouseReceipt>(x =>
-            {
-                x.HasOne(x => x.Warehouse)
-                .WithMany(x => x.WarehouseReceipts)
-                .HasForeignKey(x => x.WarehouseId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<WarehouseReceipt>(x =>
-            {
-                x.HasOne(x => x.Material)
-                .WithMany(x => x.WarehouseReceipts)
-                .HasForeignKey(x => x.MaterialId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<WarehouseReceipt>(x =>
-            {
-                x.HasOne(x => x.User)
-                .WithMany(x => x.WarehouseReceipts)
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<WarehouseReceipt>(x =>
-            {
-                x.HasOne(x => x.Provider)
-                .WithMany(x => x.WarehouseReceipts)
-                .HasForeignKey(x => x.ProviderId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<WarehouseReceipt>(x =>
-            {
-                x.HasOne(x => x.DocumentType)
-                .WithMany(x => x.MaterialReceipts)
-                .HasForeignKey(x => x.DocumentTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
 
             modelBuilder.Entity<Product>(x =>
             {
@@ -153,6 +105,14 @@
                 x.HasOne(x => x.Address)
                 .WithMany(x => x.Providers)
                 .HasForeignKey(x => x.AddressId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Provider>(x =>
+            {
+                x.HasOne(x => x.City)
+                .WithMany(x => x.Providers)
+                .HasForeignKey(x => x.CityId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -197,6 +157,46 @@
                 x.HasOne(x => x.Position)
                 .WithMany(x => x.Users)
                 .HasForeignKey(x => x.PositionId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<WarehouseReceipt>(x =>
+            {
+                x.HasOne(x => x.Warehouse)
+                .WithMany(x => x.WarehouseReceipts)
+                .HasForeignKey(x => x.WarehouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<WarehouseReceipt>(x =>
+            {
+                x.HasOne(x => x.Material)
+                .WithMany(x => x.WarehouseReceipts)
+                .HasForeignKey(x => x.MaterialId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<WarehouseReceipt>(x =>
+            {
+                x.HasOne(x => x.User)
+                .WithMany(x => x.WarehouseReceipts)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<WarehouseReceipt>(x =>
+            {
+                x.HasOne(x => x.Provider)
+                .WithMany(x => x.WarehouseReceipts)
+                .HasForeignKey(x => x.ProviderId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<WarehouseReceipt>(x =>
+            {
+                x.HasOne(x => x.DocumentType)
+                .WithMany(x => x.MaterialReceipts)
+                .HasForeignKey(x => x.DocumentTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
 

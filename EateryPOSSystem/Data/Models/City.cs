@@ -8,7 +8,7 @@ namespace EateryPOSSystem.Data.Models
     {
         public City()
         {
-            Addresses = new HashSet<Address>();
+            Providers = new HashSet<Provider>();
         }
         public int Id { get; set; }
 
@@ -18,6 +18,6 @@ namespace EateryPOSSystem.Data.Models
 
         public int? PostalCode { get; set; }
 
-        public ICollection<Address> Addresses { get; set; }
+        public ICollection<Provider> Providers { get; set; }
     }
 }
