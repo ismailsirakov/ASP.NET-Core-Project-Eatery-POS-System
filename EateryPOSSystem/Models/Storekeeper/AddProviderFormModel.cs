@@ -1,6 +1,5 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
-    using EateryPOSSystem.Data.Models;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants;

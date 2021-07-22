@@ -3,6 +3,7 @@ namespace EateryPOSSystem.Models.Storekeeper
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants;
+
     public class AddMaterialFormModel
     {
         [Required]

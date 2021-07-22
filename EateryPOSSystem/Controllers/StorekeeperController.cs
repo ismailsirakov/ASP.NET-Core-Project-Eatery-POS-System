@@ -228,8 +228,8 @@
                 var warehouseReceiptList = data
                     .TempWarehouseReceipts
                     .Where(twr => twr.ReceiptNumber == receiptNumber)
-                    .Select(twr => new WarehouseReceipt 
-                    { 
+                    .Select(twr => new WarehouseReceipt
+                    {
                         ReceiptNumber = lastReceiptNumberInDb + 1,
                         ProviderId = twr.ProviderId,
                         DocumentTypeId = twr.DocumentTypeId,
@@ -255,7 +255,7 @@
                 var materialIdsInWarehouse = data
                     .WarehouseMaterials
                     .Where(wm => wm.WarehouseId == currentWarehouse)
-                    .Select(wm=>wm.MaterialId)
+                    .Select(wm => wm.MaterialId)
                     .ToList();
 
                 foreach (var receipt in warehouseReceiptList)
@@ -286,9 +286,9 @@
 
                     data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Quantity = currentMaterialQuantity;
                     data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Price = currentMaterialPrice;
-                    data.SaveChanges();
                 }
 
+                data.SaveChanges();
 
                 return RedirectToAction("Index", "Home");
             }

@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
 namespace EateryPOSSystem.Models.Storekeeper
 {
+    using System.Collections.Generic;
+
     public class MaterialViewModel
     {
         public int Id { get; set; }

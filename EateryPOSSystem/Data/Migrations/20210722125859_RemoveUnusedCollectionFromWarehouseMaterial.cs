@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace EateryPOSSystem.Data.Migrations
+﻿namespace EateryPOSSystem.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class RemoveUnusedCollectionFromWarehouseMaterial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

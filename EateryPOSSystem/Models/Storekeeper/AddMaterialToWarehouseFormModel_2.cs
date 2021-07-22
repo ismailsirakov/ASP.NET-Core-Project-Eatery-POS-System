@@ -4,9 +4,9 @@ namespace EateryPOSSystem.Models.Storekeeper
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
     public class AddMaterialToWarehouseFormModel_2
     {
-
         public string ReceiptInfo { get; init; }
 
         public int MaterialId { get; init; }

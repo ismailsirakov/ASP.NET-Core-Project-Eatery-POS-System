@@ -2,6 +2,8 @@ namespace EateryPOSSystem
 {
     using EateryPOSSystem.Data;
     using EateryPOSSystem.Infrastructure;
+    using EateryPOSSystem.Services;
+    using EateryPOSSystem.Services.Interfaces;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -32,6 +34,7 @@ namespace EateryPOSSystem
                 .AddEntityFrameworkStores<EateryPOSDbContext>();
 
             services.AddControllersWithViews();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
