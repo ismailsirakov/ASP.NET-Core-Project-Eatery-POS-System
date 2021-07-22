@@ -4,6 +4,8 @@ namespace EateryPOSSystem.Models.Storekeeper
 {
     public class WarehouseMaterialViewModel
     {
+        public int ReceiptNumber { get; set; }
+
         public int MaterialId { get; set; }
 
         public string MaterialName { get; set; }

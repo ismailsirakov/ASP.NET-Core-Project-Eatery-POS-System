@@ -5,10 +5,6 @@ namespace EateryPOSSystem.Data.Models
 
     public class WarehouseMaterial
     {
-        public WarehouseMaterial()
-        {
-            WarehouseReceipts = new HashSet<WarehouseReceipt>();
-        }
         public int Id { get; set; }
 
         public int WarehouseId { get; set; }
@@ -19,13 +15,11 @@ namespace EateryPOSSystem.Data.Models
 
         public Material Material { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Price { get; set; }
 
         [Column(TypeName = "decimal(18,3)")]
         public decimal Quantity { get; set; }
-
-        public ICollection<WarehouseReceipt> WarehouseReceipts { get; set; }
 
     }
 }

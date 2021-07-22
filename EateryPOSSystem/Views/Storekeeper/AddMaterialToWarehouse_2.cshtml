@@ -6,8 +6,8 @@
 
 <div>
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-2 col-xl-8">
-        <div class="row mt-2 mb-2">
-            <h5 class="text-center">@Model.ReceiptInfo</h5>
+        <div class="row mt-2 mb-2 col-10 text-center">
+            <h5 class="text-secondary text-center">@Model.ReceiptInfo</h5>
         </div>
         <form method="post">
             <div style="overflow-x: auto">
@@ -15,19 +15,27 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width: 34%;">
+                            <th style="width: 34%;" class="text-center">
                                 Име на материала
                             </th>
-                            <th style="width: 17%;">
+                            <th style="width: 17%;" class="text-center">
                                 М.ед.
                             </th>
-                            <th style="width: 15%;">
+                            <th style="width: 15%;" class="text-center">
                                 Количество
                             </th>
-                            <th style="width: 17%;">
+                            <th style="width: 17%;" class="text-center">
                                 Цена
                             </th>
-                            <th style="width: 17%;">
+                            <th style="width: 17%;" class="text-right text-primary">
+                                @{ 
+                                    var totalSum = 0M;
+                                foreach (var material in Model.AddedMaterials)
+	                            {
+	                            	 totalSum += material.Quantity * material.Price;
+	                            }
+                                }
+                                @totalSum.ToString("#,##0.00")
                             </th>
                         </tr>
                     </thead>
@@ -80,12 +88,12 @@
                     <span asp-validation-for="UnitPrice" class="small text-danger"></span>
                 </div>
                 <div class="col-2 mt-2 mb-5">
-                    <input class="btn btn-outline-primary h-75" type="submit" value="Добави" />
+                    <input class="btn btn-outline-primary h-75" name="addButton" type="submit" value="Добави" />
                 </div>
             </div>
 
 
-            <input class="btn btn-primary m-1" type="submit" value="Запази документ" />
+            <input class="btn btn-primary m-1" type="submit" name="saveButton" value="Запази документ" />
         </form>
     </div>
 </div>

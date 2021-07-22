@@ -36,7 +36,7 @@
                 <select asp-for="AddressId" class="form-control">
                     @foreach (var address in Model.Addresses)
                     {
-                        <option value="@address.AddressId">@address.AddressDetails</option>
+                        <option value="@address.Id">@address.AddressDetails</option>
                     }
                 </select>
                 <span>

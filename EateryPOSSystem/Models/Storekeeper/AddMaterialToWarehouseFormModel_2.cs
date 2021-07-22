@@ -11,7 +11,16 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public int MaterialId { get; init; }
 
-        public int MeasurementId { get; init; }
+        public int ProviderId { get; init; }
+
+        public int DocumentTypeId { get; init; }
+
+        public int DocumentNumber { get; init; }
+
+        public int WarehouseId { get; init; }
+
+        [DataType(DataType.Date)]
+        public DateTime DocumentDate { get; init; } = DateTime.UtcNow.Date;
 
         [Column(TypeName = "decimal(18,2)")]
 
