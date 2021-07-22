@@ -1,6 +1,8 @@
 namespace EateryPOSSystem.Services
 {
-    public class SellerService
+    using EateryPOSSystem.Services.Interfaces;
+
+    public class SellerService : ISellerService
     {
 
     }

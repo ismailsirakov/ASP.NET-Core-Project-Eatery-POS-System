@@ -1,18 +1,17 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
     using EateryPOSSystem.Data;
-    using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Models.BaseData;
+    using EateryPOSSystem.Services.Interfaces;
     using Microsoft.AspNetCore.Mvc;
-    using System.Linq;
 
     public class BaseDataController : Controller
     {
+        private readonly IBaseDataService baseData;
         private EateryPOSDbContext data;
-
-        private const string existingModelInDB= "Already exists in database.";
-        public BaseDataController(EateryPOSDbContext data)
+        public BaseDataController(IBaseDataService baseData, EateryPOSDbContext data)
         {
+            this.baseData = baseData;
             this.data = data;
         }
 
@@ -21,11 +20,11 @@
         [HttpPost]
         public IActionResult AddCity(AddCityFormModel city)
         {
-            var cityExists = data.Cities.Any(c=> c.Name == city.Name);
+            var cityExists = baseData.IsCityExist(city.Name);
 
             if (cityExists)
             {
-                ModelState.AddModelError(nameof(city.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(city.Name), ControllerConstants.existingModelInDB);
 
                 return View(city);
             }
@@ -35,14 +34,7 @@
                 return View(city);
             }
 
-            var newCity = new City
-            {
-                Name = city.Name,
-                PostalCode = city.PostalCode,
-            };
-
-            data.Cities.Add(newCity);
-            data.SaveChanges();
+            baseData.AddCity(city.Name, city.PostalCode);
 
             return RedirectToAction("Index", "Home");
         }
@@ -52,11 +44,11 @@
         [HttpPost]
         public IActionResult AddDocumentType(AddDocumentTypeFormModel documentType)
         {
-            var documentExists = data.DocumentTypes.Any(dt => dt.Name == documentType.Name);
+            var documentExists = baseData.IsDocumentTypeExist(documentType.Name);
 
             if (documentExists)
             {
-                ModelState.AddModelError(nameof(documentType.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(documentType.Name), ControllerConstants.existingModelInDB);
 
                 return View(documentType);
             }
@@ -66,13 +58,7 @@
                 return View(documentType);
             }
 
-            var newDocumentType = new DocumentType
-            {
-                Name = documentType.Name
-            };
-
-            data.DocumentTypes.Add(newDocumentType);
-            data.SaveChanges();
+            baseData.AddDocumentType(documentType.Name);
 
             return RedirectToAction("Index", "Home");
         }
@@ -82,11 +68,11 @@
         [HttpPost]
         public IActionResult AddMeasurement(AddMeasurementFormModel measurement)
         {
-            var measurementExists = data.Measurements.Any(m => m.Name == measurement.Name);
+            var measurementExists = baseData.IsMeasurementExist(measurement.Name);
 
             if (measurementExists)
             {
-                ModelState.AddModelError(nameof(measurement.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(measurement.Name), ControllerConstants.existingModelInDB.);
 
                 return View(measurement);
             }
@@ -96,13 +82,7 @@
                 return View(measurement);
             }
 
-            var newMeasurement= new Measurement
-            {
-                Name = measurement.Name
-            };
-
-            data.Measurements.Add(newMeasurement);
-            data.SaveChanges();
+            baseData.AddMeasurement(measurement.Name);
 
             return RedirectToAction("Index", "Home");
         }
@@ -112,11 +92,11 @@
         [HttpPost]
         public IActionResult AddPaymentType(AddPaymentTypeFormModel paymentType)
         {
-            var paymentTypetExists = data.PaymentTypes.Any(pt => pt.Name == paymentType.Name);
+            var paymentTypetExists = baseData.IsPaymentTypeExist(paymentType.Name);
 
             if (paymentTypetExists)
             {
-                ModelState.AddModelError(nameof(paymentType.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(paymentType.Name), ControllerConstants.existingModelInDB);
 
                 return View(paymentType);
             }
@@ -126,13 +106,7 @@
                 return View(paymentType);
             }
 
-            var newPaymenttype = new PaymentType
-            {
-                Name = paymentType.Name
-            };
-
-            data.PaymentTypes.Add(newPaymenttype);
-            data.SaveChanges();
+            baseData.AddPaymentType(paymentType.Name);
 
             return RedirectToAction("Index", "Home");
         }
@@ -142,11 +116,11 @@
         [HttpPost]
         public IActionResult AddPosition(AddPositionFormModel position)
         {
-            var positionExists = data.Positions.Any(p => p.Name == position.Name);
+            var positionExists = baseData.IsPositionExist(position.Name);
 
             if (positionExists)
             {
-                ModelState.AddModelError(nameof(position.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(position.Name), ControllerConstants.existingModelInDB);
 
                 return View(position);
             }
@@ -156,13 +130,7 @@
                 return View(position);
             }
 
-            var newPosition = new Position
-            {
-                Name = position.Name
-            };
-
-            data.Positions.Add(newPosition);
-            data.SaveChanges();
+            baseData.AddPosition(position.Name);
 
             return RedirectToAction("Index", "Home");
         }
@@ -172,11 +140,11 @@
         [HttpPost]
         public IActionResult AddProductType(AddProductTypeFormModel productType)
         {
-            var productTypeExists = data.ProductTypes.Any(pt => pt.Name == productType.Name);
+            var productTypeExists = baseData.IsProductTypeExist(productType.Name);
 
             if (productTypeExists)
             {
-                ModelState.AddModelError(nameof(productType.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(productType.Name), ControllerConstants.existingModelInDB);
 
                 return View(productType);
             }
@@ -186,13 +154,7 @@
                 return View(productType);
             }
 
-            var newProductType = new ProductType
-            {
-                Name = productType.Name
-            };
-
-            data.ProductTypes.Add(newProductType);
-            data.SaveChanges();
+            baseData.AddProductType(productType.Name);
 
             return RedirectToAction("Index", "Home");
         }
@@ -202,11 +164,11 @@
         [HttpPost]
         public IActionResult AddStore(AddStoreFormModel store)
         {
-            var storeExists = data.Stores.Any(pt => pt.Name == store.Name);
+            var storeExists = baseData.IsStoreExist(store.Name);
 
             if (storeExists)
             {
-                ModelState.AddModelError(nameof(store.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(store.Name), ControllerConstants.existingModelInDB);
 
                 return View(store);
             }
@@ -216,13 +178,7 @@
                 return View(store);
             }
 
-            var newStore = new Store
-            {
-                Name = store.Name
-            };
-
-            data.Stores.Add(newStore);
-            data.SaveChanges();
+            baseData.AddStore(store.Name);
 
             return RedirectToAction("Index", "Home");
         }
@@ -232,11 +188,11 @@
         [HttpPost]
         public IActionResult AddWarehouse(AddWarehouseFormModel warehouse)
         {
-            var warehouseExists = data.Warehouses.Any(pt => pt.Name == warehouse.Name);
+            var warehouseExists = baseData.IsWarehouseExist(warehouse.Name);
 
             if (warehouseExists)
             {
-                ModelState.AddModelError(nameof(warehouse.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(warehouse.Name), ControllerConstants.existingModelInDB);
 
                 return View(warehouse);
             }
@@ -246,13 +202,7 @@
                 return View(warehouse);
             }
 
-            var newWarehouse = new Warehouse
-            {
-                Name = warehouse.Name
-            };
-
-            data.Warehouses.Add(newWarehouse);
-            data.SaveChanges();
+            baseData.AddWarehouse(warehouse.Name);
 
             return RedirectToAction("Index", "Home");
         }
