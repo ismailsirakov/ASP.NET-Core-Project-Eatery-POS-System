@@ -1,8 +1,8 @@
-namespace EateryPOSSystem.Models.Storekeeper
+namespace EateryPOSSystem.Services.Models
 {
     using System.Collections.Generic;
 
-    public class MaterialViewModel
+    public class MaterialServiceModel
     {
         public int Id { get; set; }
 
@@ -12,6 +12,6 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public string MeasurementName { get; set; }
 
-        public ICollection<MeasurementViewModel> Measurements { get; set; }
+        public IEnumerable<MeasurementServiceModel> Measurements { get; set; }
     }
 }

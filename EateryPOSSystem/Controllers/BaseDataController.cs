@@ -8,11 +8,9 @@
     public class BaseDataController : Controller
     {
         private readonly IBaseDataService baseData;
-        private EateryPOSDbContext data;
-        public BaseDataController(IBaseDataService baseData, EateryPOSDbContext data)
+        public BaseDataController(IBaseDataService baseData)
         {
             this.baseData = baseData;
-            this.data = data;
         }
 
         public IActionResult AddCity() => View();
@@ -72,7 +70,7 @@
 
             if (measurementExists)
             {
-                ModelState.AddModelError(nameof(measurement.Name), ControllerConstants.existingModelInDB.);
+                ModelState.AddModelError(nameof(measurement.Name), ControllerConstants.existingModelInDB);
 
                 return View(measurement);
             }

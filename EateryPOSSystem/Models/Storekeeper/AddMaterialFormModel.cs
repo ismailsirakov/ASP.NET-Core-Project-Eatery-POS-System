@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
+    using EateryPOSSystem.Services.Models;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants;
@@ -12,6 +13,6 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public int MeasurementId { get; init; }
 
-        public ICollection<MeasurementViewModel> Measurements { get; set; }
+        public IEnumerable<MeasurementServiceModel> Measurements { get; set; }
     }
 }

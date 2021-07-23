@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
-namespace EateryPOSSystem.Models.Storekeeper
+namespace EateryPOSSystem.Services.Models
 {
-    public class WarehouseMaterialViewModel
+    public class WarehouseMaterialServiceModel
     {
         public int ReceiptNumber { get; set; }
 

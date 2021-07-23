@@ -1,6 +1,6 @@
-namespace EateryPOSSystem.Models.Storekeeper
+namespace EateryPOSSystem.Services.Models
 {
-    public class ProviderViewModel
+    public class ProviderServiceModel
     {
         public int Id { get; init; }
 

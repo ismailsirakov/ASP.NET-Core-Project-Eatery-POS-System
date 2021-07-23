@@ -3,6 +3,7 @@
     using EateryPOSSystem.Data;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Models.Storekeeper;
+    using EateryPOSSystem.Services.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
@@ -12,13 +13,11 @@
     public class StorekeeperController : Controller
     {
         private EateryPOSDbContext data;
+        private IStorekeeperService storekeeper;
 
-        private const string existingModelInDB = "Already exists in database.";
-
-        private const string notExistingModelInDB = "Selected item not exists in database.";
-
-        public StorekeeperController(EateryPOSDbContext data)
+        public StorekeeperController(IStorekeeperService storekeeper, EateryPOSDbContext data)
         {
+            this.storekeeper = storekeeper;
             this.data = data;
         }
 
@@ -28,11 +27,11 @@
         [HttpPost]
         public IActionResult AddAddress(AddAddressFormModel address)
         {
-            var addressExists = data.Addresses.Any(a => a.AddressDetails == address.AddressDetail);
+            var addressExists = storekeeper.IsAddressExist(address.AddressDetail);
 
             if (addressExists)
             {
-                ModelState.AddModelError(nameof(address.AddressDetail), existingModelInDB);
+                ModelState.AddModelError(nameof(address.AddressDetail), ControllerConstants.existingModelInDB);
 
                 return View(address);
             }
@@ -42,13 +41,7 @@
                 return View(address);
             }
 
-            var newAddress = new Address
-            {
-                AddressDetails = address.AddressDetail
-            };
-
-            data.Addresses.Add(newAddress);
-            data.SaveChanges();
+            storekeeper.AddAddress(address.AddressDetail);
 
             return RedirectToAction("Index", "Home");
         }
@@ -57,11 +50,11 @@
         {
             var newAddMaterialToWarehouseModel = new AddMaterialToWarehouseFormModel_1
             {
-                Warehouses = GetWarehouses(),
+                Warehouses = storekeeper.GetWarehouses(),
 
-                DocumentTypes = GetDocumentTypes(),
+                DocumentTypes = storekeeper.GetDocumentTypes(),
 
-                Providers = GetProviders()
+                Providers = storekeeper.GetProviders()
             };
 
             return View(newAddMaterialToWarehouseModel);
@@ -71,35 +64,35 @@
         public IActionResult AddMaterialToWarehouse_1(AddMaterialToWarehouseFormModel_1 warehouseMaterial)
         {
 
-            warehouseMaterial.Warehouses = GetWarehouses();
+            warehouseMaterial.Warehouses = storekeeper.GetWarehouses();
 
             if (!warehouseMaterial
                 .Warehouses
                 .Any(w => w.Id == warehouseMaterial.WarehouseId))
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.WarehouseId), notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.WarehouseId), ControllerConstants.notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
 
-            warehouseMaterial.DocumentTypes = GetDocumentTypes();
+            warehouseMaterial.DocumentTypes = storekeeper.GetDocumentTypes();
 
             if (!warehouseMaterial
                 .DocumentTypes
                 .Any(dt => dt.Id == warehouseMaterial.DocumentTypeId))
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.DocumentTypeId), notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.DocumentTypeId), ControllerConstants.notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
 
-            warehouseMaterial.Providers = GetProviders();
+            warehouseMaterial.Providers = storekeeper.GetProviders();
 
             if (!warehouseMaterial
                 .Providers
                 .Any(dt => dt.Id == warehouseMaterial.ProviderId))
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.ProviderId), notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.ProviderId), ControllerConstants.notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
@@ -126,7 +119,7 @@
 
         public IActionResult AddMaterialToWarehouse_2(AddMaterialToWarehouseFormModel_1 warehouseMaterial)
         {
-            var addedMaterials = GetAddedMaterials(warehouseMaterial.ProviderId, warehouseMaterial.DocumentNumber);
+            var addedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId, warehouseMaterial.DocumentNumber);
 
             var newWarehouseMaterial = new AddMaterialToWarehouseFormModel_2
             {
@@ -136,7 +129,7 @@
                 DocumentNumber = warehouseMaterial.DocumentNumber,
                 DocumentDate = warehouseMaterial.DocumentDate,
                 WarehouseId = warehouseMaterial.WarehouseId,
-                Materials = GetMaterials(),
+                Materials = storekeeper.GetMaterials(),
                 AddedMaterials = addedMaterials
             };
 
@@ -146,9 +139,9 @@
         [HttpPost]
         public IActionResult AddMaterialToWarehouse_2(string addButton, string saveButton, AddMaterialToWarehouseFormModel_2 warehouseMaterial)
         {
-            warehouseMaterial.Materials = GetMaterials();
+            warehouseMaterial.Materials = storekeeper.GetMaterials();
 
-            warehouseMaterial.AddedMaterials = GetAddedMaterials(warehouseMaterial.ProviderId, warehouseMaterial.DocumentNumber);
+            warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId, warehouseMaterial.DocumentNumber);
 
             var materialExist = warehouseMaterial
                 .Materials
@@ -156,7 +149,7 @@
 
             if (!materialExist)
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.MaterialId), notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.MaterialId), ControllerConstants.notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
@@ -170,7 +163,7 @@
 
             if (!warehouseMaterial.AddedMaterials.Any())
             {
-                if (!data.TempWarehouseReceipts.Any())
+                if (storekeeper.DbTempWarehouseReceiptsEmpty())
                 {
                     receiptNumber = 1;
                 }
@@ -186,37 +179,25 @@
 
             if (addButton != null)
             {
-                var newWarehouseReceipt = new TempWarehouseReceipt
-                {
-                    ProviderId = warehouseMaterial.ProviderId,
-                    DocumentTypeId = warehouseMaterial.DocumentTypeId,
-                    DocumentNumber = warehouseMaterial.DocumentNumber,
-                    DocumentDate = warehouseMaterial.DocumentDate,
-                    WarehouseId = warehouseMaterial.DocumentTypeId,
-                    Quantity = warehouseMaterial.Quantity,
-                    UnitPrice = warehouseMaterial.UnitPrice,
-                    MaterialId = warehouseMaterial.MaterialId,
-                    ReceiptNumber = receiptNumber
-                };
-
-                data.TempWarehouseReceipts.Add(newWarehouseReceipt);
-                data.SaveChanges();
-
                 var providerId = warehouseMaterial.ProviderId;
-
+                var documentTypeId = warehouseMaterial.DocumentTypeId;
                 var documentNumber = warehouseMaterial.DocumentNumber;
+                var documentDate = warehouseMaterial.DocumentDate;
+                var warehouseId = warehouseMaterial.DocumentTypeId;
+                var quantity = warehouseMaterial.Quantity;
+                var unitPrice = warehouseMaterial.UnitPrice;
+                var materialId = warehouseMaterial.MaterialId;
 
-                warehouseMaterial.AddedMaterials = GetAddedMaterials(providerId, documentNumber);
+                storekeeper.AddTempWarehouseReceipt(providerId, documentTypeId, documentNumber, documentDate, warehouseId, quantity, unitPrice, materialId);
+
+                warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(providerId, documentNumber);
 
                 return View(warehouseMaterial);
             }
 
             if (saveButton != null)
             {
-                var lastWarehouseReceiptInDb = data
-                    .WarehouseReceipts
-                    .OrderBy(wr => wr.ReceiptNumber)
-                    .LastOrDefault();
+                var lastWarehouseReceiptInDb = storekeeper.LastWarehouseReceiptInDb();
 
                 var lastReceiptNumberInDb = 1;
 
@@ -225,70 +206,9 @@
                     lastReceiptNumberInDb = lastWarehouseReceiptInDb.ReceiptNumber;
                 }
 
-                var warehouseReceiptList = data
-                    .TempWarehouseReceipts
-                    .Where(twr => twr.ReceiptNumber == receiptNumber)
-                    .Select(twr => new WarehouseReceipt
-                    {
-                        ReceiptNumber = lastReceiptNumberInDb + 1,
-                        ProviderId = twr.ProviderId,
-                        DocumentTypeId = twr.DocumentTypeId,
-                        DocumentNumber = twr.DocumentNumber,
-                        DocumentDate = twr.DocumentDate,
-                        WarehouseId = twr.WarehouseId,
-                        MaterialId = twr.MaterialId,
-                        Quantity = twr.Quantity,
-                        UnitPrice = twr.UnitPrice,
-                        UserId = 1,
-                        DateTime = DateTime.UtcNow
-                    })
-                    .ToList();
+                var warehouseReceiptList = storekeeper.AddWarehouseReceiptListByReceiptNumber(receiptNumber, lastReceiptNumberInDb);
 
-                data.WarehouseReceipts.AddRange(warehouseReceiptList);
-                data.TempWarehouseReceipts.RemoveRange(data.TempWarehouseReceipts.Where(twr => twr.ReceiptNumber == receiptNumber));
-                data.SaveChanges();
-
-                var currentWarehouse = warehouseReceiptList
-                    .FirstOrDefault()
-                    .WarehouseId;
-
-                var materialIdsInWarehouse = data
-                    .WarehouseMaterials
-                    .Where(wm => wm.WarehouseId == currentWarehouse)
-                    .Select(wm => wm.MaterialId)
-                    .ToList();
-
-                foreach (var receipt in warehouseReceiptList)
-                {
-                    var materialId = receipt.MaterialId;
-
-                    if (!materialIdsInWarehouse.Contains(materialId))
-                    {
-                        var newWarehouseMaterial = new WarehouseMaterial
-                        {
-                            WarehouseId = currentWarehouse,
-                            MaterialId = materialId
-                        };
-
-                        data.WarehouseMaterials.Add(newWarehouseMaterial);
-                        data.SaveChanges();
-                    }
-
-                    var currentMaterialQuantity = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Quantity;
-
-                    var currentMaterialPrice = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Price;
-
-                    var currentTotalAmount = currentMaterialQuantity * currentMaterialPrice;
-
-                    currentMaterialQuantity += receipt.Quantity;
-
-                    currentMaterialPrice = (currentTotalAmount + receipt.Quantity * receipt.UnitPrice) / currentMaterialQuantity;
-
-                    data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Quantity = currentMaterialQuantity;
-                    data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Price = currentMaterialPrice;
-                }
-
-                data.SaveChanges();
+                storekeeper.AddReceiptsMaterialsToWarehouse(warehouseReceiptList);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -300,7 +220,7 @@
         {
             var newAddMaterialModel = new AddMaterialFormModel
             {
-                Measurements = GetMeasurements()
+                Measurements = storekeeper.GetMeasurements()
             };
 
             return View(newAddMaterialModel);
@@ -310,15 +230,13 @@
         public IActionResult AddMaterial(AddMaterialFormModel material)
         {
 
-            material.Measurements = GetMeasurements();
+            material.Measurements = storekeeper.GetMeasurements();
 
-            var materialExists = data
-                .Materials
-                .Any(m => m.Name == material.Name);
+            var materialExists = storekeeper.IsMaterialExist(material.Name);
 
             if (materialExists)
             {
-                ModelState.AddModelError(nameof(material.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(material.Name), ControllerConstants.existingModelInDB);
 
                 return View(material);
             }
@@ -328,14 +246,7 @@
                 return View(material);
             }
 
-            var newMaterial = new Material
-            {
-                Name = material.Name,
-                MeasurementId = material.MeasurementId
-            };
-
-            data.Materials.Add(newMaterial);
-            data.SaveChanges();
+            storekeeper.AddMaterial(material.Name, material.MeasurementId);
 
             return RedirectToAction("Index", "Home");
         }
@@ -344,8 +255,8 @@
         {
             var newProvider = new AddProviderFormModel
             {
-                Cities = GetCities(),
-                Addresses = GetAddresses()
+                Cities = storekeeper.GetCities(),
+                Addresses = storekeeper.GetAddresses()
             };
 
             return View(newProvider);
@@ -354,16 +265,14 @@
         [HttpPost]
         public IActionResult AddProvider(AddProviderFormModel provider)
         {
-            provider.Cities = GetCities();
-            provider.Addresses = GetAddresses();
+            provider.Cities = storekeeper.GetCities();
+            provider.Addresses = storekeeper.GetAddresses();
 
-            var providerlExists = data
-               .Providers
-               .Any(m => m.Name == provider.Name);
+            var providerlExists = storekeeper.IsProviderExist(provider.Name);
 
             if (providerlExists)
             {
-                ModelState.AddModelError(nameof(provider.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(provider.Name), ControllerConstants.existingModelInDB);
 
                 return View(provider);
             }
@@ -373,147 +282,9 @@
                 return View(provider);
             }
 
-            var newProvider = new Provider
-            {
-                Name = provider.Name,
-                Number = provider.Number,
-                CityId = provider.CityId,
-                AddressId = provider.AddressId
-            };
-
-            data.Providers.Add(newProvider);
-            data.SaveChanges();
+            storekeeper.AddProvider(provider.Name, provider.Number, provider.CityId, provider.AddressId);
 
             return RedirectToAction("Index", "Home");
         }
-
-        private ICollection<WarehouseViewModel> GetWarehouses()
-            => data
-            .Warehouses
-            .Select(w => new WarehouseViewModel
-            {
-                Id = w.Id,
-                Name = w.Name
-            })
-            .ToList();
-
-        private ICollection<ProviderViewModel> GetProviders()
-            => data
-            .Providers
-            .Select(p => new ProviderViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Number = p.Number
-            })
-            .ToList();
-
-        private ICollection<DocumentTypeViewModel> GetDocumentTypes()
-            => data
-            .DocumentTypes
-            .Select(dt => new DocumentTypeViewModel
-            {
-                Id = dt.Id,
-                Name = dt.Name
-            })
-            .ToList();
-
-        private ICollection<MeasurementViewModel> GetMeasurements()
-            => data
-            .Measurements
-            .Select(m => new MeasurementViewModel
-            {
-                Id = m.Id,
-                Name = m.Name
-            })
-            .ToList();
-
-        private ICollection<MaterialViewModel> GetMaterials()
-            => data
-            .Materials
-            .Select(m => new MaterialViewModel
-            {
-                Id = m.Id,
-                Name = m.Name,
-                MeasurementId = m.Measurement.Id,
-                MeasurementName = m.Measurement.Name
-            })
-            .ToList();
-
-        private ICollection<WarehouseMaterialViewModel> GetAddedMaterials(int providerId, int documentNumber)
-        {
-            var materials = GetMaterials();
-
-            var receiptNumber = 0;
-
-            var currentReceipt = data
-                .TempWarehouseReceipts
-                .FirstOrDefault(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber);
-
-            if (currentReceipt is null)
-            {
-                if (!data.TempWarehouseReceipts.Any())
-                {
-                    receiptNumber = 1;
-                }
-                else
-                {
-                    receiptNumber = data.TempWarehouseReceipts.OrderBy(x => x.Id).Last().ReceiptNumber + 1;
-                }
-            }
-            else
-            {
-                receiptNumber = data.TempWarehouseReceipts.First(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber).ReceiptNumber;
-            }
-
-            var currentTemp = data
-                .TempWarehouseReceipts
-                .Where(t => t.ReceiptNumber == receiptNumber).ToList();
-
-            var warehouseMaterialViewModels = new List<WarehouseMaterialViewModel>();
-
-            foreach (var tempWarehouseMaterial in currentTemp)
-            {
-                var materialId = tempWarehouseMaterial.MaterialId;
-                var quantity = tempWarehouseMaterial.Quantity;
-                var price = tempWarehouseMaterial.UnitPrice;
-
-                var newWarehouseMaterialViewModel = new WarehouseMaterialViewModel
-                {
-                    ReceiptNumber = receiptNumber,
-                    MaterialId = materialId,
-                    MaterialName = materials.FirstOrDefault(m => m.Id == materialId).Name,
-                    MeasurementId = materials.FirstOrDefault(m => m.Id == materialId).MeasurementId,
-                    MeasurementName = materials.FirstOrDefault(m => m.Id == materialId).MeasurementName,
-                    Quantity = quantity,
-                    Price = price
-                };
-
-                warehouseMaterialViewModels.Add(newWarehouseMaterialViewModel);
-            }
-
-            return warehouseMaterialViewModels;
-        }
-
-        private ICollection<CityViewModel> GetCities()
-            => data
-            .Cities
-            .Select(c => new CityViewModel
-            {
-                Id = c.Id,
-                Name = c.Name,
-                PostalCode = c.PostalCode
-            })
-            .ToList();
-
-        private ICollection<AddressViewModel> GetAddresses()
-            => data
-            .Addresses
-            .Select(a => new AddressViewModel
-            {
-                Id = a.Id,
-                AddressDetails = a.AddressDetails
-            })
-            .ToList();
     }
 }

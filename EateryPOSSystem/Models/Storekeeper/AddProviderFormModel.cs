@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
+    using EateryPOSSystem.Services.Models;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using static Data.DataConstants;
@@ -17,8 +18,8 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public int AddressId { get; init; }
 
-        public ICollection<AddressViewModel> Addresses { get; set; }
+        public IEnumerable<AddressServiceModel> Addresses { get; set; }
 
-        public ICollection<CityViewModel> Cities { get; set; }
+        public IEnumerable<CityServiceModel> Cities { get; set; }
     }
 }

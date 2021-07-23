@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
+    using EateryPOSSystem.Services.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -20,10 +21,10 @@ namespace EateryPOSSystem.Models.Storekeeper
         public string ReceiptInfo { get; set; }
 
         public int UserId { get; init; }
-        public ICollection<ProviderViewModel> Providers { get; set; }
+        public IEnumerable<ProviderServiceModel> Providers { get; set; }
 
-        public ICollection<WarehouseViewModel> Warehouses { get; set; }
+        public IEnumerable<WarehouseServiceModel> Warehouses { get; set; }
 
-        public ICollection<DocumentTypeViewModel> DocumentTypes { get; set; }
+        public IEnumerable<DocumentTypeServiceModel> DocumentTypes { get; set; }
     }
 }

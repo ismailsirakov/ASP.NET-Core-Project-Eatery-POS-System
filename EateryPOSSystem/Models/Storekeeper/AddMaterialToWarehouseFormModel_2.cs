@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
+    using EateryPOSSystem.Services.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -32,8 +33,8 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public int UserId { get; init; }
 
-        public ICollection<MaterialViewModel> Materials { get; set; }
+        public IEnumerable<MaterialServiceModel> Materials { get; set; }
 
-        public ICollection<WarehouseMaterialViewModel> AddedMaterials { get; set; }
+        public IEnumerable<WarehouseMaterialServiceModel> AddedMaterials { get; set; }
     }
 }
