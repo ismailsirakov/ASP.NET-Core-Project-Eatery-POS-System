@@ -1,0 +1,122 @@
+﻿{
+  "Cities": [
+    {
+      "Name": "София",
+      "PostalCode": 1000
+    },
+    {
+      "Name": "Пловдив",
+      "PostalCode": 4000
+    },
+    {
+      "Name": "Бургас",
+      "PostalCode": null
+    },
+    {
+      "Name": "Варна",
+      "PostalCode": 9000
+    }
+  ],
+  "DocumentTypes": [
+    { "Name": "Фактура" },
+    { "Name": "Опростена ф-ра" },
+    { "Name": "Касова бележка" }
+  ],
+  "PaymentTypes": [
+    { "Name": "В брой" },
+    { "Name": "С кредитна карта" },
+    { "Name": "По банков път" }
+  ],
+  "Measurements": [
+    { "Name": "бр." },
+    { "Name": "м." },
+    { "Name": "м2." },
+    { "Name": "кг." },
+    { "Name": "литър" }
+  ],
+  "Positions": [
+    { "Name": "Администратор" },
+    { "Name": "Отговорник склад" },
+    { "Name": "Счетоводител" },
+    { "Name": "Сервитьор" },
+    { "Name": "Салонен управител" }
+  ],
+  "ProductTypes": [
+    { "Name": "Храна" },
+    { "Name": "Напитка" },
+    { "Name": "Сувенир" }
+  ],
+  "Stores": [
+    { "Name": "Бар - тераса" },
+    { "Name": "Бар - басейн" },
+    { "Name": "Ресторант - градина" },
+    { "Name": "Garden" }
+  ],
+  "Warehouses": [
+    { "Name": "Основен" },
+    { "Name": "Кухня" },
+    { "Name": "Склад Бар-тераса" },
+    { "Name": "Склад Бар-басейн" },
+    { "Name": "Склад Ресторант-градина" }
+  ],
+  "Addresses": [
+    { "AddressDetails": "ул. К.Величков 50" },
+    { "AddressDetails": "ул. К.Величков 53" },
+    { "AddressDetails": "ул. К.Величков 35" },
+    { "AddressDetails": "ул. Крайречна 2" },
+    { "AddressDetails": "ул. К.Райчо 11" },
+    { "AddressDetails": "бул.Марица 42" },
+    { "AddressDetails": "бул.Марица 121" },
+    { "AddressDetails": "бул.Марица 57" }
+  ],
+  "Materials": [
+    {
+      "Name": "Кафе",
+      "MeasurementId": 4
+    },
+    {
+      "Name": "Захар",
+      "MeasurementId": 4
+    },
+    {
+      "Name": "Кола 250мл.",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Лимонада 250мл.",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Вино червено наливно",
+      "MeasurementId": 5
+    },
+    {
+      "Name": "Мляко",
+      "MeasurementId": 5
+    },
+    {
+      "Name": "Сметана течна-14гр.",
+      "MeasurementId": 1
+    }
+  ],
+  "Providers": [
+    {
+      "Name": "Винарна изба Ясен ООД",
+      "Number": 111111111,
+      "CityId": 2,
+      "AddressId": 5
+    },
+    {
+      "Name": "Бест дринкс ЕООД",
+      "Number": 222222222,
+      "CityId": 1,
+      "AddressId": 2
+    },
+    {
+      "Name": "М маркет ЕТ",
+      "Number": 123123123,
+      "CityId": 1,
+      "AddressId": 1
+    }
+  ]
+}

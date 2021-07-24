@@ -183,12 +183,12 @@
                 var documentTypeId = warehouseMaterial.DocumentTypeId;
                 var documentNumber = warehouseMaterial.DocumentNumber;
                 var documentDate = warehouseMaterial.DocumentDate;
-                var warehouseId = warehouseMaterial.DocumentTypeId;
+                var warehouseId = warehouseMaterial.WarehouseId;
                 var quantity = warehouseMaterial.Quantity;
                 var unitPrice = warehouseMaterial.UnitPrice;
                 var materialId = warehouseMaterial.MaterialId;
 
-                storekeeper.AddTempWarehouseReceipt(providerId, documentTypeId, documentNumber, documentDate, warehouseId, quantity, unitPrice, materialId);
+                storekeeper.AddTempWarehouseReceipt(receiptNumber, providerId, documentTypeId, documentNumber, documentDate, warehouseId, quantity, unitPrice, materialId);
 
                 warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(providerId, documentNumber);
 
@@ -199,7 +199,7 @@
             {
                 var lastWarehouseReceiptInDb = storekeeper.LastWarehouseReceiptInDb();
 
-                var lastReceiptNumberInDb = 1;
+                var lastReceiptNumberInDb = 0;
 
                 if (lastWarehouseReceiptInDb != null)
                 {
@@ -283,6 +283,13 @@
             }
 
             storekeeper.AddProvider(provider.Name, provider.Number, provider.CityId, provider.AddressId);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult ImportStorekeeperData()
+        {
+            storekeeper.ImportStorekeeperData();
 
             return RedirectToAction("Index", "Home");
         }

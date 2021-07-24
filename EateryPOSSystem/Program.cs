@@ -13,5 +13,6 @@ namespace EateryPOSSystem
                 .CreateDefaultBuilder(args)
                     .ConfigureWebHostDefaults(webBuilder => webBuilder
                         .UseStartup<Startup>());
+
     }
 }

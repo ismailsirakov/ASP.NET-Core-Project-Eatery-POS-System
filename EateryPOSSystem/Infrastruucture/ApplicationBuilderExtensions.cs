@@ -10,7 +10,7 @@ namespace EateryPOSSystem.Infrastructure
         {
             using var scopedServices = app.ApplicationServices.CreateScope();
 
-            var data = scopedServices.ServiceProvider.GetService<EateryPOSDbContext>();
+            var data = scopedServices.ServiceProvider.GetRequiredService<EateryPOSDbContext>();
 
             data.Database.Migrate();
 

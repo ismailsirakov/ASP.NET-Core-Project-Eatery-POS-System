@@ -11,7 +11,7 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddAddress(string addressDetail);
 
-        void AddTempWarehouseReceipt(int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId);
+        void AddTempWarehouseReceipt( int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId);
 
         bool IsMaterialExist(string materialName);
 
@@ -45,5 +45,7 @@ namespace EateryPOSSystem.Services.Interfaces
         IEnumerable<CityServiceModel> GetCities();
 
         IEnumerable<AddressServiceModel> GetAddresses();
+
+        void ImportStorekeeperData();
     }
 }

@@ -1,57 +1,81 @@
 namespace EateryPOSSystem.Services
 {
+    using AutoMapper;
     using EateryPOSSystem.Data;
+    using EateryPOSSystem.Data.DataTransferObjects;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Services.Models;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
 
     public class StorekeeperService : IStorekeeperService
     {
         private readonly EateryPOSDbContext data;
+        private IMapper mapper;
 
         public StorekeeperService(EateryPOSDbContext data)
-        {
-            this.data = data;
-        }
+            => this.data = data;
+        
         public bool IsAddressExist(string addressDetail)
-            => data.Addresses.Any(a => a.AddressDetails == addressDetail);
+            => data.Addresses
+            .Any(a => a.AddressDetails == addressDetail);
 
         public void AddAddress(string addressDetail)
         {
+            if (IsAddressExist(addressDetail))
+            {
+                return;
+            }
+
             var address = new Address
             {
                 AddressDetails = addressDetail
             };
 
             data.Addresses.Add(address);
+
             data.SaveChanges();
         }
 
         public bool IsProviderExist(string poviderName)
-            => data.Providers.Any(p => p.Name == poviderName);
+            => data.Providers
+            .Any(p => p.Name == poviderName);
 
-        public void AddProvider(string poviderName, int number, int cityId, int addressId)
+        public void AddProvider(string providerName, int number, int cityId, int addressId)
         {
+            if (IsProviderExist(providerName))
+            {
+                return;
+            }
+
             var provider = new Provider
             {
-                Name = poviderName,
+                Name = providerName,
                 Number = number,
                 CityId = cityId,
                 AddressId = addressId
             };
 
             data.Providers.Add(provider);
+
             data.SaveChanges();
         }
 
         public bool IsMaterialExist(string materialName)
-            => data.Materials.Any(m => m.Name == materialName);
+            => data.Materials
+            .Any(m => m.Name == materialName);
 
         public void AddMaterial(string materialName, int measurementId)
         {
+            if (IsMaterialExist(materialName))
+            {
+                return;
+            }
+
             var material = new Material
             {
                 Name = materialName,
@@ -59,13 +83,15 @@ namespace EateryPOSSystem.Services
             };
 
             data.Materials.Add(material);
+
             data.SaveChanges();
         }
 
-        public void AddTempWarehouseReceipt(int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId)
+        public void AddTempWarehouseReceipt(int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId)
         {
             var tempWarehouseReceipt = new TempWarehouseReceipt
             {
+                ReceiptNumber = receiptNumber,
                 ProviderId = providerId,
                 DocumentTypeId = documentTypeId,
                 DocumentNumber = documentNumber,
@@ -77,6 +103,7 @@ namespace EateryPOSSystem.Services
             };
 
             data.TempWarehouseReceipts.Add(tempWarehouseReceipt);
+
             data.SaveChanges();
         }
 
@@ -108,7 +135,10 @@ namespace EateryPOSSystem.Services
                     .ToList();
 
             data.WarehouseReceipts.AddRange(warehouseReceiptList);
-            data.TempWarehouseReceipts.RemoveRange(data.TempWarehouseReceipts.Where(twr => twr.ReceiptNumber == receiptNumber));
+
+            data.TempWarehouseReceipts
+                .RemoveRange(data.TempWarehouseReceipts.Where(twr => twr.ReceiptNumber == receiptNumber));
+
             data.SaveChanges();
 
             return warehouseReceiptList;
@@ -138,30 +168,32 @@ namespace EateryPOSSystem.Services
                         MaterialId = materialId
                     };
 
+                    materialIdsInWarehouse.Add(materialId);
+
                     data.WarehouseMaterials.Add(newWarehouseMaterial);
+
                     data.SaveChanges();
                 }
 
-                var currentMaterialQuantity = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Quantity;
+                var currentWarehouseMaterialQuantity = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Quantity;
 
-                var currentMaterialPrice = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Price;
+                var currentWarehouseMaterialPrice = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Price;
 
-                var currentTotalAmount = currentMaterialQuantity * currentMaterialPrice;
+                var currentTotalAmount = currentWarehouseMaterialQuantity * currentWarehouseMaterialPrice;
 
-                currentMaterialQuantity += receipt.Quantity;
+                currentWarehouseMaterialQuantity += receipt.Quantity;
 
-                currentMaterialPrice = (currentTotalAmount + receipt.Quantity * receipt.UnitPrice) / currentMaterialQuantity;
+                currentWarehouseMaterialPrice = (currentTotalAmount + receipt.Quantity * receipt.UnitPrice) / currentWarehouseMaterialQuantity;
 
-                data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Quantity = currentMaterialQuantity;
-                data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Price = currentMaterialPrice;
+                data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Quantity = currentWarehouseMaterialQuantity;
+                data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Price = currentWarehouseMaterialPrice;
             }
 
             data.SaveChanges();
         }
 
         public IEnumerable<WarehouseServiceModel> GetWarehouses()
-            => data
-            .Warehouses
+            => data.Warehouses
             .Select(w => new WarehouseServiceModel
             {
                 Id = w.Id,
@@ -170,8 +202,7 @@ namespace EateryPOSSystem.Services
             .ToList();
 
         public IEnumerable<ProviderServiceModel> GetProviders()
-            => data
-            .Providers
+            => data.Providers
             .Select(p => new ProviderServiceModel
             {
                 Id = p.Id,
@@ -181,8 +212,7 @@ namespace EateryPOSSystem.Services
             .ToList();
 
         public IEnumerable<DocumentTypeServiceModel> GetDocumentTypes()
-            => data
-            .DocumentTypes
+            => data.DocumentTypes
             .Select(dt => new DocumentTypeServiceModel
             {
                 Id = dt.Id,
@@ -191,8 +221,7 @@ namespace EateryPOSSystem.Services
             .ToList();
 
         public IEnumerable<MeasurementServiceModel> GetMeasurements()
-            => data
-            .Measurements
+            => data.Measurements
             .Select(m => new MeasurementServiceModel
             {
                 Id = m.Id,
@@ -201,8 +230,7 @@ namespace EateryPOSSystem.Services
             .ToList();
 
         public IEnumerable<MaterialServiceModel> GetMaterials()
-            => data
-            .Materials
+            => data.Materials
             .Select(m => new MaterialServiceModel
             {
                 Id = m.Id,
@@ -218,8 +246,7 @@ namespace EateryPOSSystem.Services
 
             var receiptNumber = 0;
 
-            var currentReceipt = data
-                .TempWarehouseReceipts
+            var currentReceipt = data.TempWarehouseReceipts
                 .FirstOrDefault(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber);
 
             if (currentReceipt is null)
@@ -230,21 +257,25 @@ namespace EateryPOSSystem.Services
                 }
                 else
                 {
-                    receiptNumber = data.TempWarehouseReceipts.OrderBy(x => x.Id).Last().ReceiptNumber + 1;
+                    receiptNumber = data.TempWarehouseReceipts
+                        .OrderBy(x => x.Id).Last()
+                        .ReceiptNumber + 1;
                 }
             }
             else
             {
-                receiptNumber = data.TempWarehouseReceipts.First(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber).ReceiptNumber;
+                receiptNumber = data.TempWarehouseReceipts
+                    .First(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber)
+                    .ReceiptNumber;
             }
 
-            var currentTemp = data
+            var currentTempWarehouseReceipt = data
                 .TempWarehouseReceipts
-                .Where(t => t.ReceiptNumber == receiptNumber).ToList();
+                .Where(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber).ToList();
 
             var warehouseMaterialServiceModels = new List<WarehouseMaterialServiceModel>();
-
-            foreach (var tempWarehouseMaterial in currentTemp)
+            
+            foreach (var tempWarehouseMaterial in currentTempWarehouseReceipt)
             {
                 var materialId = tempWarehouseMaterial.MaterialId;
                 var quantity = tempWarehouseMaterial.Quantity;
@@ -268,8 +299,7 @@ namespace EateryPOSSystem.Services
         }
 
         public IEnumerable<CityServiceModel> GetCities()
-            => data
-            .Cities
+            => data.Cities
             .Select(c => new CityServiceModel
             {
                 Id = c.Id,
@@ -279,8 +309,7 @@ namespace EateryPOSSystem.Services
             .ToList();
 
         public IEnumerable<AddressServiceModel> GetAddresses()
-            => data
-            .Addresses
+            => data.Addresses
             .Select(a => new AddressServiceModel
             {
                 Id = a.Id,
@@ -288,5 +317,31 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
+        public void ImportStorekeeperData()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<EateryPOSSystemProfile>());
+            mapper = config.CreateMapper();
+
+            var inputJson = File.ReadAllText(".\\Data\\Datasets\\seedingdata.json");
+
+            var dtoInput = JsonConvert.DeserializeObject<InputDTO>(inputJson);
+            var inputData = mapper.Map<Input>(dtoInput);
+
+            foreach (var address in inputData.Addresses)
+            {
+                AddAddress(address.AddressDetails);
+            }
+
+            foreach (var material in inputData.Materials)
+            {
+                AddMaterial(material.Name, material.MeasurementId);
+            }
+
+            foreach (var provider in inputData.Providers)
+            {
+                AddProvider(provider.Name, provider.Number, provider.CityId, provider.AddressId);
+            }
+
+        }
     }
 }

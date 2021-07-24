@@ -33,5 +33,7 @@ namespace EateryPOSSystem.Services.Interfaces
         bool IsWarehouseExist(string warehouseName);
 
         void AddWarehouse(string warehouseName);
+
+        void ImportBaseData();
     }
 }

@@ -204,5 +204,12 @@
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult ImportBaseData()
+        {
+            baseData.ImportBaseData();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

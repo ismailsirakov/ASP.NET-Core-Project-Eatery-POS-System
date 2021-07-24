@@ -52,6 +52,10 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Address>()
+                .HasIndex(x => x.AddressDetails)
+                .IsUnique();
+
             modelBuilder.Entity<Bill>(x =>
             {
                 x.HasOne(x => x.PaymentType)
@@ -68,6 +72,18 @@
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<City>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<DocumentType>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Material>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
             modelBuilder.Entity<Material>(x =>
             {
                 x.HasOne(x => x.Measurement)
@@ -75,6 +91,22 @@
                 .HasForeignKey(x => x.MeasurementId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<Measurement>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<PaymentType>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Position>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
 
             modelBuilder.Entity<Product>(x =>
             {
@@ -100,6 +132,14 @@
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<ProductType>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Provider>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
             modelBuilder.Entity<Provider>(x =>
             {
                 x.HasOne(x => x.Address)
@@ -115,6 +155,11 @@
                 .HasForeignKey(x => x.CityId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
+
+
+            modelBuilder.Entity<Recipe>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
 
             modelBuilder.Entity<Recipe>(x =>
             {
@@ -152,6 +197,10 @@
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<Store>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
             modelBuilder.Entity<User>(x =>
             {
                 x.HasOne(x => x.Position)
@@ -159,6 +208,14 @@
                 .HasForeignKey(x => x.PositionId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.UserName)
+                .IsUnique();
+
+            modelBuilder.Entity<Warehouse>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
 
             modelBuilder.Entity<WarehouseReceipt>(x =>
             {
