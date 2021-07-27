@@ -28,12 +28,12 @@
                                 Цена
                             </th>
                             <th style="width: 17%;" class="text-right text-primary">
-                                @{ 
+                                @{
                                     var totalSum = 0M;
-                                foreach (var material in Model.AddedMaterials)
-	                            {
-	                            	 totalSum += material.Quantity * material.Price;
-	                            }
+                                    foreach (var material in Model.AddedMaterials)
+                                    {
+                                        totalSum += material.Quantity * material.Price;
+                                    }
                                 }
                                 @totalSum.ToString("#,##0.00")
                             </th>
@@ -56,7 +56,7 @@
                                     @material.Price.ToString("#,##0.00")
                                 </td>
                                 <td class="text-right">
-                                    @{ 
+                                    @{
                                         var total = material.Quantity * material.Price;
                                     }
 
@@ -91,9 +91,9 @@
                     <input class="btn btn-outline-primary h-75" name="addButton" type="submit" value="Добави" />
                 </div>
             </div>
-
-
-            <input class="btn btn-primary m-1" type="submit" name="saveButton" value="Запази документ" />
+            <div class="text-center">
+                <input class="btn btn-primary m-1" type="submit" name="saveButton" value="Запази документ" />
+            </div>
         </form>
     </div>
 </div>

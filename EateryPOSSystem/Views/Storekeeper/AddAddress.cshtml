@@ -1,6 +1,6 @@
 ﻿@model AddAddressFormModel
 
-@{ 
+@{
     ViewData["Title"] = "Add Address Details";
 }
 
@@ -14,8 +14,9 @@
                 <input asp-for="AddressDetail" class="form-control">
                 <span asp-validation-for="AddressDetail" class="small text-danger"></span>
             </div>
-
-            <input class="btn btn-primary" type="submit" value="Save" />
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Добави" />
+            </div>
         </form>
     </div>
 </div>

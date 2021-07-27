@@ -23,10 +23,10 @@
                     </select>
                     <span asp-validation-for="DocumentTypeId" class="small text-danger"></span>
                     @*<div class="m-1">
-                        <span>
-                            <a asp-controller="BaseData" asp-action="AddDocumentType" class="btn btn-sm btn-outline-primary">Добави нов тип документ</a>
-                        </span>
-                    </div>*@
+                            <span>
+                                <a asp-controller="BaseData" asp-action="AddDocumentType" class="btn btn-sm btn-outline-primary">Добави нов тип документ</a>
+                            </span>
+                        </div>*@
                 </div>
                 <div class="form-group col-4">
                     <label asp-for="DocumentDate">Дата на документ</label>
@@ -45,10 +45,10 @@
                         }
                     </select>
                     @*<div class="m-1">
-                        <span>
-                            <a asp-controller="Storekeeper" asp-action="AddProvider" class="btn btn-sm btn-outline-primary">Добави нов доставчик</a>
-                        </span>
-                    </div>*@
+                            <span>
+                                <a asp-controller="Storekeeper" asp-action="AddProvider" class="btn btn-sm btn-outline-primary">Добави нов доставчик</a>
+                            </span>
+                        </div>*@
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="WarehouseId">В склад</label>
@@ -59,13 +59,15 @@
                         }
                     </select>
                     @*<div class="m-1">
-                        <span>
-                            <a asp-controller="BaseData" asp-action="AddWarehouse" class="btn btn-sm btn-outline-primary">Добави нов склад</a>
-                        </span>
-                    </div>*@
+                            <span>
+                                <a asp-controller="BaseData" asp-action="AddWarehouse" class="btn btn-sm btn-outline-primary">Добави нов склад</a>
+                            </span>
+                        </div>*@
                 </div>
             </div>
-            <input class="btn btn-primary m-1" type="submit" value="Следваща страница" />
+            <div class="text-center">
+                <input class="btn btn-primary m-1" type="submit" value="Следваща страница" />
+            </div>
         </form>
     </div>
 </div>

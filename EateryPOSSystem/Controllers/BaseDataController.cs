@@ -176,7 +176,7 @@
                 return View(store);
             }
 
-            baseData.AddStore(store.Name);
+            baseData.AddStore(store.Name, store.TablesInStore);
 
             return RedirectToAction("Index", "Home");
         }

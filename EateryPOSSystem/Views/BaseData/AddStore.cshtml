@@ -14,8 +14,14 @@
                 <input asp-for="Name" class="form-control" placeholder="бар, ресторант...">
                 <span asp-validation-for="Name" class="small text-danger"></span>
             </div>
-
-            <input class="btn btn-primary" type="submit" value="Save" />
+            <div class="form-group">
+                <label asp-for="TablesInStore">Брой маси в обекта</label>
+                <input asp-for="TablesInStore" class="form-control">
+                <span asp-validation-for="TablesInStore" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Добави" />
+            </div>
         </form>
     </div>
 </div>

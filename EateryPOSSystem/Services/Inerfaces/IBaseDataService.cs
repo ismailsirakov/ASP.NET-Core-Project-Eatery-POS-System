@@ -28,7 +28,7 @@ namespace EateryPOSSystem.Services.Interfaces
 
         bool IsStoreExist(string storeName);
 
-        void AddStore(string storeName);
+        void AddStore(string storeName, int tablesInStore);
 
         bool IsWarehouseExist(string warehouseName);
 

@@ -47,10 +47,22 @@
     { "Name": "Сувенир" }
   ],
   "Stores": [
-    { "Name": "Бар - тераса" },
-    { "Name": "Бар - басейн" },
-    { "Name": "Ресторант - градина" },
-    { "Name": "Garden" }
+    {
+      "Name": "Бар - тераса",
+      "TablesInStore": 8
+    },
+    {
+      "Name": "Бар - басейн",
+      "TablesInStore": 6
+    },
+    {
+      "Name": "Ресторант - градина",
+      "TablesInStore": 12
+    },
+    {
+      "Name": "Ресторант - Панорама",
+      "TablesInStore": 20
+    }
   ],
   "Warehouses": [
     { "Name": "Основен" },

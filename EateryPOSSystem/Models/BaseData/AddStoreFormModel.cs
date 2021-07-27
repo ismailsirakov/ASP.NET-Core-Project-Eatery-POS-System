@@ -8,5 +8,7 @@ namespace EateryPOSSystem.Models.BaseData
         [Required]
         [StringLength(StoreNameMaxLength, MinimumLength = StoreNameMinLength)]
         public string Name { get; init; }
+
+        public int TablesInStore { get; set; }
     }
 }

@@ -153,7 +153,7 @@
         public bool IsStoreExist(string storeName)
             => data.Stores.Any(s => s.Name == storeName);
 
-        public void AddStore(string storeName)
+        public void AddStore(string storeName, int tablesInStore)
         {
             if (IsStoreExist(storeName))
             {
@@ -162,7 +162,8 @@
 
             var store = new Store
             {
-                Name = storeName
+                Name = storeName,
+                TablesInStore = tablesInStore
             };
 
             data.Stores.Add(store);
@@ -231,7 +232,7 @@
 
             foreach (var store in inputData.Stores)
             {
-                AddStore(store.Name);
+                AddStore(store.Name, store.TablesInStore);
             }
 
             foreach (var warehouse in inputData.Warehouses)
