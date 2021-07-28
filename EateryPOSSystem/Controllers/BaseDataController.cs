@@ -1,9 +1,8 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
-    using EateryPOSSystem.Data;
+    using Microsoft.AspNetCore.Mvc;
     using EateryPOSSystem.Models.BaseData;
     using EateryPOSSystem.Services.Interfaces;
-    using Microsoft.AspNetCore.Mvc;
 
     public class BaseDataController : Controller
     {
@@ -201,13 +200,6 @@
             }
 
             baseData.AddWarehouse(warehouse.Name);
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult ImportBaseData()
-        {
-            baseData.ImportBaseData();
 
             return RedirectToAction("Index", "Home");
         }

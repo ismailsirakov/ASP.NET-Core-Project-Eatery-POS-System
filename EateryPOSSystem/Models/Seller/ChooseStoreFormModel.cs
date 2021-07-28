@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Models.Seller
 {
+    using EateryPOSSystem.Services.Models;
     using System.Collections.Generic;
 
 
@@ -9,6 +10,6 @@ namespace EateryPOSSystem.Models.Seller
 
         public int StoreId { get; set; }
 
-        public IEnumerable<StoreViewModel> Stores { get; set; }
+        public IEnumerable<StoreServiceModel> Stores { get; set; }
     }
 }

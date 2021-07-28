@@ -104,10 +104,6 @@
                 .HasIndex(x => x.Name)
                 .IsUnique();
 
-            modelBuilder.Entity<Product>()
-                .HasIndex(x => x.Name)
-                .IsUnique();
-
             modelBuilder.Entity<Product>(x =>
             {
                 x.HasOne(x => x.Measurement)

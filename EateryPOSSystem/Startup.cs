@@ -36,9 +36,14 @@ namespace EateryPOSSystem
             services.AddControllersWithViews();
 
             services.AddTransient<IBaseDataService, BaseDataService>();
+
             services.AddTransient<IStorekeeperService, StorekeeperService>();
+
             services.AddTransient<ISellerService, SellerService>();
 
+            services.AddTransient<IProductionService, ProductionService>();
+
+            services.AddTransient<IDbService, DbService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

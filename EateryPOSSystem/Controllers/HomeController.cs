@@ -1,9 +1,9 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
-    using EateryPOSSystem.Models;
+    using System.Diagnostics;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using System.Diagnostics;
+    using EateryPOSSystem.Models;
 
     public class HomeController : Controller
     {

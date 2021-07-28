@@ -1,17 +1,17 @@
-using EateryPOSSystem.Data.Models;
-using EateryPOSSystem.Services.Models;
-using System;
-using System.Collections.Generic;
-
 namespace EateryPOSSystem.Services.Interfaces
 {
+    using System;
+    using System.Collections.Generic;
+    using EateryPOSSystem.Data.Models;
+    using EateryPOSSystem.Services.Models;
+
     public interface IStorekeeperService
     {
         bool IsAddressExist(string addressDetail);
 
         void AddAddress(string addressDetail);
 
-        void AddTempWarehouseReceipt( int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId);
+        void AddTempWarehouseReceipt(int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId);
 
         bool IsMaterialExist(string materialName);
 
@@ -29,22 +29,7 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddReceiptsMaterialsToWarehouse(IEnumerable<WarehouseReceipt> warehouseReceiptList);
 
-        IEnumerable<WarehouseServiceModel> GetWarehouses();
-
-        IEnumerable<ProviderServiceModel> GetProviders();
-
-        IEnumerable<DocumentTypeServiceModel> GetDocumentTypes();
-
-        IEnumerable<MeasurementServiceModel> GetMeasurements();
-
-        IEnumerable<MaterialServiceModel> GetMaterials();
-
         IEnumerable<WarehouseMaterialServiceModel> GetAddedMaterials(int providerId, int documentNumber);
-
-
-        IEnumerable<CityServiceModel> GetCities();
-
-        IEnumerable<AddressServiceModel> GetAddresses();
 
         void ImportStorekeeperData();
     }

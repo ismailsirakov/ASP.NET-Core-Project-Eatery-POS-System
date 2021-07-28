@@ -1,27 +1,28 @@
 namespace EateryPOSSystem.Services
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.IO;
     using AutoMapper;
-    using EateryPOSSystem.Data;
-    using EateryPOSSystem.Data.DataTransferObjects;
+    using Newtonsoft.Json;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Services.Models;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
+    using EateryPOSSystem.Data.DataTransferObjects;
 
     public class StorekeeperService : IStorekeeperService
     {
-        private readonly EateryPOSDbContext data;
+        private readonly IDbService dbService;
         private IMapper mapper;
 
-        public StorekeeperService(EateryPOSDbContext data)
-            => this.data = data;
-        
+        public StorekeeperService(IDbService dbService)
+        {
+            this.dbService = dbService;
+        }
+
         public bool IsAddressExist(string addressDetail)
-            => data.Addresses
+            => dbService.GetAddresses()
             .Any(a => a.AddressDetails == addressDetail);
 
         public void AddAddress(string addressDetail)
@@ -36,13 +37,11 @@ namespace EateryPOSSystem.Services
                 AddressDetails = addressDetail
             };
 
-            data.Addresses.Add(address);
-
-            data.SaveChanges();
+            dbService.AddAddress(address);
         }
 
         public bool IsProviderExist(string poviderName)
-            => data.Providers
+            => dbService.GetProviders()
             .Any(p => p.Name == poviderName);
 
         public void AddProvider(string providerName, int number, int cityId, int addressId)
@@ -60,13 +59,11 @@ namespace EateryPOSSystem.Services
                 AddressId = addressId
             };
 
-            data.Providers.Add(provider);
-
-            data.SaveChanges();
+            dbService.AddProvider(provider);
         }
 
         public bool IsMaterialExist(string materialName)
-            => data.Materials
+            => dbService.GetMaterials()
             .Any(m => m.Name == materialName);
 
         public void AddMaterial(string materialName, int measurementId)
@@ -82,9 +79,7 @@ namespace EateryPOSSystem.Services
                 MeasurementId = measurementId
             };
 
-            data.Materials.Add(material);
-
-            data.SaveChanges();
+            dbService.AddMaterial(material);
         }
 
         public void AddTempWarehouseReceipt(int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId)
@@ -102,21 +97,19 @@ namespace EateryPOSSystem.Services
                 UnitPrice = unitPrice
             };
 
-            data.TempWarehouseReceipts.Add(tempWarehouseReceipt);
-
-            data.SaveChanges();
+            dbService.AddTempWarehouseReceipt(tempWarehouseReceipt);
         }
 
         public WarehouseReceipt LastWarehouseReceiptInDb()
-            => data.WarehouseReceipts.OrderBy(wr => wr.ReceiptNumber).LastOrDefault();
+            => dbService.GetWarehouseReceipts().OrderBy(wr => wr.ReceiptNumber).LastOrDefault();
 
         public bool DbTempWarehouseReceiptsEmpty()
-            => !data.TempWarehouseReceipts.Any();
+            => !dbService.GetTempWarehouseReceipts().Any();
 
         public IEnumerable<WarehouseReceipt> AddWarehouseReceiptListByReceiptNumber(int receiptNumber, int lastReceiptNumberInDb)
         {
-            var warehouseReceiptList = data
-                    .TempWarehouseReceipts
+            var warehouseReceiptList = dbService
+                    .GetTempWarehouseReceipts()
                     .Where(twr => twr.ReceiptNumber == receiptNumber)
                     .Select(twr => new WarehouseReceipt
                     {
@@ -134,27 +127,20 @@ namespace EateryPOSSystem.Services
                     })
                     .ToList();
 
-            data.WarehouseReceipts.AddRange(warehouseReceiptList);
+            dbService.AddWarehouseReceiptRange(warehouseReceiptList);
 
-            data.TempWarehouseReceipts
-                .RemoveRange(data.TempWarehouseReceipts.Where(twr => twr.ReceiptNumber == receiptNumber));
-
-            data.SaveChanges();
+            dbService.RemoveTempWarehouseReceiptsRangeByReceiptNumber(receiptNumber);
 
             return warehouseReceiptList;
         }
 
         public void AddReceiptsMaterialsToWarehouse(IEnumerable<WarehouseReceipt> warehouseReceiptList)
         {
-            var currentWarehouse = warehouseReceiptList
+            var currentWarehouseId = warehouseReceiptList
                     .FirstOrDefault()
                     .WarehouseId;
 
-            var materialIdsInWarehouse = data
-                .WarehouseMaterials
-                .Where(wm => wm.WarehouseId == currentWarehouse)
-                .Select(wm => wm.MaterialId)
-                .ToList();
+            var materialIdsInWarehouse = dbService.GetWarehouseMaterialIdsByWarehouseId(currentWarehouseId).ToList();
 
             foreach (var receipt in warehouseReceiptList)
             {
@@ -164,20 +150,20 @@ namespace EateryPOSSystem.Services
                 {
                     var newWarehouseMaterial = new WarehouseMaterial
                     {
-                        WarehouseId = currentWarehouse,
+                        WarehouseId = currentWarehouseId,
                         MaterialId = materialId
                     };
 
                     materialIdsInWarehouse.Add(materialId);
 
-                    data.WarehouseMaterials.Add(newWarehouseMaterial);
-
-                    data.SaveChanges();
+                    dbService.AddWarehouseMaterial(newWarehouseMaterial);
                 }
 
-                var currentWarehouseMaterialQuantity = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Quantity;
+                var currentWarehouseMaterialQuantity = dbService.
+                    GetWarehouseMaterialByWarehouseIdAndMaterialId(currentWarehouseId, materialId).Quantity;
 
-                var currentWarehouseMaterialPrice = data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == materialId).Price;
+                var currentWarehouseMaterialPrice = dbService.
+                    GetWarehouseMaterialByWarehouseIdAndMaterialId(currentWarehouseId, materialId).Price;
 
                 var currentTotalAmount = currentWarehouseMaterialQuantity * currentWarehouseMaterialPrice;
 
@@ -185,96 +171,48 @@ namespace EateryPOSSystem.Services
 
                 currentWarehouseMaterialPrice = (currentTotalAmount + receipt.Quantity * receipt.UnitPrice) / currentWarehouseMaterialQuantity;
 
-                data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Quantity = currentWarehouseMaterialQuantity;
-                data.WarehouseMaterials.FirstOrDefault(wm => wm.MaterialId == receipt.MaterialId).Price = currentWarehouseMaterialPrice;
-            }
+                dbService.UpdateWareHouseMaterialQuantity(currentWarehouseId, materialId, currentWarehouseMaterialQuantity);
 
-            data.SaveChanges();
+                dbService.UpdateWarehouseMaterialPrice(currentWarehouseId, materialId, currentWarehouseMaterialPrice);
+            }
         }
 
-        public IEnumerable<WarehouseServiceModel> GetWarehouses()
-            => data.Warehouses
-            .Select(w => new WarehouseServiceModel
-            {
-                Id = w.Id,
-                Name = w.Name
-            })
-            .ToList();
-
-        public IEnumerable<ProviderServiceModel> GetProviders()
-            => data.Providers
-            .Select(p => new ProviderServiceModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Number = p.Number
-            })
-            .ToList();
-
-        public IEnumerable<DocumentTypeServiceModel> GetDocumentTypes()
-            => data.DocumentTypes
-            .Select(dt => new DocumentTypeServiceModel
-            {
-                Id = dt.Id,
-                Name = dt.Name
-            })
-            .ToList();
-
-        public IEnumerable<MeasurementServiceModel> GetMeasurements()
-            => data.Measurements
-            .Select(m => new MeasurementServiceModel
-            {
-                Id = m.Id,
-                Name = m.Name
-            })
-            .ToList();
-
-        public IEnumerable<MaterialServiceModel> GetMaterials()
-            => data.Materials
-            .Select(m => new MaterialServiceModel
-            {
-                Id = m.Id,
-                Name = m.Name,
-                MeasurementId = m.Measurement.Id,
-                MeasurementName = m.Measurement.Name
-            })
-            .ToList();
 
         public IEnumerable<WarehouseMaterialServiceModel> GetAddedMaterials(int providerId, int documentNumber)
         {
-            var materials = GetMaterials();
+            var materials = dbService.GetMaterials();
 
             var receiptNumber = 0;
 
-            var currentReceipt = data.TempWarehouseReceipts
+            var currentReceipt = dbService.GetTempWarehouseReceipts()
                 .FirstOrDefault(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber);
 
             if (currentReceipt is null)
             {
-                if (!data.TempWarehouseReceipts.Any())
+                if (!dbService.GetTempWarehouseReceipts().Any())
                 {
                     receiptNumber = 1;
                 }
                 else
                 {
-                    receiptNumber = data.TempWarehouseReceipts
+                    receiptNumber = dbService.GetTempWarehouseReceipts()
                         .OrderBy(x => x.Id).Last()
                         .ReceiptNumber + 1;
                 }
             }
             else
             {
-                receiptNumber = data.TempWarehouseReceipts
+                receiptNumber = dbService.GetTempWarehouseReceipts()
                     .First(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber)
                     .ReceiptNumber;
             }
 
-            var currentTempWarehouseReceipt = data
-                .TempWarehouseReceipts
-                .Where(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber).ToList();
+            var currentTempWarehouseReceipt = dbService.GetTempWarehouseReceipts()
+                .Where(twr => twr.ProviderId == providerId & twr.DocumentNumber == documentNumber)
+                .ToList();
 
             var warehouseMaterialServiceModels = new List<WarehouseMaterialServiceModel>();
-            
+
             foreach (var tempWarehouseMaterial in currentTempWarehouseReceipt)
             {
                 var materialId = tempWarehouseMaterial.MaterialId;
@@ -297,25 +235,6 @@ namespace EateryPOSSystem.Services
 
             return warehouseMaterialServiceModels;
         }
-
-        public IEnumerable<CityServiceModel> GetCities()
-            => data.Cities
-            .Select(c => new CityServiceModel
-            {
-                Id = c.Id,
-                Name = c.Name,
-                PostalCode = c.PostalCode
-            })
-            .ToList();
-
-        public IEnumerable<AddressServiceModel> GetAddresses()
-            => data.Addresses
-            .Select(a => new AddressServiceModel
-            {
-                Id = a.Id,
-                AddressDetails = a.AddressDetails
-            })
-            .ToList();
 
         public void ImportStorekeeperData()
         {

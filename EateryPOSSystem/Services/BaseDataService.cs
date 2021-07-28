@@ -4,23 +4,22 @@
     using System.Linq;
     using AutoMapper;
     using Newtonsoft.Json;
-    using EateryPOSSystem.Data;
     using EateryPOSSystem.Data.DataTransferObjects;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Interfaces;
 
     public class BaseDataService : IBaseDataService
     {
-        private readonly EateryPOSDbContext data;
+        private readonly IDbService dbService;
         private IMapper mapper;
 
-        public BaseDataService(EateryPOSDbContext data)
+        public BaseDataService(IDbService dbService)
         {
-            this.data = data;
+            this.dbService = dbService;
         }
 
         public bool IsCityExist(string cityName)
-            => data.Cities.Any(c => c.Name == cityName);
+            => dbService.GetCities().Any(c => c.Name == cityName);
 
         public void AddCity(string cityName, int? postalCode)
         {
@@ -35,12 +34,11 @@
                 PostalCode = postalCode
             };
 
-            data.Cities.Add(city);
-            data.SaveChanges();
+            dbService.AddCity(city);
         }
 
         public bool IsDocumentTypeExist(string documentTypeName)
-            => data.DocumentTypes.Any(dt => dt.Name == documentTypeName);
+            => dbService.GetDocumentTypes().Any(dt => dt.Name == documentTypeName);
 
         public void AddDocumentType(string documentTypeName)
         {
@@ -54,12 +52,11 @@
                 Name = documentTypeName
             };
 
-            data.DocumentTypes.Add(documentType);
-            data.SaveChanges();
+            dbService.AddDoocumentType(documentType);
         }
 
         public bool IsMeasurementExist(string measurementName)
-            => data.Measurements.Any(m => m.Name == measurementName);
+            => dbService.GetMeasurements().Any(m => m.Name == measurementName);
 
         public void AddMeasurement(string measurementName)
         {
@@ -73,12 +70,11 @@
                 Name = measurementName
             };
 
-            data.Measurements.Add(measurement);
-            data.SaveChanges();
+            dbService.AddMeasurement(measurement);
         }
 
-        public bool IsPaymentTypeExist(string paymenttTypeName)
-            => data.PaymentTypes.Any(pt => pt.Name == paymenttTypeName);
+        public bool IsPaymentTypeExist(string paymentTypeName)
+            => dbService.GetPaymentTypes().Any(pt => pt.Name == paymentTypeName);
 
         public void AddPaymentType(string paymentTypeName)
         {
@@ -92,12 +88,11 @@
                 Name = paymentTypeName
             };
 
-            data.PaymentTypes.Add(paymentType);
-            data.SaveChanges();
+            dbService.AddPaymentType(paymentType);
         }
 
         public bool IsPositionExist(string positionName)
-            => data.Positions.Any(p => p.Name == positionName);
+            => dbService.GetPositions().Any(p => p.Name == positionName);
 
         public void AddPosition(string positionName)
         {
@@ -111,28 +106,26 @@
                 Name = positionName
             };
 
-            data.Positions.Add(position);
-            data.SaveChanges();
+            dbService.AddPosition(position);
             
             if (positionName == "Администратор")
             {
-                data.POSSystemUsers.Add(new User
+                var user = new User
                 {
                     FirstName = "Admin",
                     LastName = "Administrator",
                     UserName = "Admin",
                     Password = "AdminPass",
                     PositionId = position.Id
-                });
+                };
 
-                data.SaveChanges();
+                dbService.AddUser(user);
             }
 
         }
 
         public bool IsProductTypeExist(string productTypeName)
-            => data.ProductTypes.Any(pt => pt.Name == productTypeName);
-
+            => dbService.GetProductTypes().Any(pt => pt.Name == productTypeName);
 
         public void AddProductType(string productTypeName)
         {
@@ -146,12 +139,11 @@
                 Name = productTypeName
             };
 
-            data.ProductTypes.Add(productType);
-            data.SaveChanges();
+            dbService.AddProductType(productType);
         }
 
         public bool IsStoreExist(string storeName)
-            => data.Stores.Any(s => s.Name == storeName);
+            => dbService.GetStores().Any(s => s.Name == storeName);
 
         public void AddStore(string storeName, int tablesInStore)
         {
@@ -166,12 +158,11 @@
                 TablesInStore = tablesInStore
             };
 
-            data.Stores.Add(store);
-            data.SaveChanges();
+            dbService.AddStore(store);
         }
 
         public bool IsWarehouseExist(string warehouseName)
-            => data.Warehouses.Any(w => w.Name == warehouseName);
+            => dbService.GetWarehouses().Any(w => w.Name == warehouseName);
 
         public void AddWarehouse(string warehouseName)
         {
@@ -185,9 +176,9 @@
                 Name = warehouseName
             };
 
-            data.Warehouses.Add(warehouse);
-            data.SaveChanges();
+            dbService.AddWarehouse(warehouse);
         }
+
 
         public void ImportBaseData()
         {
@@ -204,7 +195,7 @@
             {
                 AddCity(city.Name, city.PostalCode);
             }
-            
+
             foreach (var documentType in inputData.DocumentTypes)
             {
                 AddDocumentType(documentType.Name);

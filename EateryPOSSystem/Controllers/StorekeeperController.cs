@@ -1,24 +1,22 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
+    using System.Linq;
+    using Microsoft.AspNetCore.Mvc;
     using EateryPOSSystem.Data;
-    using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Models.Storekeeper;
     using EateryPOSSystem.Services.Interfaces;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     public class StorekeeperController : Controller
     {
-        private EateryPOSDbContext data;
-        private IStorekeeperService storekeeper;
+        private readonly EateryPOSDbContext data;
+        private readonly IStorekeeperService storekeeper;
+        private readonly IDbService dbService;
 
-        public StorekeeperController(IStorekeeperService storekeeper, EateryPOSDbContext data)
+        public StorekeeperController(EateryPOSDbContext data, IStorekeeperService storekeeper, IDbService dbService)
         {
-            this.storekeeper = storekeeper;
             this.data = data;
+            this.storekeeper = storekeeper;
+            this.dbService = dbService;
         }
 
         public IActionResult AddAddress()
@@ -50,11 +48,11 @@
         {
             var newAddMaterialToWarehouseModel = new AddMaterialToWarehouseFormModel_1
             {
-                Warehouses = storekeeper.GetWarehouses(),
+                Warehouses = dbService.GetWarehouses(),
 
-                DocumentTypes = storekeeper.GetDocumentTypes(),
+                DocumentTypes = dbService.GetDocumentTypes(),
 
-                Providers = storekeeper.GetProviders()
+                Providers = dbService.GetProviders()
             };
 
             return View(newAddMaterialToWarehouseModel);
@@ -64,7 +62,7 @@
         public IActionResult AddMaterialToWarehouse_1(AddMaterialToWarehouseFormModel_1 warehouseMaterial)
         {
 
-            warehouseMaterial.Warehouses = storekeeper.GetWarehouses();
+            warehouseMaterial.Warehouses = dbService.GetWarehouses();
 
             if (!warehouseMaterial
                 .Warehouses
@@ -75,7 +73,7 @@
                 return View(warehouseMaterial);
             }
 
-            warehouseMaterial.DocumentTypes = storekeeper.GetDocumentTypes();
+            warehouseMaterial.DocumentTypes = dbService.GetDocumentTypes();
 
             if (!warehouseMaterial
                 .DocumentTypes
@@ -86,7 +84,7 @@
                 return View(warehouseMaterial);
             }
 
-            warehouseMaterial.Providers = storekeeper.GetProviders();
+            warehouseMaterial.Providers = dbService.GetProviders();
 
             if (!warehouseMaterial
                 .Providers
@@ -129,7 +127,7 @@
                 DocumentNumber = warehouseMaterial.DocumentNumber,
                 DocumentDate = warehouseMaterial.DocumentDate,
                 WarehouseId = warehouseMaterial.WarehouseId,
-                Materials = storekeeper.GetMaterials(),
+                Materials = dbService.GetMaterials(),
                 AddedMaterials = addedMaterials
             };
 
@@ -139,7 +137,7 @@
         [HttpPost]
         public IActionResult AddMaterialToWarehouse_2(string addButton, string saveButton, AddMaterialToWarehouseFormModel_2 warehouseMaterial)
         {
-            warehouseMaterial.Materials = storekeeper.GetMaterials();
+            warehouseMaterial.Materials = dbService.GetMaterials();
 
             warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId, warehouseMaterial.DocumentNumber);
 
@@ -220,7 +218,7 @@
         {
             var newAddMaterialModel = new AddMaterialFormModel
             {
-                Measurements = storekeeper.GetMeasurements()
+                Measurements = dbService.GetMeasurements()
             };
 
             return View(newAddMaterialModel);
@@ -230,7 +228,7 @@
         public IActionResult AddMaterial(AddMaterialFormModel material)
         {
 
-            material.Measurements = storekeeper.GetMeasurements();
+            material.Measurements = dbService.GetMeasurements();
 
             var materialExists = storekeeper.IsMaterialExist(material.Name);
 
@@ -255,8 +253,8 @@
         {
             var newProvider = new AddProviderFormModel
             {
-                Cities = storekeeper.GetCities(),
-                Addresses = storekeeper.GetAddresses()
+                Cities = dbService.GetCities(),
+                Addresses = dbService.GetAddresses()
             };
 
             return View(newProvider);
@@ -265,8 +263,8 @@
         [HttpPost]
         public IActionResult AddProvider(AddProviderFormModel provider)
         {
-            provider.Cities = storekeeper.GetCities();
-            provider.Addresses = storekeeper.GetAddresses();
+            provider.Cities = dbService.GetCities();
+            provider.Addresses = dbService.GetAddresses();
 
             var providerlExists = storekeeper.IsProviderExist(provider.Name);
 
@@ -287,11 +285,5 @@
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult ImportStorekeeperData()
-        {
-            storekeeper.ImportStorekeeperData();
-
-            return RedirectToAction("Index", "Home");
-        }
     }
 }

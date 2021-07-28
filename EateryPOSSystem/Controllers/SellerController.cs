@@ -1,27 +1,26 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
-    using EateryPOSSystem.Services;
-    using EateryPOSSystem.Models.Seller;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
-    using System.Diagnostics;
-    using EateryPOSSystem.Services.Interfaces;
     using System.Linq;
+    using Microsoft.AspNetCore.Mvc;
+    using EateryPOSSystem.Models.Seller;
+    using EateryPOSSystem.Services.Interfaces;
 
     public class SellerController : Controller
     {
-        private ISellerService seller;
+        private readonly ISellerService seller;
+        private readonly IDbService dbService;
 
-        public SellerController(ISellerService seller)
+        public SellerController(IDbService dbService, ISellerService seller)
         {
             this.seller = seller;
+            this.dbService = dbService;
         }
 
         public IActionResult ChooseStore()
         {
             var table = new ChooseStoreFormModel
             {
-                Stores = seller.GetStores()
+                Stores = dbService.GetStores()
             };
 
             return View(table);
@@ -30,7 +29,7 @@
         [HttpPost]
         public IActionResult ChooseStore(ChooseStoreFormModel store)
         {
-            var stores = seller.GetStores();
+            var stores = dbService.GetStores();
 
             var chosenStore = new ChooseTableFormModel
             {

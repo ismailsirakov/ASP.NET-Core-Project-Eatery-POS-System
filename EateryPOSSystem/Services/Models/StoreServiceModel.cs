@@ -1,7 +1,6 @@
-namespace EateryPOSSystem.Models.Seller
+namespace EateryPOSSystem.Services.Models
 {
-
-    public class StoreViewModel
+    public class StoreServiceModel
     {
         public int Id { get; set; }
 
