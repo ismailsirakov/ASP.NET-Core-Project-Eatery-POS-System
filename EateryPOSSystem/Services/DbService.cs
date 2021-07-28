@@ -100,6 +100,12 @@ namespace EateryPOSSystem.Services
             data.SaveChanges();
         }
 
+        public void AddStoreProduct(StoreProduct storeProduct)
+        {
+            data.StoreProducts.Add(storeProduct);
+            data.SaveChanges();
+        }
+
         public void AddTempWarehouseReceipt(TempWarehouseReceipt tempWarehouseReceipt)
         {
             data.TempWarehouseReceipts.Add(tempWarehouseReceipt);
@@ -178,6 +184,15 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
+        public IEnumerable<ProductServiceModel> GetProducts()
+            => data.Products
+            .Select(p=> new ProductServiceModel
+            {
+                Id = p.Id,
+                Name = p.Name
+            })
+            .ToList();
+
         public IEnumerable<ProviderServiceModel> GetProviders()
             => data.Providers
             .Select(p => new ProviderServiceModel
@@ -236,6 +251,14 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
+        public IEnumerable<Recipe> GetRecipes()
+            => data.Recipes
+            .ToList();
+
+        public IEnumerable<StoreProduct> GetStoreProducts()
+            => data.StoreProducts
+            .ToList();
+
         public IEnumerable<WarehouseReceipt> GetWarehouseReceipts()
             => data.WarehouseReceipts.ToList();
 
@@ -252,9 +275,20 @@ namespace EateryPOSSystem.Services
             => data.WarehouseMaterials
             .FirstOrDefault(wm => wm.WarehouseId == warehouseId & wm.MaterialId == materialId);
 
-        public bool IsProductExistInStore(string productName, int productStoreId)
-            => data.Products.Any(p => p.Name == productName & p.StoreId == productStoreId);
-       
+        public IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int productId)
+            => data.Recipes
+            .Where(r => r.Name == recipeName & r.ProductId == productId)
+            .Select(r=> new RecipeServiceModel
+            {
+                Id = r.Id,
+                Name = r.Name,
+                ProductId = r.ProductId,
+                MaterialId = r.MaterialId,
+                MeasurementName = r.Material.Measurement.Name,
+                MaterialQuantity = r.MaterialQuantity
+            })
+            .ToList();
+
         public void RemoveTempWarehouseReceiptsRangeByReceiptNumber(int receiptNumber)
             => data.TempWarehouseReceipts
             .RemoveRange(data.TempWarehouseReceipts.Where(twr => twr.ReceiptNumber == receiptNumber));

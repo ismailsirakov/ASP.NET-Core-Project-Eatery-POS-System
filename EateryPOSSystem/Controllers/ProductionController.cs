@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
     using EateryPOSSystem.Models.Production;
     using EateryPOSSystem.Services.Interfaces;
+    using static ControllerConstants;
 
     public class ProductionController : Controller
     {
@@ -18,72 +19,132 @@
         }
         public IActionResult AddProductToStore()
         {
-            var product = new AddProductToStoreFormModel
+            var storeProduct = new AddProductToStoreFormModel
             {
                 Measurements = dbService.GetMeasurements(),
-                ProductTypes = dbService.GetProductTypes(),
+                Products = dbService.GetProducts(),
                 Stores = dbService.GetStores(),
             };
 
-            return View(product);
+            return View(storeProduct);
         }
 
         [HttpPost]
-        public IActionResult AddProductToStore(AddProductToStoreFormModel product)
+        public IActionResult AddProductToStore(AddProductToStoreFormModel storeProduct)
         {
-            product.Measurements = dbService.GetMeasurements();
+            storeProduct.Measurements = dbService.GetMeasurements();
 
-            if (!product
+            if (!storeProduct
                 .Measurements
-                .Any(m => m.Id == product.MeasurementId))
+                .Any(m => m.Id == storeProduct.MeasurementId))
             {
-                ModelState.AddModelError(nameof(product.MeasurementId), ControllerConstants.notExistingModelInDB);
+                ModelState.AddModelError(nameof(storeProduct.MeasurementId), notExistingModelInDB);
 
-                return View(product);
+                return View(storeProduct);
             }
 
-            product.ProductTypes = dbService.GetProductTypes();
+            storeProduct.Stores = dbService.GetStores();
 
-            if (!product
-                .ProductTypes
-                .Any(p => p.Id == product.ProductTypeId))
-            {
-                ModelState.AddModelError(nameof(product.ProductTypeId), ControllerConstants.notExistingModelInDB);
-
-                return View(product);
-            }
-
-            product.Stores = dbService.GetStores();
-
-            if (!product
+            if (!storeProduct
                 .Stores
-                .Any(s => s.Id == product.StoreId))
+                .Any(s => s.Id == storeProduct.StoreId))
             {
-                ModelState.AddModelError(nameof(product.StoreId), ControllerConstants.notExistingModelInDB);
+                ModelState.AddModelError(nameof(storeProduct.StoreId), notExistingModelInDB);
 
-                return View(product);
+                return View(storeProduct);
             }
 
-            if (dbService.IsProductExistInStore(product.Name, product.StoreId))
+            if (production.IsProductExistInStore(storeProduct.ProductId, storeProduct.StoreId))
             {
-                ModelState.AddModelError(nameof(product.StoreId), ControllerConstants.existingModelInDB);
+                ModelState.AddModelError(nameof(storeProduct.StoreId), existingModelInDB);
 
-                return View(product);
+                return View(storeProduct);
             }
 
             if (!ModelState.IsValid)
             {
-                return View(product);
+                return View(storeProduct);
             }
 
-            production.AddProduct(product.Name,
-                                    product.StoreId,
-                                    product.MeasurementId,
-                                    product.ProductTypeId,
-                                    product.Quantity, 
-                                    product.Price);
+            production.AddProductToStore(storeProduct.ProductId,
+                                    storeProduct.StoreId,
+                                    storeProduct.MeasurementId,
+                                    storeProduct.Quantity,
+                                    storeProduct.Price);
 
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AddRecipe()
+        {
+            var recipe = new AddRecipeFormModel
+            {
+                Products = dbService.GetProducts(),
+                Materials = dbService.GetMaterials()
+            };
+
+            return View(recipe);
+        }
+
+        [HttpPost]
+        public IActionResult AddRecipeFirstPage(AddRecipeFormModel recipe)
+        {
+            recipe.Products = dbService.GetProducts();
+
+            if (production.IsProductWithIdExist(recipe.ProductId))
+            {
+                ModelState.AddModelError(nameof(recipe.ProductId), notExistingModelInDB);
+                return View(recipe);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(recipe);
+            }
+
+            var productName = recipe.Products.FirstOrDefault(p => p.Id == recipe.ProductId).Name;
+
+            recipe.RecipeInfo = $"Име на рецепта: {recipe.Name} - За продукт: {productName}";
+
+            return RedirectToAction("AddRecipeSecondPage", "Production", recipe);
+        }
+
+        [HttpPost]
+        public IActionResult AddRecipeSecondPage(string addButton, AddRecipeFormModel recipe)
+        {
+
+            recipe.Materials = dbService.GetMaterials();
+
+            if (production.IsMaterialWithIdExist(recipe.MaterialId))
+            {
+                ModelState.AddModelError(nameof(recipe.MaterialId), notExistingModelInDB);
+                return View(recipe);
+            }
+
+            if (production.IsMaterialInRecipeExist(recipe.Name, recipe.ProductId, recipe.MaterialId))
+            {
+                ModelState.AddModelError(nameof(recipe.MaterialId), existingMaterialInRecipe);
+
+                return View(recipe);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(recipe);
+            }
+
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
+
+            if (addButton != null)
+            {
+                production.AddRecipe(recipe.Name, recipe.ProductId, recipe.MaterialId, recipe.MaterialQuantity);
+
+                recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
+
+                return View(recipe);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

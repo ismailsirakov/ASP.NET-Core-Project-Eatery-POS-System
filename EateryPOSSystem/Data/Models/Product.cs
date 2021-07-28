@@ -10,7 +10,7 @@ namespace EateryPOSSystem.Data.Models
         public Product()
         {
             Recipes = new HashSet<Recipe>();
-            SoldProducts = new HashSet<SoldProduct>();
+            StoreProducts = new HashSet<StoreProduct>();
         }
         public int Id { get; set; }
 
@@ -18,26 +18,12 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(ProductNameMaxLength)]
         public string Name { get; set; }
 
-        public int StoreId { get; set; }
-
-        public Store Store { get; set; }
-
         public int ProductTypeId { get; set; }
 
         public ProductType ProductType { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-
-        public int MeasurementId { get; set; }
-
-        public Measurement Measurement { get; set; }
-
-        [Column(TypeName = "decimal(18,3)")]
-        public decimal Quantity { get; set; }
-
         public ICollection<Recipe> Recipes { get; set; }
 
-        public ICollection<SoldProduct> SoldProducts { get; set; }
+        public ICollection<StoreProduct> StoreProducts { get; set; }
     }
 }

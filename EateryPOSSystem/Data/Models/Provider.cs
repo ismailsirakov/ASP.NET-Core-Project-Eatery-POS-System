@@ -16,7 +16,6 @@ namespace EateryPOSSystem.Data.Models
         [Required]
         [MaxLength(ProviderNameMaxLength)]
         public string Name { get; set; }
-
         
         public int Number { get; set; }
 

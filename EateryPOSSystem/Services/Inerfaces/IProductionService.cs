@@ -5,8 +5,16 @@ namespace EateryPOSSystem.Services.Interfaces
 
     public interface IProductionService
     {
-        
+        bool IsProductExistInStore(int productId, int storeId);
 
-        void AddProduct(string productName, int storeId, int measurementId, int productTypeId, decimal quantity, decimal price);
+        bool IsMaterialWithIdExist(int materialId);
+
+        bool IsProductWithIdExist(int productId);
+
+        bool IsMaterialInRecipeExist(string recipeName, int productId, int materialId);
+
+        void AddRecipe(string recipeName, int productId, int materialId, decimal quantity);
+
+        void AddProductToStore(int productId, int storeId, int measurementlId, decimal quantity, decimal price);
     }
 }

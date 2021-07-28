@@ -42,6 +42,8 @@
 
         public DbSet<Store> Stores { get; init; }
 
+        public DbSet<StoreProduct> StoreProducts { get; init; }
+
         public DbSet<TempWarehouseReceipt> TempWarehouseReceipts { get; init; }
 
         public DbSet<Warehouse> Warehouses { get; init; }
@@ -104,27 +106,15 @@
                 .HasIndex(x => x.Name)
                 .IsUnique();
 
-            modelBuilder.Entity<Product>(x =>
-            {
-                x.HasOne(x => x.Measurement)
-                .WithMany(x => x.Products)
-                .HasForeignKey(x => x.MeasurementId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
+            modelBuilder.Entity<Product>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
 
             modelBuilder.Entity<Product>(x =>
             {
                 x.HasOne(x => x.ProductType)
                 .WithMany(x => x.Products)
                 .HasForeignKey(x => x.ProductTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<Product>(x =>
-            {
-                x.HasOne(x => x.Store)
-                .WithMany(x => x.Products)
-                .HasForeignKey(x => x.StoreId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -171,9 +161,9 @@
 
             modelBuilder.Entity<SoldProduct>(x =>
             {
-                x.HasOne(x => x.Product)
+                x.HasOne(x => x.StoreProduct)
                 .WithMany(x => x.SoldProducts)
-                .HasForeignKey(x => x.ProductId)
+                .HasForeignKey(x => x.StoreProductId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -196,6 +186,22 @@
             modelBuilder.Entity<Store>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<StoreProduct>(x =>
+            {
+                x.HasOne(x => x.Measurement)
+                .WithMany(x => x.StoreProducts)
+                .HasForeignKey(x => x.MeasurementId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<StoreProduct>(x =>
+            {
+                x.HasOne(x => x.Store)
+                .WithMany(x => x.StoreProducts)
+                .HasForeignKey(x => x.StoreId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
 
             modelBuilder.Entity<User>(x =>
             {

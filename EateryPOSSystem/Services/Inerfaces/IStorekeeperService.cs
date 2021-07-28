@@ -13,7 +13,7 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddTempWarehouseReceipt(int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId);
 
-        bool IsMaterialExist(string materialName);
+        bool IsMaterialWhitNameExist(string materialName);
 
         void AddMaterial(string materialName, int measurementId);
 

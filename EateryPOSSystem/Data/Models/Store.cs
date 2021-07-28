@@ -8,7 +8,7 @@ namespace EateryPOSSystem.Data.Models
     {
         public Store()
         {
-            Products = new HashSet<Product>();
+            StoreProducts = new HashSet<StoreProduct>();
         }
         public int Id { get; set; }
 
@@ -18,6 +18,6 @@ namespace EateryPOSSystem.Data.Models
 
         public int TablesInStore { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+        public ICollection<StoreProduct> StoreProducts { get; set; }
     }
 }

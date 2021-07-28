@@ -230,7 +230,7 @@
 
             material.Measurements = dbService.GetMeasurements();
 
-            var materialExists = storekeeper.IsMaterialExist(material.Name);
+            var materialExists = storekeeper.IsMaterialWhitNameExist(material.Name);
 
             if (materialExists)
             {

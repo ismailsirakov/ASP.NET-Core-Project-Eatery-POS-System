@@ -62,13 +62,13 @@ namespace EateryPOSSystem.Services
             dbService.AddProvider(provider);
         }
 
-        public bool IsMaterialExist(string materialName)
+        public bool IsMaterialWhitNameExist(string materialName)
             => dbService.GetMaterials()
             .Any(m => m.Name == materialName);
 
         public void AddMaterial(string materialName, int measurementId)
         {
-            if (IsMaterialExist(materialName))
+            if (IsMaterialWhitNameExist(materialName))
             {
                 return;
             }

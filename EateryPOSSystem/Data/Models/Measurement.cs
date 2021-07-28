@@ -9,7 +9,7 @@ namespace EateryPOSSystem.Data.Models
         public Measurement()
         {
             Materials = new HashSet<Material>();
-            Products = new HashSet<Product>();
+            StoreProducts = new HashSet<StoreProduct>();
             SoldProducts = new HashSet<SoldProduct>();
         }
 
@@ -21,7 +21,7 @@ namespace EateryPOSSystem.Data.Models
 
         public ICollection<Material> Materials { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+        public ICollection<StoreProduct> StoreProducts { get; set; }
 
         public ICollection<SoldProduct> SoldProducts { get; set; }
     }

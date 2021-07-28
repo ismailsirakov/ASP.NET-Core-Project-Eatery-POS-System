@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Data.DataConstants;
@@ -19,9 +20,6 @@ namespace EateryPOSSystem.Data.Models
         public int MaterialId { get; set; }
 
         public Material Material { get; set; }
-
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal MaterialPrice { get; set; }
 
         [Column(TypeName = "decimal(18,3)")]
         public decimal MaterialQuantity { get; set; }
