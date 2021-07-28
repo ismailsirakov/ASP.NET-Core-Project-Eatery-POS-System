@@ -5,17 +5,16 @@
 }
 
 <div>
-    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-2 col-xl-8">
-        <div class="row mt-2 mb-2 col-10 text-center">
-            <h3 class="text-dark text-center">Добавяне на рецепта </h3>
-        </div>
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
         <form method="post">
-            <div class="row">
-                <div class="form-group col-2">
+            <h3 class="text-center">Добавяне на рецепта </h3>
+                <div class="form-group">
+                    <label asp-for="Name">Име на рецептата</label>
                     <input asp-for="Name" class="form-control">
                     <span asp-validation-for="Name" class="small text-danger"></span>
                 </div>
-                <div class="form-group col-6">
+                <div class="form-group">
+                    <label asp-for="ProductId">За кой продукт</label>
                     <select asp-for="ProductId" class="form-control">
                         @foreach (var product in Model.Products)
                         {
@@ -25,9 +24,8 @@
                         }
                     </select>
                 </div>
-            </div>
             <div class="text-center">
-                <input class="btn btn-primary m-1" type="submit" value="Запази документ" />
+                <input class="btn btn-primary m-1" type="submit" value="Следваща страница" />
             </div>
         </form>
     </div>

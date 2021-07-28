@@ -12,6 +12,8 @@ namespace EateryPOSSystem.Services.Models
 
         public int MaterialId { get; set; }
 
+        public string MaterialName { get; set; }
+
         public string MeasurementName { get; set; }
 
         public decimal MaterialQuantity { get; set; }

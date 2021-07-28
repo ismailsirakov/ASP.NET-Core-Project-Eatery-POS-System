@@ -5,27 +5,26 @@
 }
 
 <div>
-    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-2 col-xl-8">
-        <div class="row mt-2 mb-2 col-10 text-center">
-            <h3 class="text-dark text-center">Добавяне на рецепта </h3>
+    <div class="col-sm-12 offset-md-4 col-md-4 col-lg-6 offset-xl-3 col-xl-6">
+        <div class="text-center">
+            <h3 class="text-dark">Добавяне на рецепта </h3>
         </div>
-        <div class="row mt-2 mb-2 col-10 text-center">
-            <h4 class="text-dark text-center">@Model.RecipeInfo</h4>
+        <div class="mt-2 mb-2 text-center">
+            <h5 class="text-dark">@Model.RecipeInfo</h5>
         </div>
         <form method="post">
             <div style="overflow-x: auto">
-
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width: 34%;" class="text-center">
-                                Име на материала
+                            <th style="width: 50%;" class="text-center">
+                                Име на материала     -   М.ед.
                             </th>
-                            <th style="width: 17%;" class="text-center">
-                                М.ед.
-                            </th>
-                            <th style="width: 15%;" class="text-center">
+                            <th style="width: 20%;" class="text-center">
                                 Количество
+                            </th>
+                            <th style="width: 20%;" class="text-center">
+
                             </th>
                         </tr>
                     </thead>
@@ -34,13 +33,13 @@
                         {
                             <tr>
                                 <td>
-                                    @material.Name
-                                </td>
-                                <td class="text-center">
-                                    @material.MeasurementName
+                                    @material.MaterialName - @material.MeasurementName
                                 </td>
                                 <td class="text-right">
                                     @material.MaterialQuantity.ToString("#,##0.000")
+                                </td>
+                                <td class="text-right">
+                                   
                                 </td>
                             </tr>
                         }
@@ -49,7 +48,7 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-6">
+                <div class="form-group col-7">
                     <select asp-for="MaterialId" class="form-control">
                         @foreach (var material in Model.Materials)
                         {
@@ -63,12 +62,12 @@
                     <input asp-for="MaterialQuantity" class="form-control">
                     <span asp-validation-for="MaterialQuantity" class="small text-danger"></span>
                 </div>
-                <div class="col-2 mt-2 mb-5">
-                    <input class="btn btn-outline-primary h-75" name="addButton" type="submit" value="Добави материала към рецептата" />
+                <div class="col-2">
+                    <input class="btn btn-outline-primary" type="submit" name="addButton" value="Добави" />
                 </div>
             </div>
             <div class="text-center">
-                <input class="btn btn-primary m-1" type="submit" value="Запази рецептата" />
+                <input class="btn btn-primary m-2" type="submit" name="saveButton" value="Върни се на главна страница" />
             </div>
         </form>
     </div>

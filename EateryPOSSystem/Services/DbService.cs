@@ -284,6 +284,7 @@ namespace EateryPOSSystem.Services
                 Name = r.Name,
                 ProductId = r.ProductId,
                 MaterialId = r.MaterialId,
+                MaterialName = r.Material.Name,
                 MeasurementName = r.Material.Measurement.Name,
                 MaterialQuantity = r.MaterialQuantity
             })

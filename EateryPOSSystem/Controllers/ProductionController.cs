@@ -17,6 +17,40 @@
             this.dbService = dbService;
             this.production = production;
         }
+
+        public IActionResult AddProduct()
+            => View(new AddProductFormModel { ProductTypes = dbService.GetProductTypes() });
+
+        [HttpPost]
+        public IActionResult AddProduct(AddProductFormModel product)
+        {
+            product.ProductTypes = dbService.GetProductTypes();
+
+            var productTypeExist = product.ProductTypes.Any(p => p.Id == product.ProductTypeId);
+
+            if (!productTypeExist)
+            {
+                ModelState.AddModelError(nameof(product.ProductTypeId), notExistingModelInDB);
+
+                return View(product);
+            }
+
+            if (dbService.GetProducts().Any(p => p.Name == product.Name))
+            {
+                ModelState.AddModelError(nameof(product.Name), existingModelInDB);
+
+                return View(product);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(product);
+            }
+
+            production.AddProduct(product.Name, product.ProductTypeId);
+
+            return RedirectToAction("Index", "Home");
+        }
         public IActionResult AddProductToStore()
         {
             var storeProduct = new AddProductToStoreFormModel
@@ -75,7 +109,7 @@
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult AddRecipe()
+        public IActionResult AddRecipeFirstPage()
         {
             var recipe = new AddRecipeFormModel
             {
@@ -91,7 +125,7 @@
         {
             recipe.Products = dbService.GetProducts();
 
-            if (production.IsProductWithIdExist(recipe.ProductId))
+            if (!production.IsProductWithIdExist(recipe.ProductId))
             {
                 ModelState.AddModelError(nameof(recipe.ProductId), notExistingModelInDB);
                 return View(recipe);
@@ -109,22 +143,24 @@
             return RedirectToAction("AddRecipeSecondPage", "Production", recipe);
         }
 
+        public IActionResult AddRecipeSecondPage(AddRecipeFormModel recipe)
+        {
+            recipe.Materials = dbService.GetMaterials();
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
+
+            return View(recipe);
+        }
+
         [HttpPost]
-        public IActionResult AddRecipeSecondPage(string addButton, AddRecipeFormModel recipe)
+        public IActionResult AddRecipeSecondPage(string addButton, string saveButton, AddRecipeFormModel recipe)
         {
 
             recipe.Materials = dbService.GetMaterials();
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
 
-            if (production.IsMaterialWithIdExist(recipe.MaterialId))
+            if (!production.IsMaterialWithIdExist(recipe.MaterialId))
             {
                 ModelState.AddModelError(nameof(recipe.MaterialId), notExistingModelInDB);
-                return View(recipe);
-            }
-
-            if (production.IsMaterialInRecipeExist(recipe.Name, recipe.ProductId, recipe.MaterialId))
-            {
-                ModelState.AddModelError(nameof(recipe.MaterialId), existingMaterialInRecipe);
-
                 return View(recipe);
             }
 
@@ -133,10 +169,16 @@
                 return View(recipe);
             }
 
-            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
 
             if (addButton != null)
             {
+                if (production.IsMaterialInRecipeExist(recipe.Name, recipe.ProductId, recipe.MaterialId))
+                {
+                    ModelState.AddModelError(nameof(recipe.MaterialQuantity), existingMaterialInRecipe);
+
+                    return View(recipe);
+                }
+
                 production.AddRecipe(recipe.Name, recipe.ProductId, recipe.MaterialId, recipe.MaterialQuantity);
 
                 recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
@@ -144,7 +186,12 @@
                 return View(recipe);
             }
 
-            return RedirectToAction("Index", "Home");
+            if (saveButton != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(recipe);
         }
     }
 }

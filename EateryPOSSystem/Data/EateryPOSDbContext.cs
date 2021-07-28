@@ -142,11 +142,6 @@
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
-
-            modelBuilder.Entity<Recipe>()
-                .HasIndex(x => x.Name)
-                .IsUnique();
-
             modelBuilder.Entity<Recipe>(x =>
             {
                 x.HasOne(x => x.Product)

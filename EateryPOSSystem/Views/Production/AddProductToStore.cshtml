@@ -1,7 +1,7 @@
 ﻿@model AddProductToStoreFormModel
 
 @{
-    ViewData["Title"] = "Add Product";
+    ViewData["Title"] = "Add Product To Store";
 }
 
 <div class="row">
@@ -18,7 +18,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="ProductId">Вид продукт</label>
+                <label asp-for="ProductId">Избери продукт</label>
                 <select asp-for="ProductId" class="form-control">
                     @foreach (var product in Model.Products)
                     {

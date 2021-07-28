@@ -43,6 +43,17 @@ namespace EateryPOSSystem.Services
             dbService.AddRecipe(recipe);
         }
 
+        public void AddProduct(string productName, int productTypeId)
+        {
+            var product = new Product
+            {
+                Name = productName,
+                ProductTypeId = productTypeId
+            };
+
+            dbService.AddProduct(product);
+        }
+
         public void AddProductToStore(int productId, int storeId, int measurementlId, decimal quantity, decimal price)
         {
             var storeProduct = new StoreProduct

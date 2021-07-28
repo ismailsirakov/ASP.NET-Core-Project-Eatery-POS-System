@@ -15,6 +15,8 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddRecipe(string recipeName, int productId, int materialId, decimal quantity);
 
+        void AddProduct(string productName, int productTypeId);
+
         void AddProductToStore(int productId, int storeId, int measurementlId, decimal quantity, decimal price);
     }
 }

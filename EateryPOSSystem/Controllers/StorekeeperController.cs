@@ -5,7 +5,7 @@
     using EateryPOSSystem.Data;
     using EateryPOSSystem.Models.Storekeeper;
     using EateryPOSSystem.Services.Interfaces;
-
+    using static ControllerConstants;
     public class StorekeeperController : Controller
     {
         private readonly EateryPOSDbContext data;
@@ -29,7 +29,7 @@
 
             if (addressExists)
             {
-                ModelState.AddModelError(nameof(address.AddressDetail), ControllerConstants.existingModelInDB);
+                ModelState.AddModelError(nameof(address.AddressDetail), existingModelInDB);
 
                 return View(address);
             }
@@ -68,7 +68,7 @@
                 .Warehouses
                 .Any(w => w.Id == warehouseMaterial.WarehouseId))
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.WarehouseId), ControllerConstants.notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.WarehouseId), notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
@@ -79,7 +79,7 @@
                 .DocumentTypes
                 .Any(dt => dt.Id == warehouseMaterial.DocumentTypeId))
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.DocumentTypeId), ControllerConstants.notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.DocumentTypeId), notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
@@ -90,7 +90,7 @@
                 .Providers
                 .Any(dt => dt.Id == warehouseMaterial.ProviderId))
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.ProviderId), ControllerConstants.notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.ProviderId), notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
@@ -110,14 +110,19 @@
                 .FirstOrDefault(dt => dt.Id == warehouseMaterial.DocumentTypeId)
                 .Name;
 
-            warehouseMaterial.ReceiptInfo = $"Доставчик: {providerName} - {documentTypeName} №{warehouseMaterial.DocumentNumber}/{warehouseMaterial.DocumentDate:d} - Склад: {warehouseName}";
+            warehouseMaterial
+                .ReceiptInfo = $"Доставчик: {providerName} " +
+                $"- {documentTypeName} №{warehouseMaterial.DocumentNumber}" +
+                $"/{warehouseMaterial.DocumentDate:d} -" +
+                $" Склад: {warehouseName}";
 
             return RedirectToAction("AddMaterialToWarehouse_2", "Storekeeper", warehouseMaterial);
         }
 
         public IActionResult AddMaterialToWarehouse_2(AddMaterialToWarehouseFormModel_1 warehouseMaterial)
         {
-            var addedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId, warehouseMaterial.DocumentNumber);
+            var addedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId,
+                                                                warehouseMaterial.DocumentNumber);
 
             var newWarehouseMaterial = new AddMaterialToWarehouseFormModel_2
             {
@@ -135,11 +140,14 @@
         }
 
         [HttpPost]
-        public IActionResult AddMaterialToWarehouse_2(string addButton, string saveButton, AddMaterialToWarehouseFormModel_2 warehouseMaterial)
+        public IActionResult AddMaterialToWarehouse_2(string addButton,
+                                                        string saveButton,
+                                                        AddMaterialToWarehouseFormModel_2 warehouseMaterial)
         {
             warehouseMaterial.Materials = dbService.GetMaterials();
 
-            warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId, warehouseMaterial.DocumentNumber);
+            warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId,
+                                                                                warehouseMaterial.DocumentNumber);
 
             var materialExist = warehouseMaterial
                 .Materials
@@ -147,7 +155,7 @@
 
             if (!materialExist)
             {
-                ModelState.AddModelError(nameof(warehouseMaterial.MaterialId), ControllerConstants.notExistingModelInDB);
+                ModelState.AddModelError(nameof(warehouseMaterial.MaterialId), notExistingModelInDB);
 
                 return View(warehouseMaterial);
             }
@@ -186,7 +194,16 @@
                 var unitPrice = warehouseMaterial.UnitPrice;
                 var materialId = warehouseMaterial.MaterialId;
 
-                storekeeper.AddTempWarehouseReceipt(receiptNumber, providerId, documentTypeId, documentNumber, documentDate, warehouseId, quantity, unitPrice, materialId);
+                storekeeper.AddTempWarehouseReceipt(
+                                        receiptNumber,
+                                        providerId, 
+                                        documentTypeId,
+                                        documentNumber,
+                                        documentDate,
+                                        warehouseId,
+                                        quantity,
+                                        unitPrice,
+                                        materialId);
 
                 warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(providerId, documentNumber);
 
@@ -204,7 +221,10 @@
                     lastReceiptNumberInDb = lastWarehouseReceiptInDb.ReceiptNumber;
                 }
 
-                var warehouseReceiptList = storekeeper.AddWarehouseReceiptListByReceiptNumber(receiptNumber, lastReceiptNumberInDb);
+                var warehouseReceiptList = storekeeper
+                    .AddWarehouseReceiptListByReceiptNumber(
+                                                          receiptNumber,
+                                                          lastReceiptNumberInDb);
 
                 storekeeper.AddReceiptsMaterialsToWarehouse(warehouseReceiptList);
 
@@ -234,7 +254,7 @@
 
             if (materialExists)
             {
-                ModelState.AddModelError(nameof(material.Name), ControllerConstants.existingModelInDB);
+                ModelState.AddModelError(nameof(material.Name), existingModelInDB);
 
                 return View(material);
             }
@@ -270,7 +290,7 @@
 
             if (providerlExists)
             {
-                ModelState.AddModelError(nameof(provider.Name), ControllerConstants.existingModelInDB);
+                ModelState.AddModelError(nameof(provider.Name), existingModelInDB);
 
                 return View(provider);
             }
@@ -285,5 +305,11 @@
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult ImportStorekeeperData()
+        {
+            storekeeper.ImportStorekeeperData();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
