@@ -255,8 +255,19 @@ namespace EateryPOSSystem.Services
             => data.Recipes
             .ToList();
 
-        public IEnumerable<StoreProduct> GetStoreProducts()
+        public IEnumerable<StoreProductServiceModel> GetStoreProducts()
             => data.StoreProducts
+            .Select(sp=> new StoreProductServiceModel
+            {
+                Id = sp.Id,
+                StoreId = sp.StoreId,
+                StoreName = sp.Store.Name,
+                ProductId = sp.ProductId,
+                ProductName = sp.Product.Name,
+                MeasurementId = sp.MeasurementId,
+                Quantity = sp.Quantity,
+                Price = sp.Price
+            })
             .ToList();
 
         public IEnumerable<WarehouseReceipt> GetWarehouseReceipts()
@@ -271,21 +282,38 @@ namespace EateryPOSSystem.Services
             .Select(wm => wm.Id)
             .ToList();
 
+        public IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterialsByWarehouseId(int warehouseId)
+            => data.WarehouseMaterials
+            .Where(wm => wm.WarehouseId == warehouseId)
+            .Select(wm=> new WarehouseMaterialServiceModel
+            {
+                Id = wm.Id,
+                WarehouseId = wm.WarehouseId,
+                WarehouseName = wm.Warehouse.Name,
+                MaterialId = wm.MaterialId,
+                MaterialName = wm.Material.Name,
+                MeasurementId = wm.Material.MeasurementId,
+                MeasurementName = wm.Material.Measurement.Name,
+                Quantity = wm.Quantity,
+                Price = wm.Price
+                })
+            .ToList();
+
         public WarehouseMaterial GetWarehouseMaterialByWarehouseIdAndMaterialId(int warehouseId, int materialId)
             => data.WarehouseMaterials
             .FirstOrDefault(wm => wm.WarehouseId == warehouseId & wm.MaterialId == materialId);
 
-        public IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int productId)
+        public IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int storeProductId)
             => data.Recipes
-            .Where(r => r.Name == recipeName & r.ProductId == productId)
+            .Where(r => r.Name == recipeName & r.StoreProductId == storeProductId)
             .Select(r=> new RecipeServiceModel
             {
                 Id = r.Id,
                 Name = r.Name,
-                ProductId = r.ProductId,
-                MaterialId = r.MaterialId,
-                MaterialName = r.Material.Name,
-                MeasurementName = r.Material.Measurement.Name,
+                StoreProductId = r.StoreProductId,
+                WarehouseMaterialId = r.WarehouseMaterialId,
+                MaterialName = r.WarehouseMaterial.Material.Name,
+                MeasurementName = r.WarehouseMaterial.Material.Measurement.Name,
                 MaterialQuantity = r.MaterialQuantity
             })
             .ToList();

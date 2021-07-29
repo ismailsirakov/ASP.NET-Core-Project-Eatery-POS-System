@@ -19,10 +19,10 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(MeasurementNameMaxLength)]
         public string Name { get; set; }
 
-        public ICollection<Material> Materials { get; set; }
+        public IEnumerable<Material> Materials { get; set; }
 
-        public ICollection<StoreProduct> StoreProducts { get; set; }
+        public IEnumerable<StoreProduct> StoreProducts { get; set; }
 
-        public ICollection<SoldProduct> SoldProducts { get; set; }
+        public IEnumerable<SoldProduct> SoldProducts { get; set; }
     }
 }

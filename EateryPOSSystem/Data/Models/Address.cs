@@ -16,6 +16,6 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(AddressDetailsMaxLength)]
         public string AddressDetails { get; set; }
 
-        public ICollection<Provider> Providers { get; set; }
+        public IEnumerable<Provider> Providers { get; set; }
     }
 }

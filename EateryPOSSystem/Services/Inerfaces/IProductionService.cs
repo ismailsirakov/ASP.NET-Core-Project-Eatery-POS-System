@@ -11,6 +11,8 @@ namespace EateryPOSSystem.Services.Interfaces
 
         bool IsProductWithIdExist(int productId);
 
+        bool IsStoreProductWithIdExist(int storeProductlId);
+
         bool IsMaterialInRecipeExist(string recipeName, int productId, int materialId);
 
         void AddRecipe(string recipeName, int productId, int materialId, decimal quantity);

@@ -73,13 +73,15 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<Recipe> GetRecipes();
 
-        IEnumerable<StoreProduct> GetStoreProducts();
+        IEnumerable<StoreProductServiceModel> GetStoreProducts();
 
         IEnumerable<WarehouseReceipt> GetWarehouseReceipts();
 
         IEnumerable<TempWarehouseReceipt> GetTempWarehouseReceipts();
 
         IEnumerable<int> GetWarehouseMaterialIdsByWarehouseId(int warehouseId);
+
+        IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterialsByWarehouseId(int warehouseId);
 
         WarehouseMaterial GetWarehouseMaterialByWarehouseIdAndMaterialId(int warehouseId, int materialId);
 

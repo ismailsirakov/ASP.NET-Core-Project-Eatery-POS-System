@@ -12,7 +12,7 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(ProductTypeNameMaxLength)]
         public string Name { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; }
 
     }
 }

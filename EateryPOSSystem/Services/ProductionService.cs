@@ -25,18 +25,22 @@ namespace EateryPOSSystem.Services
             => dbService.GetProducts()
             .Any(m => m.Id == productlId);
 
-        public bool IsMaterialInRecipeExist(string recipeName, int productId, int materialId)
+        public bool IsStoreProductWithIdExist(int storeProductlId)
+            => dbService.GetStoreProducts()
+            .Any(m => m.Id == storeProductlId);
+
+        public bool IsMaterialInRecipeExist(string recipeName, int storeProductId, int WarehouseMaterialId)
             => dbService.GetRecipes()
-            .Any(r => r.Name == recipeName & r.ProductId == productId & r.MaterialId == materialId);
+            .Any(r => r.Name == recipeName & r.StoreProductId == storeProductId & r.WarehouseMaterialId == WarehouseMaterialId);
 
         
-        public void AddRecipe(string recipeName, int productId, int materialId, decimal quantity)
+        public void AddRecipe(string recipeName, int storeProductId, int warehouseMaterialId, decimal quantity)
         {
             var recipe = new Recipe
             {
                 Name = recipeName,
-                ProductId = productId,
-                MaterialId = materialId,
+                StoreProductId = storeProductId,
+                WarehouseMaterialId = warehouseMaterialId,
                 MaterialQuantity = quantity
             };
 

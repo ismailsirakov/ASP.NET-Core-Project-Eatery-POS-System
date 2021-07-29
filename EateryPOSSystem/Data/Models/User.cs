@@ -33,9 +33,9 @@ namespace EateryPOSSystem.Data.Models
 
         public Position Position { get; set; }
 
-        public ICollection<Bill> Bills { get; set; }
+        public IEnumerable<Bill> Bills { get; set; }
 
-        public ICollection<WarehouseReceipt> WarehouseReceipts { get; set; }
+        public IEnumerable<WarehouseReceipt> WarehouseReceipts { get; set; }
 
     }
 }

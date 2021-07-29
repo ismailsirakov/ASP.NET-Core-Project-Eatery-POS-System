@@ -17,6 +17,6 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(DocumentTypeNameMaxLength)]
         public string Name { get; set; }
 
-        public ICollection<WarehouseReceipt> MaterialReceipts { get; set; }
+        public IEnumerable<WarehouseReceipt> MaterialReceipts { get; set; }
     }
 }

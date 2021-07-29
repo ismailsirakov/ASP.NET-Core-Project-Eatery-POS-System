@@ -7,6 +7,7 @@ namespace EateryPOSSystem.Data.Models
     {
         public StoreProduct()
         {
+            Recipes = new HashSet<Recipe>();
             SoldProducts = new HashSet<SoldProduct>();
         }
         public int Id { get; set; }
@@ -29,6 +30,8 @@ namespace EateryPOSSystem.Data.Models
         [Column(TypeName = "decimal(18,3)")]
         public decimal Quantity { get; set; }
 
-        public ICollection<SoldProduct> SoldProducts { get; set; }
+        public IEnumerable<Recipe> Recipes { get; set; }
+
+        public IEnumerable<SoldProduct> SoldProducts { get; set; }
     }
 }

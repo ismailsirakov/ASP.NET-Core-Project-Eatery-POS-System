@@ -25,7 +25,7 @@ namespace EateryPOSSystem.Data.Models
 
         public bool Closed { get; set; }
 
-        public ICollection<SoldProduct> SoldProducts { get; set; }
+        public IEnumerable<SoldProduct> SoldProducts { get; set; }
     }
 }
 

@@ -11,9 +11,11 @@ namespace EateryPOSSystem.Models.Production
         [MaxLength(RecipeNameMaxLength)]
         public string Name { get; set; }
 
-        public int ProductId { get; set; }
+        public int StoreProductId { get; set; }
 
-        public int MaterialId { get; set; }
+        public int WarehouseId { get; set; }
+
+        public int WarehouseMaterialId { get; set; }
 
         public string MaterialName { get; set; }
 
@@ -21,10 +23,12 @@ namespace EateryPOSSystem.Models.Production
 
         public string RecipeInfo { get; set; }
 
-        public IEnumerable<MaterialServiceModel> Materials { get; set; }
+        public IEnumerable<WarehouseMaterialServiceModel> WarehouseMaterials { get; set; }
 
         public IEnumerable<RecipeServiceModel> AddedMaterialsToRecipe { get; set; }
 
-        public IEnumerable<ProductServiceModel> Products { get; set; }
+        public IEnumerable<StoreProductServiceModel> StoreProducts { get; set; }
+
+        public IEnumerable<WarehouseServiceModel> Warehouses { get; set; }
     }
 }

@@ -41,10 +41,15 @@
         }
 
         public IActionResult ChooseTable(ChooseTableFormModel chosenStore)
-        {
-            
+        {            
             return View(chosenStore);
         }
 
+        [HttpPost]
+        public IActionResult ChooseTable(ChooseTableFormModel chosenStore, int tableNumber)
+        {
+
+            return View(chosenStore);
+        }
     }
 }

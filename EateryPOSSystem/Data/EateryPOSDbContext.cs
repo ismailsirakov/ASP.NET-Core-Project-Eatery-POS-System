@@ -44,6 +44,8 @@
 
         public DbSet<StoreProduct> StoreProducts { get; init; }
 
+        public DbSet<Table> Tables { get; init; }
+
         public DbSet<TempWarehouseReceipt> TempWarehouseReceipts { get; init; }
 
         public DbSet<Warehouse> Warehouses { get; init; }
@@ -144,13 +146,17 @@
 
             modelBuilder.Entity<Recipe>(x =>
             {
-                x.HasOne(x => x.Product)
+                x.HasOne(x => x.StoreProduct)
                 .WithMany(x => x.Recipes)
-                .HasForeignKey(x => x.ProductId)
+                .HasForeignKey(x => x.StoreProductId)
                 .OnDelete(DeleteBehavior.Restrict);
-                x.HasOne(x => x.Material)
+                x.HasOne(x => x.WarehouseMaterial)
                 .WithMany(x => x.Recipes)
-                .HasForeignKey(x => x.MaterialId)
+                .HasForeignKey(x => x.WarehouseMaterialId)
+                .OnDelete(DeleteBehavior.Restrict);
+                x.HasOne(x => x.Warehouse)
+                .WithMany(x => x.Recipes)
+                .HasForeignKey(x => x.WarehouseId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -253,8 +259,6 @@
                 .HasForeignKey(x => x.DocumentTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
-
-            modelBuilder.Entity<WarehouseMaterial>().HasKey(x => new { x.WarehouseId, x.MaterialId });
 
             modelBuilder.Entity<WarehouseMaterial>(x =>
             {

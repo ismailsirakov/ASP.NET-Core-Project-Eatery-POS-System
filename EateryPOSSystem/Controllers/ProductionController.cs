@@ -113,8 +113,9 @@
         {
             var recipe = new AddRecipeFormModel
             {
-                Products = dbService.GetProducts(),
-                Materials = dbService.GetMaterials()
+                StoreProducts = dbService.GetStoreProducts(),
+                Warehouses = dbService.GetWarehouses()
+                //Materials = dbService.GetWarehouseMaterialsByWarehouseId()
             };
 
             return View(recipe);
@@ -123,11 +124,11 @@
         [HttpPost]
         public IActionResult AddRecipeFirstPage(AddRecipeFormModel recipe)
         {
-            recipe.Products = dbService.GetProducts();
+            recipe.StoreProducts = dbService.GetStoreProducts();
 
-            if (!production.IsProductWithIdExist(recipe.ProductId))
+            if (!production.IsStoreProductWithIdExist(recipe.StoreProductId))
             {
-                ModelState.AddModelError(nameof(recipe.ProductId), notExistingModelInDB);
+                ModelState.AddModelError(nameof(recipe.StoreProductId), notExistingModelInDB);
                 return View(recipe);
             }
 
@@ -136,17 +137,19 @@
                 return View(recipe);
             }
 
-            var productName = recipe.Products.FirstOrDefault(p => p.Id == recipe.ProductId).Name;
+            var storeName = recipe.StoreProducts.FirstOrDefault(p => p.Id == recipe.StoreProductId).StoreName;
 
-            recipe.RecipeInfo = $"Име на рецепта: {recipe.Name} - За продукт: {productName}";
+            var productName = recipe.StoreProducts.FirstOrDefault(p => p.Id == recipe.StoreProductId).ProductName;
+
+            recipe.RecipeInfo = $"Име на рецепта: {recipe.Name} - За продукт: {productName} - За обект: {storeName}";
 
             return RedirectToAction("AddRecipeSecondPage", "Production", recipe);
         }
 
         public IActionResult AddRecipeSecondPage(AddRecipeFormModel recipe)
         {
-            recipe.Materials = dbService.GetMaterials();
-            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
+            recipe.WarehouseMaterials = dbService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
             return View(recipe);
         }
@@ -155,12 +158,12 @@
         public IActionResult AddRecipeSecondPage(string addButton, string saveButton, AddRecipeFormModel recipe)
         {
 
-            recipe.Materials = dbService.GetMaterials();
-            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
+            recipe.WarehouseMaterials = dbService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
-            if (!production.IsMaterialWithIdExist(recipe.MaterialId))
+            if (!production.IsMaterialWithIdExist(recipe.WarehouseMaterialId))
             {
-                ModelState.AddModelError(nameof(recipe.MaterialId), notExistingModelInDB);
+                ModelState.AddModelError(nameof(recipe.WarehouseMaterialId), notExistingModelInDB);
                 return View(recipe);
             }
 
@@ -172,16 +175,16 @@
 
             if (addButton != null)
             {
-                if (production.IsMaterialInRecipeExist(recipe.Name, recipe.ProductId, recipe.MaterialId))
+                if (production.IsMaterialInRecipeExist(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialId))
                 {
                     ModelState.AddModelError(nameof(recipe.MaterialQuantity), existingMaterialInRecipe);
 
                     return View(recipe);
                 }
 
-                production.AddRecipe(recipe.Name, recipe.ProductId, recipe.MaterialId, recipe.MaterialQuantity);
+                production.AddRecipe(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialId, recipe.MaterialQuantity);
 
-                recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.ProductId);
+                recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
                 return View(recipe);
             }

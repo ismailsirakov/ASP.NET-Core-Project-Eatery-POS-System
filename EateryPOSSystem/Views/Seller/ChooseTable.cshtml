@@ -4,29 +4,29 @@
     ViewData["Title"] = "Choose a table";
 }
 
-<div class="row">
+<form method="post">
     <div class="col-sm-12 col-lg-8 offset-xl-4 col-xl-4">
         <h2 class="text-center embed-responsive">Обект: @Model.StoreName</h2>
         <h3 class="text-center">Избери маса</h3>
     </div>
     <div class="offset-3 col-md-6 col-sm-8">
         <container>
-            @for (int row = 0; row < Model.TablesInStore / 5; row++)
+            @for (int row = 0; row <= Model.TablesInStore / 5; row++)
             {
                 <div class="row">
                     @for (int i = row * 5 + 1; i <= (row + 1) * 5; i++)
                     {
-                        <button class="btn btn-outline-primary btn-lg col-2 m-2 text-center">@i</button>
+                        <button class="btn btn-outline-primary btn-lg col-2 m-2 text-center" type="submit" name="tableNumber" value="@i">@i</button>
+                        if (i >= Model.TablesInStore)
+                        {
+                            break;
+                        }
                     }
                 </div>
             }
-            <div class="row">
-                @for (int i = Model.TablesInStore / 5 * 5 + 1; i <= Model.TablesInStore; i++)
-                {
-                    <button class="btn btn-outline-primary btn-lg col-2 m-2 text-center">@i</button>
-                }
-            </div>
         </container>
     </div>
+</form>
 
-</div>
+
+

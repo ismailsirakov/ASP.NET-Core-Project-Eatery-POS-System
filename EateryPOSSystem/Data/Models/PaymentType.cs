@@ -16,6 +16,6 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(PaymentTypeNameMaxLength)]
         public string Name { get; set; }
 
-        public ICollection<Bill> Bills { get; set; }
+        public IEnumerable<Bill> Bills { get; set; }
     }
 }

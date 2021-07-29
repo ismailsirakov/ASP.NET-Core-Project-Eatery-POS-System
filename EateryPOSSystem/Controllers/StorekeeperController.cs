@@ -12,7 +12,9 @@
         private readonly IStorekeeperService storekeeper;
         private readonly IDbService dbService;
 
-        public StorekeeperController(EateryPOSDbContext data, IStorekeeperService storekeeper, IDbService dbService)
+        public StorekeeperController(EateryPOSDbContext data,
+                                        IStorekeeperService storekeeper,
+                                        IDbService dbService)
         {
             this.data = data;
             this.storekeeper = storekeeper;
@@ -194,16 +196,15 @@
                 var unitPrice = warehouseMaterial.UnitPrice;
                 var materialId = warehouseMaterial.MaterialId;
 
-                storekeeper.AddTempWarehouseReceipt(
-                                        receiptNumber,
-                                        providerId, 
-                                        documentTypeId,
-                                        documentNumber,
-                                        documentDate,
-                                        warehouseId,
-                                        quantity,
-                                        unitPrice,
-                                        materialId);
+                storekeeper.AddTempWarehouseReceipt(receiptNumber,
+                                                    providerId, 
+                                                    documentTypeId,
+                                                    documentNumber,
+                                                    documentDate,
+                                                    warehouseId,
+                                                    quantity,
+                                                    unitPrice,
+                                                    materialId);
 
                 warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(providerId, documentNumber);
 

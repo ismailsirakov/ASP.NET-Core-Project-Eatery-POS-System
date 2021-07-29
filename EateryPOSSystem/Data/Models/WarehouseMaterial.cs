@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public class WarehouseMaterial
@@ -19,6 +20,8 @@ namespace EateryPOSSystem.Data.Models
 
         [Column(TypeName = "decimal(18,3)")]
         public decimal Quantity { get; set; }
+
+        public IEnumerable<Recipe> Recipes { get; set; }
 
     }
 }

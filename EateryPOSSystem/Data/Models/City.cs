@@ -18,6 +18,6 @@ namespace EateryPOSSystem.Data.Models
 
         public int? PostalCode { get; set; }
 
-        public ICollection<Provider> Providers { get; set; }
+        public IEnumerable<Provider> Providers { get; set; }
     }
 }

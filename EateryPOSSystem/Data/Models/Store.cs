@@ -18,6 +18,6 @@ namespace EateryPOSSystem.Data.Models
 
         public int TablesInStore { get; set; }
 
-        public ICollection<StoreProduct> StoreProducts { get; set; }
+        public IEnumerable<StoreProduct> StoreProducts { get; set; }
     }
 }

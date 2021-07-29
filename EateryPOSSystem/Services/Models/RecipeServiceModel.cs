@@ -8,9 +8,11 @@ namespace EateryPOSSystem.Services.Models
 
         public string Name { get; set; }
 
-        public int ProductId { get; set; }
+        public int StoreProductId { get; set; }
 
-        public int MaterialId { get; set; }
+        public int WarehouseId { get; set; }
+
+        public int WarehouseMaterialId { get; set; }
 
         public string MaterialName { get; set; }
 

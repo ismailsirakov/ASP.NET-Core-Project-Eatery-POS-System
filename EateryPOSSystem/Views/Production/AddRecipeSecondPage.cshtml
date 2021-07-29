@@ -49,11 +49,11 @@
 
             <div class="row">
                 <div class="form-group col-7">
-                    <select asp-for="MaterialId" class="form-control">
-                        @foreach (var material in Model.Materials)
+                    <select asp-for="WarehouseMaterialId" class="form-control">
+                        @foreach (var warehouseMaterial in Model.WarehouseMaterials)
                         {
-                            <option value="@material.Id">
-                                @material.Name   -  @material.MeasurementName
+                            <option value="@warehouseMaterial.Id">
+                                @warehouseMaterial.MaterialName   -  @warehouseMaterial.MeasurementName
                             </option>
                         }
                     </select>

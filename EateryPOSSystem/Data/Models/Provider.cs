@@ -27,6 +27,6 @@ namespace EateryPOSSystem.Data.Models
 
         public Address Address { get; set; }
 
-        public ICollection<WarehouseReceipt> WarehouseReceipts { get; set; }
+        public IEnumerable<WarehouseReceipt> WarehouseReceipts { get; set; }
     }
 }

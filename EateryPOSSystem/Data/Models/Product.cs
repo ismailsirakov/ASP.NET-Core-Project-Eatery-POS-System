@@ -9,7 +9,6 @@ namespace EateryPOSSystem.Data.Models
     {
         public Product()
         {
-            Recipes = new HashSet<Recipe>();
             StoreProducts = new HashSet<StoreProduct>();
         }
         public int Id { get; set; }
@@ -22,8 +21,6 @@ namespace EateryPOSSystem.Data.Models
 
         public ProductType ProductType { get; set; }
 
-        public ICollection<Recipe> Recipes { get; set; }
-
-        public ICollection<StoreProduct> StoreProducts { get; set; }
+        public IEnumerable<StoreProduct> StoreProducts { get; set; }
     }
 }
