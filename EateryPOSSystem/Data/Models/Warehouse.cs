@@ -8,7 +8,8 @@ namespace EateryPOSSystem.Data.Models
     {
         public Warehouse()
         {
-            Recipes = new HashSet<Recipe>();
+            TransfersFrom = new HashSet<Transfer>();
+            TransfersTo = new HashSet<Transfer>();
             WarehouseMaterials = new HashSet<WarehouseMaterial>();
             WarehouseReceipts = new HashSet<WarehouseReceipt>();
         }
@@ -19,10 +20,12 @@ namespace EateryPOSSystem.Data.Models
         [MaxLength(WarehouseNameMaxLength)]
         public string Name { get; set; }
 
-        public IEnumerable<Recipe> Recipes { get; set; }
-
         public IEnumerable<WarehouseMaterial> WarehouseMaterials { get; set; }
 
         public IEnumerable<WarehouseReceipt> WarehouseReceipts { get; set; }
+
+        public IEnumerable<Transfer> TransfersTo { get; set; }
+
+        public IEnumerable<Transfer> TransfersFrom { get; set; }
     }
 }

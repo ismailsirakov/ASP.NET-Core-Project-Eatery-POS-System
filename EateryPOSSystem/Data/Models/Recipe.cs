@@ -14,15 +14,13 @@ namespace EateryPOSSystem.Data.Models
 
         public int StoreProductId { get; set; }
 
-        public StoreProduct StoreProduct { get; set; }
+        public int WarehouseMaterialWarehouseId { get; set; }
 
-        public int WarehouseId { get; set; }
-
-        public Warehouse Warehouse { get; set; }
-
-        public int WarehouseMaterialId { get; set; }
+        public int WarehouseMaterialMaterialId { get; set; }
 
         public WarehouseMaterial WarehouseMaterial { get; set; }
+
+        public StoreProduct StoreProduct { get; set; }
 
         [Column(TypeName = "decimal(18,3)")]
         public decimal MaterialQuantity { get; set; }

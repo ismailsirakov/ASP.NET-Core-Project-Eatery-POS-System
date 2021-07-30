@@ -1,8 +1,10 @@
 namespace EateryPOSSystem.Services
 {
+    using System.Collections.Generic;
     using System.Linq;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Interfaces;
+    using EateryPOSSystem.Services.Models;
 
     public class ProductionService : IProductionService
     {
@@ -31,16 +33,23 @@ namespace EateryPOSSystem.Services
 
         public bool IsMaterialInRecipeExist(string recipeName, int storeProductId, int WarehouseMaterialId)
             => dbService.GetRecipes()
-            .Any(r => r.Name == recipeName & r.StoreProductId == storeProductId & r.WarehouseMaterialId == WarehouseMaterialId);
+            .Any(r => r.Name == recipeName & r.StoreProductId == storeProductId);
 
-        
-        public void AddRecipe(string recipeName, int storeProductId, int warehouseMaterialId, decimal quantity)
+        public bool IsWarehouseMaterialExist(int warehouseId, int materialId)
+            => dbService.GetWarehouseMaterials().Any(wm=> wm.WarehouseId == warehouseId &wm.MaterialId == materialId);
+
+        public void AddRecipe(string recipeName,
+                                int storeProductId,
+                                int warehouseMaterialWarehouseId,
+                                int warehouseMaterialMaterialId,
+                                decimal quantity)
         {
             var recipe = new Recipe
             {
                 Name = recipeName,
                 StoreProductId = storeProductId,
-                WarehouseMaterialId = warehouseMaterialId,
+                WarehouseMaterialWarehouseId = warehouseMaterialWarehouseId,
+                WarehouseMaterialMaterialId = warehouseMaterialMaterialId,
                 MaterialQuantity = quantity
             };
 
@@ -71,5 +80,8 @@ namespace EateryPOSSystem.Services
 
             dbService.AddStoreProduct(storeProduct);
         }
+
+        public IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterialsByWarehouseId(int warehouseId)
+            => dbService.GetWarehouseMaterials().Where(wm => wm.WarehouseId == warehouseId);
     }
 }

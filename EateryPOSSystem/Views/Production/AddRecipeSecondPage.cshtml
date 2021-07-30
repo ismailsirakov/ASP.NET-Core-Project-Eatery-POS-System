@@ -7,10 +7,10 @@
 <div>
     <div class="col-sm-12 offset-md-4 col-md-4 col-lg-6 offset-xl-3 col-xl-6">
         <div class="text-center">
-            <h3 class="text-dark">Добавяне на рецепта </h3>
+            <h2 class="text-center font-weight-bold text-primary">Добавяне на рецепта </h2>
         </div>
-        <div class="mt-2 mb-2 text-center">
-            <h5 class="text-dark">@Model.RecipeInfo</h5>
+        <div class="mt-2 mb-2 text-center text-success">
+            <h5 class="text-success">@Model.RecipeInfo</h5>
         </div>
         <form method="post">
             <div style="overflow-x: auto">
@@ -49,10 +49,10 @@
 
             <div class="row">
                 <div class="form-group col-7">
-                    <select asp-for="WarehouseMaterialId" class="form-control">
+                    <select asp-for="WarehouseMaterialMaterialId" class="form-control">
                         @foreach (var warehouseMaterial in Model.WarehouseMaterials)
                         {
-                            <option value="@warehouseMaterial.Id">
+                            <option value="@warehouseMaterial.MaterialId">
                                 @warehouseMaterial.MaterialName   -  @warehouseMaterial.MeasurementName
                             </option>
                         }

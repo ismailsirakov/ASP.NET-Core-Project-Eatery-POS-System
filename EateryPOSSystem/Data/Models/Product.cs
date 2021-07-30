@@ -11,6 +11,7 @@ namespace EateryPOSSystem.Data.Models
         {
             StoreProducts = new HashSet<StoreProduct>();
         }
+
         public int Id { get; set; }
 
         [Required]

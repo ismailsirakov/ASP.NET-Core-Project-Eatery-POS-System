@@ -115,7 +115,6 @@
             {
                 StoreProducts = dbService.GetStoreProducts(),
                 Warehouses = dbService.GetWarehouses()
-                //Materials = dbService.GetWarehouseMaterialsByWarehouseId()
             };
 
             return View(recipe);
@@ -148,7 +147,7 @@
 
         public IActionResult AddRecipeSecondPage(AddRecipeFormModel recipe)
         {
-            recipe.WarehouseMaterials = dbService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            recipe.WarehouseMaterials = production.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
             recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
             return View(recipe);
@@ -158,12 +157,17 @@
         public IActionResult AddRecipeSecondPage(string addButton, string saveButton, AddRecipeFormModel recipe)
         {
 
-            recipe.WarehouseMaterials = dbService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            if (saveButton != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            recipe.WarehouseMaterials = production.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
             recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
-            if (!production.IsMaterialWithIdExist(recipe.WarehouseMaterialId))
+            if (!production.IsWarehouseMaterialExist(recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId))
             {
-                ModelState.AddModelError(nameof(recipe.WarehouseMaterialId), notExistingModelInDB);
+                ModelState.AddModelError(nameof(recipe.WarehouseMaterialMaterialId), notExistingModelInDB);
                 return View(recipe);
             }
 
@@ -175,23 +179,18 @@
 
             if (addButton != null)
             {
-                if (production.IsMaterialInRecipeExist(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialId))
+                if (production.IsMaterialInRecipeExist(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialMaterialId))
                 {
                     ModelState.AddModelError(nameof(recipe.MaterialQuantity), existingMaterialInRecipe);
 
                     return View(recipe);
                 }
 
-                production.AddRecipe(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialId, recipe.MaterialQuantity);
+                production.AddRecipe(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId, recipe.MaterialQuantity);
 
                 recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
                 return View(recipe);
-            }
-
-            if (saveButton != null)
-            {
-                return RedirectToAction("Index", "Home");
             }
 
             return View(recipe);

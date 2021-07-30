@@ -112,6 +112,12 @@ namespace EateryPOSSystem.Services
             data.SaveChanges();
         }
 
+        public void AddTransfer(Transfer transfer)
+        {
+            data.Transfers.Add(transfer);
+            data.SaveChanges();
+        }
+
         public void AddUser(User user)
         {
             data.POSSystemUsers.Add(user);
@@ -136,22 +142,27 @@ namespace EateryPOSSystem.Services
             data.SaveChanges();
         }
 
-        public IEnumerable<StoreServiceModel> GetStores()
-            => data.Stores
-            .Select(s => new StoreServiceModel
+        public IEnumerable<AddressServiceModel> GetAddresses()
+            => data.Addresses
+            .Select(a => new AddressServiceModel
             {
-                Id = s.Id,
-                Name = s.Name,
-                TablesInStore = s.TablesInStore
+                Id = a.Id,
+                AddressDetails = a.AddressDetails
             })
             .ToList();
 
-        public IEnumerable<ProductTypeServiceModel> GetProductTypes()
-            => data.ProductTypes
-            .Select(pt => new ProductTypeServiceModel
+        public IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int storeProductId)
+            => data.Recipes
+            .Where(r => r.Name == recipeName & r.StoreProductId == storeProductId)
+            .Select(r => new RecipeServiceModel
             {
-                Id = pt.Id,
-                Name = pt.Name
+                Id = r.Id,
+                Name = r.Name,
+                StoreProductId = r.StoreProductId,
+                WarehouseMaterialId = r.WarehouseMaterialMaterialId,
+                MaterialName = r.WarehouseMaterial.Material.Name,
+                MeasurementName = r.WarehouseMaterial.Material.Measurement.Name,
+                MaterialQuantity = r.MaterialQuantity
             })
             .ToList();
 
@@ -165,28 +176,47 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
-        public IEnumerable<AddressServiceModel> GetAddresses()
-            => data.Addresses
-            .Select(a => new AddressServiceModel
+        public IEnumerable<DocumentTypeServiceModel> GetDocumentTypes()
+            => data.DocumentTypes
+            .Select(dt => new DocumentTypeServiceModel
             {
-                Id = a.Id,
-                AddressDetails = a.AddressDetails
+                Id = dt.Id,
+                Name = dt.Name
             })
             .ToList();
 
-
-        public IEnumerable<WarehouseServiceModel> GetWarehouses()
-            => data.Warehouses
-            .Select(w => new WarehouseServiceModel
+        public IEnumerable<MaterialServiceModel> GetMaterials()
+            => data.Materials
+            .Select(m => new MaterialServiceModel
             {
-                Id = w.Id,
-                Name = w.Name
+                Id = m.Id,
+                Name = m.Name,
+                MeasurementId = m.Measurement.Id,
+                MeasurementName = m.Measurement.Name
+            })
+            .ToList();
+
+        public IEnumerable<MeasurementServiceModel> GetMeasurements()
+            => data.Measurements
+            .Select(m => new MeasurementServiceModel
+            {
+                Id = m.Id,
+                Name = m.Name
+            })
+            .ToList();
+
+        public IEnumerable<ProductTypeServiceModel> GetProductTypes()
+            => data.ProductTypes
+            .Select(pt => new ProductTypeServiceModel
+            {
+                Id = pt.Id,
+                Name = pt.Name
             })
             .ToList();
 
         public IEnumerable<ProductServiceModel> GetProducts()
             => data.Products
-            .Select(p=> new ProductServiceModel
+            .Select(p => new ProductServiceModel
             {
                 Id = p.Id,
                 Name = p.Name
@@ -202,36 +232,6 @@ namespace EateryPOSSystem.Services
                 Number = p.Number
             })
             .ToList();
-
-        public IEnumerable<DocumentTypeServiceModel> GetDocumentTypes()
-            => data.DocumentTypes
-            .Select(dt => new DocumentTypeServiceModel
-            {
-                Id = dt.Id,
-                Name = dt.Name
-            })
-            .ToList();
-
-        public IEnumerable<MeasurementServiceModel> GetMeasurements()
-            => data.Measurements
-            .Select(m => new MeasurementServiceModel
-            {
-                Id = m.Id,
-                Name = m.Name
-            })
-            .ToList();
-
-        public IEnumerable<MaterialServiceModel> GetMaterials()
-            => data.Materials
-            .Select(m => new MaterialServiceModel
-            {
-                Id = m.Id,
-                Name = m.Name,
-                MeasurementId = m.Measurement.Id,
-                MeasurementName = m.Measurement.Name
-            })
-            .ToList();
-
 
         public IEnumerable<PositionServiceModel> GetPositions()
             => data.Positions
@@ -255,9 +255,19 @@ namespace EateryPOSSystem.Services
             => data.Recipes
             .ToList();
 
+        public IEnumerable<StoreServiceModel> GetStores()
+            => data.Stores
+            .Select(s => new StoreServiceModel
+            {
+                Id = s.Id,
+                Name = s.Name,
+                TablesInStore = s.TablesInStore
+            })
+            .ToList();
+
         public IEnumerable<StoreProductServiceModel> GetStoreProducts()
             => data.StoreProducts
-            .Select(sp=> new StoreProductServiceModel
+            .Select(sp => new StoreProductServiceModel
             {
                 Id = sp.Id,
                 StoreId = sp.StoreId,
@@ -270,22 +280,36 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
-        public IEnumerable<WarehouseReceipt> GetWarehouseReceipts()
-            => data.WarehouseReceipts.ToList();
-
         public IEnumerable<TempWarehouseReceipt> GetTempWarehouseReceipts()
             => data.TempWarehouseReceipts.ToList();
+
+        public IEnumerable<TransferServiceModel> GetTransfers()
+            => data.Transfers
+            .Select(t => new TransferServiceModel
+            {
+                Id = t.Id,
+                Number = t.Number,
+                FromWarehouseId = t.FromWarehouseId,
+                FromWarehouseName = t.FromWarehouse.Name,
+                ToWarehouseId = t.ToWarehouseId,
+                ToWarehouseName = t.ToWarehouse.Name,
+                MaterialId = t.MaterialId,
+                MaterialName = t.Material.Name,
+                MeasurementName = t.Material.Measurement.Name,
+                Quantity = t.Quantity,
+                UserId = t.UserId
+            })
+            .ToList();
 
         public IEnumerable<int> GetWarehouseMaterialIdsByWarehouseId(int warehouseId)
             => data.WarehouseMaterials
             .Where(wm => wm.WarehouseId == warehouseId)
-            .Select(wm => wm.Id)
+            .Select(wm => wm.MaterialId)
             .ToList();
 
-        public IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterialsByWarehouseId(int warehouseId)
+        public IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterials()
             => data.WarehouseMaterials
-            .Where(wm => wm.WarehouseId == warehouseId)
-            .Select(wm=> new WarehouseMaterialServiceModel
+            .Select(wm => new WarehouseMaterialServiceModel
             {
                 Id = wm.Id,
                 WarehouseId = wm.WarehouseId,
@@ -296,38 +320,43 @@ namespace EateryPOSSystem.Services
                 MeasurementName = wm.Material.Measurement.Name,
                 Quantity = wm.Quantity,
                 Price = wm.Price
-                })
+            })
             .ToList();
 
         public WarehouseMaterial GetWarehouseMaterialByWarehouseIdAndMaterialId(int warehouseId, int materialId)
             => data.WarehouseMaterials
             .FirstOrDefault(wm => wm.WarehouseId == warehouseId & wm.MaterialId == materialId);
 
-        public IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int storeProductId)
-            => data.Recipes
-            .Where(r => r.Name == recipeName & r.StoreProductId == storeProductId)
-            .Select(r=> new RecipeServiceModel
+        public IEnumerable<WarehouseServiceModel> GetWarehouses()
+            => data.Warehouses
+            .Select(w => new WarehouseServiceModel
             {
-                Id = r.Id,
-                Name = r.Name,
-                StoreProductId = r.StoreProductId,
-                WarehouseMaterialId = r.WarehouseMaterialId,
-                MaterialName = r.WarehouseMaterial.Material.Name,
-                MeasurementName = r.WarehouseMaterial.Material.Measurement.Name,
-                MaterialQuantity = r.MaterialQuantity
+                Id = w.Id,
+                Name = w.Name
             })
             .ToList();
+
+        public IEnumerable<WarehouseReceipt> GetWarehouseReceipts()
+            => data.WarehouseReceipts.ToList();
 
         public void RemoveTempWarehouseReceiptsRangeByReceiptNumber(int receiptNumber)
             => data.TempWarehouseReceipts
             .RemoveRange(data.TempWarehouseReceipts.Where(twr => twr.ReceiptNumber == receiptNumber));
 
         public void UpdateWareHouseMaterialQuantity(int warehouseId, int materialId, decimal quantity)
-            => data.WarehouseMaterials
+        {
+            data.WarehouseMaterials
             .FirstOrDefault(wm => wm.WarehouseId == warehouseId & wm.MaterialId == materialId).Quantity = quantity;
 
+            data.SaveChanges();
+        }
+
         public void UpdateWarehouseMaterialPrice(int warehouseId, int materialId, decimal price)
-            => data.WarehouseMaterials
+        {
+            data.WarehouseMaterials
             .FirstOrDefault(wm => wm.WarehouseId == warehouseId & wm.MaterialId == materialId).Price = price;
+
+            data.SaveChanges();
+        }
     }
 }

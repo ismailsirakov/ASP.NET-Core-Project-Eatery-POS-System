@@ -5,9 +5,14 @@ namespace EateryPOSSystem.Data.Models
 
     public class WarehouseMaterial
     {
+        public WarehouseMaterial()
+        {
+            Recipes = new HashSet<Recipe>();
+        }
+
         public int Id { get; set; }
 
-        public int WarehouseId { get; set; }
+       public int WarehouseId { get; set; }
 
         public Warehouse Warehouse { get; set; }
 

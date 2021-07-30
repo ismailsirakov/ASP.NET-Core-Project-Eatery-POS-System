@@ -44,9 +44,11 @@
 
         public DbSet<StoreProduct> StoreProducts { get; init; }
 
-        public DbSet<Table> Tables { get; init; }
+        public DbSet<StoreTable> StoreTables { get; init; }
 
         public DbSet<TempWarehouseReceipt> TempWarehouseReceipts { get; init; }
+
+        public DbSet<Transfer> Transfers { get; init; }
 
         public DbSet<Warehouse> Warehouses { get; init; }
 
@@ -150,14 +152,12 @@
                 .WithMany(x => x.Recipes)
                 .HasForeignKey(x => x.StoreProductId)
                 .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Recipe>(x =>
+            {
                 x.HasOne(x => x.WarehouseMaterial)
-                .WithMany(x => x.Recipes)
-                .HasForeignKey(x => x.WarehouseMaterialId)
-                .OnDelete(DeleteBehavior.Restrict);
-                x.HasOne(x => x.Warehouse)
-                .WithMany(x => x.Recipes)
-                .HasForeignKey(x => x.WarehouseId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(x => x.Recipes);
             });
 
             modelBuilder.Entity<SoldProduct>(x =>
@@ -198,9 +198,41 @@
 
             modelBuilder.Entity<StoreProduct>(x =>
             {
+                x.HasOne(x => x.Product)
+                .WithMany(x => x.StoreProducts)
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<StoreProduct>(x =>
+            {
                 x.HasOne(x => x.Store)
                 .WithMany(x => x.StoreProducts)
                 .HasForeignKey(x => x.StoreId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Transfer>(x =>
+            {
+                x.HasOne(x => x.FromWarehouse)
+                .WithMany(x => x.TransfersFrom)
+                .HasForeignKey(x => x.FromWarehouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+                x.HasOne(x => x.ToWarehouse)
+                .WithMany(x => x.TransfersTo)
+                .HasForeignKey(x => x.ToWarehouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Transfer>(x =>
+            {
+                x.HasOne(x => x.Material)
+                .WithMany(x => x.Transfers)
+                .HasForeignKey(x => x.MaterialId)
+                .OnDelete(DeleteBehavior.Restrict);
+                x.HasOne(x => x.User)
+                .WithMany(x => x.Transfers)
+                .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -260,21 +292,20 @@
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
+
             modelBuilder.Entity<WarehouseMaterial>(x =>
             {
                 x.HasOne(x => x.Material)
                 .WithMany(x => x.WarehouseMaterials)
                 .HasForeignKey(x => x.MaterialId)
                 .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<WarehouseMaterial>(x =>
-            {
                 x.HasOne(x => x.Warehouse)
                 .WithMany(x => x.WarehouseMaterials)
                 .HasForeignKey(x => x.WarehouseId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<WarehouseMaterial>().HasKey(x => new { x.WarehouseId, x.MaterialId });
 
             base.OnModelCreating(modelBuilder);
         }

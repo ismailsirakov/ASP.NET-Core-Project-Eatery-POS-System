@@ -15,7 +15,9 @@ namespace EateryPOSSystem.Models.Production
 
         public int WarehouseId { get; set; }
 
-        public int WarehouseMaterialId { get; set; }
+        public int WarehouseMaterialMaterialId { get; set; }
+
+        public int WarehouseMaterialWarehouseId { get; set; }
 
         public string MaterialName { get; set; }
 

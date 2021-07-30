@@ -2,7 +2,7 @@
 
 namespace EateryPOSSystem.Data.Migrations
 {
-    public partial class AddTableEntityAndEditRecipeEntity : Migration
+    public partial class AddStoreTableEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,38 +14,27 @@ namespace EateryPOSSystem.Data.Migrations
                 name: "FK_Recipes_Products_ProductId",
                 table: "Recipes");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_WarehouseMaterials",
-                table: "WarehouseMaterials");
+            migrationBuilder.DropForeignKey(
+                name: "FK_StoreProducts_Products_ProductId",
+                table: "StoreProducts");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Recipes_MaterialId",
+                table: "Recipes");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Recipes_ProductId",
+                table: "Recipes");
 
             migrationBuilder.RenameColumn(
                 name: "ProductId",
                 table: "Recipes",
-                newName: "WarehouseMaterialId");
+                newName: "WarehouseMaterialWarehouseId");
 
             migrationBuilder.RenameColumn(
                 name: "MaterialId",
                 table: "Recipes",
-                newName: "WarehouseId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Recipes_ProductId",
-                table: "Recipes",
-                newName: "IX_Recipes_WarehouseMaterialId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Recipes_MaterialId",
-                table: "Recipes",
-                newName: "IX_Recipes_WarehouseId");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "WarehouseMaterials",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .Annotation("SqlServer:Identity", "1, 1");
+                newName: "WarehouseMaterialMaterialId");
 
             migrationBuilder.AddColumn<int>(
                 name: "StoreProductId",
@@ -54,36 +43,32 @@ namespace EateryPOSSystem.Data.Migrations
                 nullable: false,
                 defaultValue: 0);
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_WarehouseMaterials",
-                table: "WarehouseMaterials",
-                column: "Id");
-
             migrationBuilder.CreateTable(
-                name: "Tables",
+                name: "StoreTables",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StoreId = table.Column<int>(type: "int", nullable: false),
                     TableNumber = table.Column<int>(type: "int", nullable: false),
+                    StoreId = table.Column<int>(type: "int", nullable: false),
+                    StoreName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BillNumber = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tables", x => x.Id);
+                    table.PrimaryKey("PK_StoreTables", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WarehouseMaterials_WarehouseId",
-                table: "WarehouseMaterials",
-                column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_StoreProductId",
                 table: "Recipes",
                 column: "StoreProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recipes_WarehouseMaterialWarehouseId_WarehouseMaterialMaterialId",
+                table: "Recipes",
+                columns: new[] { "WarehouseMaterialWarehouseId", "WarehouseMaterialMaterialId" });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Recipes_StoreProducts_StoreProductId",
@@ -94,18 +79,18 @@ namespace EateryPOSSystem.Data.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Recipes_WarehouseMaterials_WarehouseMaterialId",
+                name: "FK_Recipes_WarehouseMaterials_WarehouseMaterialWarehouseId_WarehouseMaterialMaterialId",
                 table: "Recipes",
-                column: "WarehouseMaterialId",
+                columns: new[] { "WarehouseMaterialWarehouseId", "WarehouseMaterialMaterialId" },
                 principalTable: "WarehouseMaterials",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                principalColumns: new[] { "WarehouseId", "MaterialId" },
+                onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Recipes_Warehouses_WarehouseId",
-                table: "Recipes",
-                column: "WarehouseId",
-                principalTable: "Warehouses",
+                name: "FK_StoreProducts_Products_ProductId",
+                table: "StoreProducts",
+                column: "ProductId",
+                principalTable: "Products",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -117,26 +102,22 @@ namespace EateryPOSSystem.Data.Migrations
                 table: "Recipes");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Recipes_WarehouseMaterials_WarehouseMaterialId",
+                name: "FK_Recipes_WarehouseMaterials_WarehouseMaterialWarehouseId_WarehouseMaterialMaterialId",
                 table: "Recipes");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Recipes_Warehouses_WarehouseId",
-                table: "Recipes");
+                name: "FK_StoreProducts_Products_ProductId",
+                table: "StoreProducts");
 
             migrationBuilder.DropTable(
-                name: "Tables");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_WarehouseMaterials",
-                table: "WarehouseMaterials");
-
-            migrationBuilder.DropIndex(
-                name: "IX_WarehouseMaterials_WarehouseId",
-                table: "WarehouseMaterials");
+                name: "StoreTables");
 
             migrationBuilder.DropIndex(
                 name: "IX_Recipes_StoreProductId",
+                table: "Recipes");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Recipes_WarehouseMaterialWarehouseId_WarehouseMaterialMaterialId",
                 table: "Recipes");
 
             migrationBuilder.DropColumn(
@@ -144,38 +125,24 @@ namespace EateryPOSSystem.Data.Migrations
                 table: "Recipes");
 
             migrationBuilder.RenameColumn(
-                name: "WarehouseMaterialId",
+                name: "WarehouseMaterialWarehouseId",
                 table: "Recipes",
                 newName: "ProductId");
 
             migrationBuilder.RenameColumn(
-                name: "WarehouseId",
+                name: "WarehouseMaterialMaterialId",
                 table: "Recipes",
                 newName: "MaterialId");
 
-            migrationBuilder.RenameIndex(
-                name: "IX_Recipes_WarehouseMaterialId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Recipes_MaterialId",
                 table: "Recipes",
-                newName: "IX_Recipes_ProductId");
+                column: "MaterialId");
 
-            migrationBuilder.RenameIndex(
-                name: "IX_Recipes_WarehouseId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Recipes_ProductId",
                 table: "Recipes",
-                newName: "IX_Recipes_MaterialId");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "WarehouseMaterials",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("SqlServer:Identity", "1, 1");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_WarehouseMaterials",
-                table: "WarehouseMaterials",
-                columns: new[] { "WarehouseId", "MaterialId" });
+                column: "ProductId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Recipes_Materials_MaterialId",
@@ -192,6 +159,14 @@ namespace EateryPOSSystem.Data.Migrations
                 principalTable: "Products",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_StoreProducts_Products_ProductId",
+                table: "StoreProducts",
+                column: "ProductId",
+                principalTable: "Products",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

@@ -7,7 +7,7 @@
 <div>
     <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
         <form method="post">
-            <h3 class="text-center">Добавяне на рецепта </h3>
+            <h2 class="text-center font-weight-bold text-primary">Добавяне на рецепта </h2>
             <div class="form-group">
                 <label asp-for="Name">Име на рецептата</label>
                 <input asp-for="Name" class="form-control">
@@ -25,7 +25,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="WarehouseId">За кой продукт</label>
+                <label asp-for="WarehouseId">От кой склад ще са материалите</label>
                 <select asp-for="WarehouseId" class="form-control">
                     @foreach (var warehouse in Model.Warehouses)
                     {

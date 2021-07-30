@@ -8,6 +8,7 @@ namespace EateryPOSSystem.Data.Models
     {
         public Material()
         {
+            Transfers = new HashSet<Transfer>();
             WarehouseMaterials = new HashSet<WarehouseMaterial>();
             WarehouseReceipts = new HashSet<WarehouseReceipt>();
         }
@@ -20,6 +21,8 @@ namespace EateryPOSSystem.Data.Models
         public int MeasurementId { get; set; }
 
         public Measurement Measurement { get; set; }
+
+        public IEnumerable<Transfer> Transfers { get; set; }
 
         public IEnumerable<WarehouseReceipt> WarehouseReceipts { get; set; }
 

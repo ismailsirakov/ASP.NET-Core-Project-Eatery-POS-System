@@ -100,6 +100,21 @@ namespace EateryPOSSystem.Services
             dbService.AddTempWarehouseReceipt(tempWarehouseReceipt);
         }
 
+        public void AddTransfer(TransferServiceModel transfer)
+        {
+            var newTransfer = new Transfer
+            {
+                Number = transfer.Number,
+                FromWarehouseId = transfer.FromWarehouseId,
+                ToWarehouseId = transfer.ToWarehouseId,
+                MaterialId = transfer.MaterialId,
+                Quantity = transfer.Quantity,
+                UserId = transfer.UserId
+            };
+
+            dbService.AddTransfer(newTransfer);
+        }
+
         public WarehouseReceipt LastWarehouseReceiptInDb()
             => dbService.GetWarehouseReceipts().OrderBy(wr => wr.ReceiptNumber).LastOrDefault();
 
@@ -177,6 +192,48 @@ namespace EateryPOSSystem.Services
             }
         }
 
+        public void TransferMaterial(TransferServiceModel transfer)
+        {
+            var fromWarehouseMaterial = dbService
+                .GetWarehouseMaterialByWarehouseIdAndMaterialId(transfer.FromWarehouseId, transfer.MaterialId);
+
+            var toWarehouseMaterial = dbService.GetWarehouseMaterialByWarehouseIdAndMaterialId(transfer.ToWarehouseId, transfer.MaterialId);
+
+            if (toWarehouseMaterial is null)
+            {
+                toWarehouseMaterial = new WarehouseMaterial
+                {
+                    WarehouseId = transfer.ToWarehouseId,
+                    MaterialId = transfer.MaterialId
+                };
+
+                dbService.AddWarehouseMaterial(toWarehouseMaterial);
+            }
+
+            var toWarehouseMaterialTotalAmount = toWarehouseMaterial.Quantity * toWarehouseMaterial.Price;
+
+            var transferedMaterialTotalAmount = transfer.Quantity * fromWarehouseMaterial.Price;
+
+            toWarehouseMaterialTotalAmount += transferedMaterialTotalAmount;
+
+            fromWarehouseMaterial.Quantity -= transfer.Quantity;
+
+            toWarehouseMaterial.Quantity += transfer.Quantity;
+
+            toWarehouseMaterial.Price = toWarehouseMaterialTotalAmount / toWarehouseMaterial.Quantity;
+
+            dbService.UpdateWareHouseMaterialQuantity(fromWarehouseMaterial.WarehouseId,
+                                                        fromWarehouseMaterial.MaterialId,
+                                                        fromWarehouseMaterial.Quantity);
+
+            dbService.UpdateWareHouseMaterialQuantity(toWarehouseMaterial.WarehouseId,
+                                                        toWarehouseMaterial.MaterialId,
+                                                        toWarehouseMaterial.Quantity);
+
+            dbService.UpdateWarehouseMaterialPrice(toWarehouseMaterial.WarehouseId,
+                                                        toWarehouseMaterial.MaterialId,
+                                                        toWarehouseMaterial.Price);
+        }
 
         public IEnumerable<WarehouseMaterialServiceModel> GetAddedMaterials(int providerId, int documentNumber)
         {
@@ -235,6 +292,13 @@ namespace EateryPOSSystem.Services
 
             return warehouseMaterialServiceModels;
         }
+
+        public IEnumerable<TransferServiceModel> GetTransferedMaterials(int transferNumber)
+            => dbService.GetTransfers()
+                .Where(t => t.Number == transferNumber)
+                .ToList();
+
+        
 
         public void ImportStorekeeperData()
         {

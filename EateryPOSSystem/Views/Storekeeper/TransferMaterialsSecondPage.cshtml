@@ -1,0 +1,73 @@
+﻿@model TransferMaterialsFormModel
+
+@{
+    ViewData["Title"] = "Transfer Materials";
+}
+
+<div>
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-2 col-xl-8">
+        <div class="text-center">
+            <h2 class="text-center font-weight-bold text-primary">Трансфер на материали между складове</h2>
+        </div>
+        <div class="text-center">
+            <h5 class="text-success">От склад: @Model.TransferFromWarehouseName Към склад: @Model.TransferToWarehouseName</h5>
+        </div>
+        <form method="post">
+            <div style="overflow-x: auto">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;" class="text-center">
+                                Име на материала     - М.ед. - К-во в склад
+                            </th>
+                            <th style="width: 20%;" class="text-center">
+                                К-во трансфер
+                            </th>
+                            <th style="width: 20%;" class="text-center">
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var material in Model.TransferedMaterials)
+                        {
+                        <tr>
+                            <td>
+                                @material.MaterialName - @material.MeasurementName
+                            </td>
+                            <td class="text-right">
+                                @material.Quantity.ToString("#,##0.000")
+                            </td>
+                            <td class="text-right">
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-7">
+                    <select asp-for="TransferedMaterialId" class="form-control">
+                        @foreach (var warehouseMaterial in Model.WarehouseMaterials)
+                        {
+                        <option value="@warehouseMaterial.MaterialId">
+                            @warehouseMaterial.MaterialName   -  @warehouseMaterial.MeasurementName - @warehouseMaterial.Quantity.ToString("#,##0.000")
+                        </option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-2">
+                    <input asp-for="QuantityToTransfer" class="form-control">
+                    <span asp-validation-for="QuantityToTransfer" class="small text-danger"></span>
+                </div>
+                <div class="col-2">
+                    <input class="btn btn-outline-primary" type="submit" name="addButton" value="Добави" />
+                </div>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary m-2" type="submit" name="endButton" value="Върни се на главна страница" />
+            </div>
+        </form>
+    </div>
+</div>

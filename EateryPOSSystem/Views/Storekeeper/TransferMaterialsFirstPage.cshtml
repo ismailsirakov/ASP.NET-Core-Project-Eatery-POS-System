@@ -1,0 +1,43 @@
+﻿@model TransferMaterialsFormModel
+
+@{
+    ViewData["Title"] = "Transfer Materials";
+}
+
+<div>
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-2 col-xl-8">
+        <div class="text-center">
+            <h2 class="text-center font-weight-bold text-primary">Трансфер на материали между складове</h2>
+        </div>
+        <form method="post">
+            <div class="row">
+                <div class="form-group offset-3 col-6">
+                    <label asp-for="TransferFromWarehouseId">Трансфер от склад</label>
+                    <select asp-for="TransferFromWarehouseId" class="form-control">
+                        @foreach (var warehouse1 in Model.Warehouses)
+                        {
+                            <option value="@warehouse1.Id">@warehouse1.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="TransferFromWarehouseId" class="small text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group offset-3 col-6">
+                    <label asp-for="TransferToWarehouseId">Трансфер към склад</label>
+                    <select asp-for="TransferToWarehouseId" class="form-control">
+                        @foreach (var warehouse2 in Model.Warehouses)
+                        {
+                            <option value="@warehouse2.Id">@warehouse2.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="TransferToWarehouseId" class="small text-danger"></span>
+                </div>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary m-1" type="submit" value="Следваща страница" />
+            </div>
+        </form>
+    </div>
+</div>

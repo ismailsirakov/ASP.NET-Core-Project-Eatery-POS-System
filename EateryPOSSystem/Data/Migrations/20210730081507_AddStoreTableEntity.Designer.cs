@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EateryPOSSystem.Data.Migrations
 {
     [DbContext(typeof(EateryPOSDbContext))]
-    [Migration("20210729145106_AddTableEntityAndEditRecipeEntity")]
-    partial class AddTableEntityAndEditRecipeEntity
+    [Migration("20210730081507_AddStoreTableEntity")]
+    partial class AddStoreTableEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -296,19 +296,17 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<int>("StoreProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WarehouseId")
+                    b.Property<int>("WarehouseMaterialMaterialId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WarehouseMaterialId")
+                    b.Property<int>("WarehouseMaterialWarehouseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StoreProductId");
 
-                    b.HasIndex("WarehouseId");
-
-                    b.HasIndex("WarehouseMaterialId");
+                    b.HasIndex("WarehouseMaterialWarehouseId", "WarehouseMaterialMaterialId");
 
                     b.ToTable("Recipes");
                 });
@@ -405,7 +403,7 @@ namespace EateryPOSSystem.Data.Migrations
                     b.ToTable("StoreProducts");
                 });
 
-            modelBuilder.Entity("EateryPOSSystem.Data.Models.Table", b =>
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.StoreTable", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -418,6 +416,9 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<int>("StoreId")
                         .HasColumnType("int");
 
+                    b.Property<string>("StoreName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TableNumber")
                         .HasColumnType("int");
 
@@ -426,7 +427,7 @@ namespace EateryPOSSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tables");
+                    b.ToTable("StoreTables");
                 });
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.TempWarehouseReceipt", b =>
@@ -533,12 +534,13 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.WarehouseMaterial", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
 
                     b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -547,14 +549,9 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,3)");
 
-                    b.Property<int>("WarehouseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("WarehouseId", "MaterialId");
 
                     b.HasIndex("MaterialId");
-
-                    b.HasIndex("WarehouseId");
 
                     b.ToTable("WarehouseMaterials");
                 });
@@ -882,21 +879,13 @@ namespace EateryPOSSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EateryPOSSystem.Data.Models.Warehouse", "Warehouse")
-                        .WithMany("Recipes")
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("EateryPOSSystem.Data.Models.WarehouseMaterial", "WarehouseMaterial")
                         .WithMany("Recipes")
-                        .HasForeignKey("WarehouseMaterialId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("WarehouseMaterialWarehouseId", "WarehouseMaterialMaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("StoreProduct");
-
-                    b.Navigation("Warehouse");
 
                     b.Navigation("WarehouseMaterial");
                 });
@@ -939,7 +928,7 @@ namespace EateryPOSSystem.Data.Migrations
                     b.HasOne("EateryPOSSystem.Data.Models.Product", "Product")
                         .WithMany("StoreProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EateryPOSSystem.Data.Models.Store", "Store")
@@ -1161,8 +1150,6 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.Warehouse", b =>
                 {
-                    b.Navigation("Recipes");
-
                     b.Navigation("WarehouseMaterials");
 
                     b.Navigation("WarehouseReceipts");

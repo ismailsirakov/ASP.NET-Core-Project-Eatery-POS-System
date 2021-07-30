@@ -9,6 +9,7 @@ namespace EateryPOSSystem.Data.Models
         public User()
         {
             Bills = new HashSet<Bill>();
+            Transfers = new HashSet<Transfer>();
             WarehouseReceipts = new HashSet<WarehouseReceipt>();
         }
         public int UserId { get; set; }
@@ -37,5 +38,6 @@ namespace EateryPOSSystem.Data.Models
 
         public IEnumerable<WarehouseReceipt> WarehouseReceipts { get; set; }
 
+        public IEnumerable<Transfer> Transfers { get; set; }
     }
 }

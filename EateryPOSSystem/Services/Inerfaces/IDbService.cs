@@ -10,9 +10,9 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddBill(Bill bill);
 
-        void AddCity(City city);
-
         void AddDoocumentType(DocumentType documentType);
+
+        void AddCity(City city);
 
         void AddMaterial(Material material);
 
@@ -38,54 +38,57 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddTempWarehouseReceipt(TempWarehouseReceipt tempWarehouseReceipt);
 
+        void AddTransfer(Transfer transfer);
+
         void AddUser(User user);
 
         void AddWarehouse(Warehouse warehouse);
 
         void AddWarehouseMaterial(WarehouseMaterial warehouseMaterial);
 
-
         void AddWarehouseReceiptRange(IEnumerable<WarehouseReceipt> warehouseReceipts);
 
-        IEnumerable<StoreServiceModel> GetStores();
-
-        IEnumerable<PositionServiceModel> GetPositions();
-
-        IEnumerable<PaymentTypeServiceModel> GetPaymentTypes();
-
-        IEnumerable<CityServiceModel> GetCities();
-
-        IEnumerable<ProductTypeServiceModel> GetProductTypes();
+        IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int productId);
 
         IEnumerable<AddressServiceModel> GetAddresses();
 
-        IEnumerable<WarehouseServiceModel> GetWarehouses();
-
-        IEnumerable<ProviderServiceModel> GetProviders();
-
-        IEnumerable<ProductServiceModel> GetProducts();
+        IEnumerable<CityServiceModel> GetCities();
 
         IEnumerable<DocumentTypeServiceModel> GetDocumentTypes();
 
+        IEnumerable<MaterialServiceModel> GetMaterials();
+
         IEnumerable<MeasurementServiceModel> GetMeasurements();
 
-        IEnumerable<MaterialServiceModel> GetMaterials();
+        IEnumerable<PaymentTypeServiceModel> GetPaymentTypes();
+
+        IEnumerable<PositionServiceModel> GetPositions();
+
+        IEnumerable<ProductServiceModel> GetProducts();
+
+        IEnumerable<ProductTypeServiceModel> GetProductTypes();
+
+        IEnumerable<ProviderServiceModel> GetProviders();
 
         IEnumerable<Recipe> GetRecipes();
 
-        IEnumerable<StoreProductServiceModel> GetStoreProducts();
+        IEnumerable<StoreServiceModel> GetStores();
 
-        IEnumerable<WarehouseReceipt> GetWarehouseReceipts();
+        IEnumerable<StoreProductServiceModel> GetStoreProducts();
 
         IEnumerable<TempWarehouseReceipt> GetTempWarehouseReceipts();
 
-        IEnumerable<int> GetWarehouseMaterialIdsByWarehouseId(int warehouseId);
+        IEnumerable<TransferServiceModel> GetTransfers();
 
-        IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterialsByWarehouseId(int warehouseId);
+        IEnumerable<WarehouseServiceModel> GetWarehouses();
+
+        IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterials();
 
         WarehouseMaterial GetWarehouseMaterialByWarehouseIdAndMaterialId(int warehouseId, int materialId);
 
-        IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int productId);
+        IEnumerable<int> GetWarehouseMaterialIdsByWarehouseId(int warehouseId);
+
+        IEnumerable<WarehouseReceipt> GetWarehouseReceipts();
 
         void RemoveTempWarehouseReceiptsRangeByReceiptNumber(int receiptNumber);
 
