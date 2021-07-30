@@ -329,6 +329,34 @@
 
             transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
 
+            transfer.Warehouses = dbService.GetWarehouses();
+
+            if (!transfer.Warehouses.Any(w=>w.Id == transfer.TransferFromWarehouseId))
+            {
+                ModelState.AddModelError(nameof(transfer.TransferFromWarehouseId), notExistingModelInDB);
+
+                return View(transfer);
+            }
+
+            if (!transfer.Warehouses.Any(w => w.Id == transfer.TransferToWarehouseId))
+            {
+                ModelState.AddModelError(nameof(transfer.TransferToWarehouseId), notExistingModelInDB);
+
+                return View(transfer);
+            }
+
+            if (transfer.TransferFromWarehouseId == transfer.TransferToWarehouseId)
+            {
+                ModelState.AddModelError(nameof(transfer.TransferToWarehouseId), fromWarehouseAndToWarehouseAreTheSame);
+
+                return View(transfer);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(transfer);
+            }
+
             var lastTransfer = dbService.GetTransfers().OrderBy(t => t.Id).LastOrDefault();
 
             if (lastTransfer is null)
@@ -345,7 +373,8 @@
 
         public IActionResult TransferMaterialsSecondPage(TransferMaterialsFormModel transfer)
         {
-            transfer.WarehouseMaterials = dbService.GetWarehouseMaterials();
+            transfer.WarehouseMaterials = dbService.GetWarehouseMaterials()
+                .Where(wm => wm.WarehouseId == transfer.TransferFromWarehouseId);
 
             transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
 
@@ -358,15 +387,42 @@
                                                          string endButton,
                                                          TransferMaterialsFormModel transfer)
         {
+            transfer.WarehouseMaterials = dbService.GetWarehouseMaterials()
+                .Where(wm => wm.WarehouseId == transfer.TransferFromWarehouseId);
+
+            transfer.QuantityInWarehouse = transfer.WarehouseMaterials
+                .FirstOrDefault(w => w.MaterialId == transfer.TransferedMaterialId).Quantity;
+
+            transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
+
             if (endButton != null)
             {
                 return RedirectToAction("Index","Home");
+            }
+
+            if (transfer.QuantityToTransfer > transfer.QuantityInWarehouse)
+            {
+                ModelState.AddModelError(nameof(transfer.QuantityToTransfer), greaterQuantityThenExistInWarehouse);
+
+                return View(transfer);
             }
 
             transfer.WarehouseMaterials = dbService.GetWarehouseMaterials()
                 .Where(wm => wm.WarehouseId == transfer.TransferFromWarehouseId);
 
             transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
+
+            if (!transfer.WarehouseMaterials.Any(wm=>wm.MaterialId == transfer.TransferedMaterialId))
+            {
+                ModelState.AddModelError(nameof(transfer.TransferedMaterialId), notExistingModelInDB);
+
+                return View(transfer);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(transfer);
+            }
 
             if (addButton != null)
             {
@@ -384,7 +440,8 @@
 
                 storekeeper.TransferMaterial(newTransfer);
 
-                transfer.WarehouseMaterials = dbService.GetWarehouseMaterials();
+                transfer.WarehouseMaterials = dbService.GetWarehouseMaterials()
+                .Where(wm => wm.WarehouseId == transfer.TransferFromWarehouseId);
 
                 transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
 
