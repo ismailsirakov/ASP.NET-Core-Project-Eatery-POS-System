@@ -52,6 +52,8 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<AddressServiceModel> GetAddresses();
 
+        Bill GetBillById(int billId);
+
         IEnumerable<CityServiceModel> GetCities();
 
         IEnumerable<DocumentTypeServiceModel> GetDocumentTypes();
@@ -72,9 +74,13 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<Recipe> GetRecipes();
 
+        IEnumerable<SoldProduct> GetSoldProductsByBillId(int billId);
+
         IEnumerable<StoreServiceModel> GetStores();
 
         IEnumerable<StoreProductServiceModel> GetStoreProducts();
+
+        IEnumerable<TableServiceModel> GetTablesWithOpenBills();
 
         IEnumerable<TempWarehouseReceipt> GetTempWarehouseReceipts();
 

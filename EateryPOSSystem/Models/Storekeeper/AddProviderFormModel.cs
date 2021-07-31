@@ -1,8 +1,8 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
-    using EateryPOSSystem.Services.Models;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using EateryPOSSystem.Services.Models;
     using static Data.DataConstants;
 
     public class AddProviderFormModel

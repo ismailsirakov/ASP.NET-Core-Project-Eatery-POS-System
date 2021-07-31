@@ -67,8 +67,8 @@
   "Warehouses": [
     { "Name": "Основен" },
     { "Name": "Кухня" },
-    { "Name": "Склад Бар-тераса" },
-    { "Name": "Склад Бар-басейн" },
+    { "Name": "Склад Бар - тераса" },
+    { "Name": "Склад Бар - басейн" },
     { "Name": "Склад Ресторант-градина" }
   ],
   "Addresses": [
@@ -76,7 +76,11 @@
     { "AddressDetails": "ул. К.Величков 53" },
     { "AddressDetails": "ул. К.Величков 35" },
     { "AddressDetails": "ул. Крайречна 2" },
-    { "AddressDetails": "ул. К.Райчо 11" },
+    { "AddressDetails": "ул. К.Величков 11" },
+    { "AddressDetails": "ул. Хр.Ботев 3" },
+    { "AddressDetails": "ул. Кокиче 12" },
+    { "AddressDetails": "ул. Дунав 3" },
+    { "AddressDetails": "ул. Пирин 14" },
     { "AddressDetails": "бул.Марица 42" },
     { "AddressDetails": "бул.Марица 121" },
     { "AddressDetails": "бул.Марица 57" }
@@ -91,7 +95,43 @@
       "MeasurementId": 4
     },
     {
+      "Name": "Кашкавал",
+      "MeasurementId": 4
+    },
+    {
+      "Name": "Сирене",
+      "MeasurementId": 4
+    },
+    {
+      "Name": "Брашно",
+      "MeasurementId": 4
+    },
+    {
+      "Name": "Шунка",
+      "MeasurementId": 4
+    },
+    {
+      "Name": "Сол",
+      "MeasurementId": 4
+    },
+    {
+      "Name": "Яйца",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Кафе капсула",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Захар пакетче 4гр.",
+      "MeasurementId": 1
+    },
+    {
       "Name": "Кола 250мл.",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Кола 1л.",
       "MeasurementId": 1
     },
     {
@@ -99,15 +139,39 @@
       "MeasurementId": 1
     },
     {
+      "Name": "Фанта 250мл.",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Фанта 1л.",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Чаени бисквити кутия(50бр.)",
+      "MeasurementId": 1
+    },
+    {
       "Name": "Вино червено наливно",
       "MeasurementId": 5
+    },
+    {
+      "Name": "Вино бяло наливно",
+      "MeasurementId": 5
+    },
+    {
+      "Name": "Вино бяло бутилка 750мл.",
+      "MeasurementId": 1
+    },
+    {
+      "Name": "Вино червено бутилка 750мл.",
+      "MeasurementId": 1
     },
     {
       "Name": "Мляко",
       "MeasurementId": 5
     },
     {
-      "Name": "Сметана течна-14гр.",
+      "Name": "Сметана течна - 14гр.",
       "MeasurementId": 1
     }
   ],
@@ -125,10 +189,28 @@
       "AddressId": 2
     },
     {
+      "Name": "Т.Иванов Тони ЕТ",
+      "Number": 145386222,
+      "CityId": 4,
+      "AddressId": 2
+    },
+    {
+      "Name": "Тонико 33 ООД",
+      "Number": 229352142,
+      "CityId": 2,
+      "AddressId": 4
+    },
+    {
+      "Name": "2000-ПП ООД",
+      "Number": 157349842,
+      "CityId": 3,
+      "AddressId": 9
+    },
+    {
       "Name": "М маркет ЕТ",
       "Number": 123123123,
       "CityId": 1,
-      "AddressId": 1
+      "AddressId": 7
     }
   ]
 }

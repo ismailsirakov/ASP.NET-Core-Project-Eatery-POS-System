@@ -13,13 +13,13 @@ namespace EateryPOSSystem.Data.Models
 
         public DateTime OpenDateTime { get; set; }
 
-        public DateTime CloseDateTime { get; set; }
+        public DateTime? CloseDateTime { get; set; }
 
         public int UserId { get; set; }
 
         public User User { get; set; }
 
-        public int PaymentTypeId { get; set; }
+        public int? PaymentTypeId { get; set; }
 
         public PaymentType PaymentType { get; set; }
 

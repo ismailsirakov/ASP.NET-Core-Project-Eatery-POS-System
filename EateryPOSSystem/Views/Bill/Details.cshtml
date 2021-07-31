@@ -1,0 +1,42 @@
+﻿@model BillViewModel
+
+@{
+    ViewData["Title"] = "Bill details";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <h2 class="text-center font-weight-bold text-primary">Детайли на сметка</h2>
+        <div class="border">
+            <h6>Сметка номер @Model.Id</h6>
+            <p>Служител: @Model.UserName</p>
+            <p>@Model.OpenDateTime.ToString()</p>
+        </div>
+        <ul class="list-group border-0">
+            @foreach (var soldProduct in Model.SoldProducts)
+            {
+                var sum = @soldProduct.Quantity * @soldProduct.Price;
+
+                <li class="list-group-item d-flex justify-content-between align-items-center border-top-0">
+                    @soldProduct.StoreProductName - @soldProduct.Quantity @soldProduct.MeasurementName  x @soldProduct.Price.ToString("#,##0.00")
+                    <span class="badge badge-pill">@sum.ToString("#,##0.00")</span>
+                </li>
+            }
+        </ul>
+        <div class="border">
+            <div>
+                <div class="text-right m-2">
+                    <h6>Общо @Model.TotalSum.ToString("#,##0.00") лв.</h6>
+                </div>
+                <div class="text-left">
+                    <h6>Дата @Model.CloseDateTime.ToString() </h6>
+                </div>
+            </div>
+            <p> @Model.PaymentTypeName</p>
+            <p> Ресто ....</p>
+        </div>
+        <div class="text-center">
+            <a asp-controller="Seller" asp-action="ChooseTable" class="btn btn-outline-primary">Затвори</a>
+        </div>
+    </div>
+</div>

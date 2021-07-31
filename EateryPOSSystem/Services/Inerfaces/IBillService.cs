@@ -3,9 +3,8 @@ namespace EateryPOSSystem.Services.Interfaces
     using System.Collections.Generic;
     using EateryPOSSystem.Services.Models;
 
-
-    public interface ISellerService
+    public interface IBillService
     {
-        IEnumerable<BillServiceModel> GetOpenBillsByStoreAndTableNumber(int storeId, int tableNumber);
+        IEnumerable<SoldProductServiceModel> SoldProductsByBillId(int billId);
     }
 }

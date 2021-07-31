@@ -42,14 +42,41 @@
 
         public IActionResult ChooseTable(ChooseTableFormModel chosenStore)
         {            
+
             return View(chosenStore);
         }
 
         [HttpPost]
-        public IActionResult ChooseTable(ChooseTableFormModel chosenStore, int tableNumber)
+        public IActionResult ChooseTable(ChooseTableFormModel chosenStoreTables, int tableNumber)
         {
+            var table = new TableFormModel
+            {
+                TableNumber = tableNumber,
+                StoreName = chosenStoreTables.StoreName
+            };
 
-            return View(chosenStore);
+            return RedirectToAction("Table", "Seller", table);
+        }
+
+        public IActionResult Table(TableFormModel table)
+        {
+            table.OpenBills = seller.GetOpenBillsByStoreAndTableNumber(table.StoreId, table.TableNumber);
+
+            return View(table);
+        }
+
+        [HttpPost]
+        public IActionResult Table(TableFormModel table, int billNumberToView, string newBill)
+        {
+            table.OpenBills = seller.GetOpenBillsByStoreAndTableNumber(table.StoreId, table.TableNumber);
+
+            if (newBill != null)
+            {
+
+                return RedirectToAction();
+            }
+
+            return View(table);
         }
     }
 }

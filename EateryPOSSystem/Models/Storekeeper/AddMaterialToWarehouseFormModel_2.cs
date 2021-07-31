@@ -1,10 +1,10 @@
 namespace EateryPOSSystem.Models.Storekeeper
 {
-    using EateryPOSSystem.Services.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using EateryPOSSystem.Services.Models;
 
     public class AddMaterialToWarehouseFormModel_2
     {

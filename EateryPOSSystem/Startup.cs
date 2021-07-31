@@ -44,6 +44,8 @@ namespace EateryPOSSystem
             services.AddTransient<IProductionService, ProductionService>();
 
             services.AddTransient<IDbService, DbService>();
+
+            services.AddTransient<IBillService, BillService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -166,6 +166,9 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
+        public Bill GetBillById(int billId)
+            => data.Bills.FirstOrDefault(b => b.Id == billId);
+
         public IEnumerable<CityServiceModel> GetCities()
             => data.Cities
             .Select(c => new CityServiceModel
@@ -255,6 +258,9 @@ namespace EateryPOSSystem.Services
             => data.Recipes
             .ToList();
 
+        public IEnumerable<SoldProduct> GetSoldProductsByBillId(int billId)
+            => data.SoldProducts.Where(sp => sp.BillId == billId);
+        
         public IEnumerable<StoreServiceModel> GetStores()
             => data.Stores
             .Select(s => new StoreServiceModel
@@ -277,6 +283,18 @@ namespace EateryPOSSystem.Services
                 MeasurementId = sp.MeasurementId,
                 Quantity = sp.Quantity,
                 Price = sp.Price
+            })
+            .ToList();
+
+        public IEnumerable<TableServiceModel> GetTablesWithOpenBills()
+            => data.StoreTables
+            .Select(st => new TableServiceModel
+            {
+                BillNumber = st.BillNumber,
+                StoreId = st.StoreId,
+                StoreName = st.StoreName,
+                TableNumber = st.TableNumber,
+                UserId = st.UserId
             })
             .ToList();
 
