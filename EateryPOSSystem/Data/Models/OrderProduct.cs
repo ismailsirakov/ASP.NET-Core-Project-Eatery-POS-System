@@ -1,6 +1,8 @@
-namespace EateryPOSSystem.Services.Models
+namespace EateryPOSSystem.Data.Models
 {
-    public class SoldProductServiceModel
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    public class OrderProduct
     {
         public int Id { get; set; }
 
@@ -10,16 +12,14 @@ namespace EateryPOSSystem.Services.Models
 
         public string StoreProductName { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
-        public decimal Cost { get; set; }
-
+        [Column(TypeName = "decimal(18,3)")]
         public decimal Quantity { get; set; }
 
         public int MeasurementId { get; set; }
 
         public string MeasurementName { get; set; }
-
-        
     }
 }

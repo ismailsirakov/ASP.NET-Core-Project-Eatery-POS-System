@@ -7,13 +7,13 @@
     {
         private readonly IBaseDataService baseData;
 
-        private readonly IStorekeeperService storekeeper;
+        private readonly IStorekeeperService storekeeperService;
 
         public DbController(IBaseDataService baseData,
-            IStorekeeperService storekeeper)
+            IStorekeeperService storekeeperService)
         {
             this.baseData = baseData;
-            this.storekeeper = storekeeper;
+            this.storekeeperService = storekeeperService;
         }
 
 
@@ -27,7 +27,7 @@
 
         public IActionResult ImportStorekeeperData()
         {
-            storekeeper.ImportStorekeeperData();
+            storekeeperService.ImportStorekeeperData();
 
             return RedirectToAction("Index", "Home");
         }

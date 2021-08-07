@@ -1,14 +1,14 @@
-﻿@model BillViewModel
+﻿@model CloseBillFormModel
 
 @{
-    ViewData["Title"] = "Bill details";
+    ViewData["Title"] = "Close bill";
 }
 
 <div class="row">
     <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
         <h2 class="text-center font-weight-bold text-primary">Детайли на сметка</h2>
         <div class="border">
-            <h5>Сметка номер @Model.Id</h5>
+            <h5>Сметка номер @Model.BillId</h5>
             <h5>Сервитьор: @Model.UserName</h5>
             <h5>Дата и час на отваряне:</h5>
             <h6>@Model.OpenDateTime.ToString()</h6>
@@ -37,11 +37,21 @@
         <div class="m-2">
             <a asp-controller="Seller" asp-action="Table" class="btn btn-outline-secondary btn-block">Назад</a>
         </div>
-        <div class="m-2">
-            <a asp-controller="Seller" asp-action="AddSoldProductToBill" class="btn btn-outline-primary btn-block">Нова поръчка</a>
-        </div>
-        <div class="m-2">
-            <a asp-controller="Bill" asp-action="CloseBill" class="btn btn-outline-success btn-block">Приключи сметка</a>
-        </div>
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="PaymentTypeId">Избери тип плащане</label>
+                <select asp-for="PaymentTypeId">
+
+                    @foreach (var paymentType in Model.PaymentTypes)
+                    {
+                        <option value="@paymentType.Id">@paymentType.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="PaymentTypeId" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-outline-success" type="submit" value="Приключи" />
+            </div>
+        </form>
     </div>
 </div>

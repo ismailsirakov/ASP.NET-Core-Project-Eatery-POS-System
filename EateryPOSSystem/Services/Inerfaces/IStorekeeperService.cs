@@ -45,5 +45,7 @@ namespace EateryPOSSystem.Services.Interfaces
         void TransferMaterial(TransferServiceModel transfer);
 
         WarehouseReceipt LastWarehouseReceiptInDb();
+
+        int GetLastTempWarehouseReceiptNumber();
     }
 }

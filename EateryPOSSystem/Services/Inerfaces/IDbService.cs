@@ -18,6 +18,8 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddMeasurement(Measurement measurement);
 
+        void AddOrderProduct(OrderProduct orderProduct);
+
         void AddPaymentType(PaymentType paymentType);
 
         void AddPosition(Position position);
@@ -35,6 +37,8 @@ namespace EateryPOSSystem.Services.Interfaces
         void AddStore(Store store);
 
         void AddStoreProduct(StoreProduct storeProduct);
+
+        void AddStoreTable(StoreTable table);
 
         void AddTempWarehouseReceipt(TempWarehouseReceipt tempWarehouseReceipt);
 
@@ -62,6 +66,8 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<MeasurementServiceModel> GetMeasurements();
 
+        IEnumerable<OrderProductServiceModel> GetOrderProducts();
+
         IEnumerable<PaymentTypeServiceModel> GetPaymentTypes();
 
         IEnumerable<PositionServiceModel> GetPositions();
@@ -72,9 +78,9 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<ProviderServiceModel> GetProviders();
 
-        IEnumerable<Recipe> GetRecipes();
+        IEnumerable<RecipeServiceModel> GetRecipes();
 
-        IEnumerable<SoldProduct> GetSoldProductsByBillId(int billId);
+        IEnumerable<SoldProductServiceModel> GetSoldProducts();
 
         IEnumerable<StoreServiceModel> GetStores();
 
@@ -96,9 +102,15 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<WarehouseReceipt> GetWarehouseReceipts();
 
+        void RemoveBillFromTable(int billId);
+
+        void RemoveOrderProductById(int billId);
+
+        void RemoveOrderProductsFromBill(int billId);
+
         void RemoveTempWarehouseReceiptsRangeByReceiptNumber(int receiptNumber);
 
-        void UpdateWareHouseMaterialQuantity(int warehouseId, int materialId, decimal quantity);
+        void UpdateWarehouseMaterialQuantity(int warehouseId, int materialId, decimal quantity);
 
         void UpdateWarehouseMaterialPrice(int warehouseId, int materialId, decimal price);
     }

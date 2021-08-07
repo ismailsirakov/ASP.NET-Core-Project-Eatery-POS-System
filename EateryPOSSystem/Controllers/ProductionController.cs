@@ -9,13 +9,13 @@
     public class ProductionController : Controller
     {
         private readonly IDbService dbService;
-        private readonly IProductionService production;
+        private readonly IProductionService productionService;
 
         public ProductionController(IDbService dbService,
-                                    IProductionService production)
+                                    IProductionService productionService)
         {
             this.dbService = dbService;
-            this.production = production;
+            this.productionService = productionService;
         }
 
         public IActionResult AddProduct()
@@ -47,7 +47,7 @@
                 return View(product);
             }
 
-            production.AddProduct(product.Name, product.ProductTypeId);
+            productionService.AddProduct(product.Name, product.ProductTypeId);
 
             return RedirectToAction("Index", "Home");
         }
@@ -88,7 +88,7 @@
                 return View(storeProduct);
             }
 
-            if (production.IsProductExistInStore(storeProduct.ProductId, storeProduct.StoreId))
+            if (productionService.IsProductExistInStore(storeProduct.ProductId, storeProduct.StoreId))
             {
                 ModelState.AddModelError(nameof(storeProduct.StoreId), existingModelInDB);
 
@@ -100,7 +100,7 @@
                 return View(storeProduct);
             }
 
-            production.AddProductToStore(storeProduct.ProductId,
+            productionService.AddProductToStore(storeProduct.ProductId,
                                     storeProduct.StoreId,
                                     storeProduct.MeasurementId,
                                     storeProduct.Quantity,
@@ -125,7 +125,7 @@
         {
             recipe.StoreProducts = dbService.GetStoreProducts();
 
-            if (!production.IsStoreProductWithIdExist(recipe.StoreProductId))
+            if (!productionService.IsStoreProductWithIdExist(recipe.StoreProductId))
             {
                 ModelState.AddModelError(nameof(recipe.StoreProductId), notExistingModelInDB);
                 return View(recipe);
@@ -147,7 +147,7 @@
 
         public IActionResult AddRecipeSecondPage(AddRecipeFormModel recipe)
         {
-            recipe.WarehouseMaterials = production.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
             recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
             return View(recipe);
@@ -162,10 +162,12 @@
                 return RedirectToAction("Index", "Home");
             }
 
-            recipe.WarehouseMaterials = production.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            recipe.WarehouseMaterialWarehouseId = recipe.WarehouseId;
+
+            recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
             recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
-            if (!production.IsWarehouseMaterialExist(recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId))
+            if (!productionService.IsWarehouseMaterialExist(recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId))
             {
                 ModelState.AddModelError(nameof(recipe.WarehouseMaterialMaterialId), notExistingModelInDB);
                 return View(recipe);
@@ -179,14 +181,14 @@
 
             if (addButton != null)
             {
-                if (production.IsMaterialInRecipeExist(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialMaterialId))
+                if (productionService.IsMaterialInRecipeExist(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialMaterialId))
                 {
                     ModelState.AddModelError(nameof(recipe.MaterialQuantity), existingMaterialInRecipe);
 
                     return View(recipe);
                 }
 
-                production.AddRecipe(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId, recipe.MaterialQuantity);
+                productionService.AddRecipe(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId, recipe.MaterialQuantity);
 
                 recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
@@ -194,6 +196,13 @@
             }
 
             return View(recipe);
+        }
+
+        public IActionResult ImportProductionData()
+        {
+            productionService.ImportProductionData();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

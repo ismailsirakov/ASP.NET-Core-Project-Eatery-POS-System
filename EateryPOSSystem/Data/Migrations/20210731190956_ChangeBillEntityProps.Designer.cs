@@ -410,7 +410,7 @@ namespace EateryPOSSystem.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BillNumber")
+                    b.Property<int>("BillId")
                         .HasColumnType("int");
 
                     b.Property<int>("StoreId")

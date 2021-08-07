@@ -10,18 +10,19 @@
             <h2 class="text-center font-weight-bold text-primary">Отворени сметки</h2>
             <h5 class="text-center embed-responsive">Обект: @Model.StoreName</h5>
             <h5 class="text-center embed-responsive">Маса № @Model.TableNumber</h5>
-            <div class="border m-2">
+            <div class="border m-2 h-100">
                 @foreach (var bill in Model.OpenBills)
                 {
-                    <button class="btn btn-outline-primary btn-lg col-2 m-2 text-center" type="submit" name="billNumberToView" value="@bill.Id">@bill.UserName @bill.TotalSum</button>
+                    <button class="btn btn-outline-primary col-12 m-1 text-center" type="submit" name="billIdToView" value="@bill.Id">@bill.UserName - сметка № @bill.Id - @bill.TotalSum.ToString("#,###0.00") лв.</button>
                 }
             </div>
+            <div class="border m-2">
+                <button class="btn btn-outline-primary text-center" type="submit" name="newBill" value="New bill">Нова сметка</button>
+            </div>
+
             <div class="m-2">
                 <div class="text-center m-2">
                     <input class="btn btn-primary" type="submit" name="goBack" value="Назад" />
-                </div>
-                <div class="text-center m-2">
-                    <input class="btn btn-primary" type="submit" name="newBill" value="Нова сметка" />
                 </div>
             </div>
         </form>

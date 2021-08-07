@@ -1,0 +1,62 @@
+﻿@model AddSoldProductToBillFormModel
+
+@{
+    ViewData["Title"] = "Add product to bill";
+}
+
+
+<div class="col-sm-12 offset-lg-1 col-lg-10 offset-xl-2 col-xl-8">
+    <form method="post">
+        <h2 class="text-center font-weight-bold text-primary">Добави продукт към сметка</h2>
+        <div class="row">
+            <div class="col-5 m-0 text-center">
+                <h5>Продукти</h5>
+                <h6>Id - Име на продукт - Ед. цена</h6>
+            </div>
+            <div class="text-center col-6 m-0">
+                <h5>Поръчка</h5>
+                <h6>Към сметка № @Model.BillId</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-5 h-100 m-0">
+                <select asp-for="StoreProductId" class="form-control" size="15">
+                    @foreach (var product in Model.StoreProducts)
+                    {
+                        <option value="@product.Id">@product.Id - @product.ProductName - @product.Price</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-6 h-100 m-0">
+                <select asp-for="OrderProductId" class="form-control" size="15">
+                    @foreach (var orderProduct in Model.OrderProducts)
+                    {
+                        var sum = orderProduct.Quantity * orderProduct.Price;
+                        <option value="@orderProduct.Id">@orderProduct.StoreProductName - @orderProduct.Quantity @orderProduct.MeasurementName x @orderProduct.Price.ToString("#,##0.00") - @sum.ToString("#,##0.00")лв.</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row m-2">
+            <div>
+                <label asp-for="Quantity">Колич.</label>
+            </div>
+            <div class="form-group col-2">
+                <input asp-for="Quantity" class="form-control" value="1">
+                <span asp-validation-for="Quantity" class="small text-danger"></span>
+            </div>
+            <div class="col-2">
+                <input class="btn btn-outline-success" type="submit" name="addButton" value=" => " />
+            </div>
+            <div class="col-4">
+
+            </div>
+            <div class="col-2">
+                <input class="btn btn-outline-danger" type="submit" name="deleteButton" value=" <= " />
+            </div>
+        </div>
+        <div class="text-center m-3">
+            <input class="btn btn-primary" type="submit" name="endOrderButton" value="Приключи поръчка" />
+        </div>
+    </form>
+</div>

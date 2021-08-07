@@ -24,6 +24,8 @@
 
         public DbSet<Measurement> Measurements { get; init; }
 
+        public DbSet<OrderProduct> OrderProducts { get; init; }
+
         public DbSet<PaymentType> PaymentTypes { get; init; }
 
         public DbSet<Position> Positions { get; init; }

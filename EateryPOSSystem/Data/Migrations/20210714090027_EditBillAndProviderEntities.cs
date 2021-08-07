@@ -11,7 +11,7 @@
                 table: "Providers");
 
             migrationBuilder.DropColumn(
-                name: "BillNumber",
+                name: "BillId",
                 table: "Bills");
 
             migrationBuilder.RenameColumn(
@@ -103,7 +103,7 @@
                 oldMaxLength: 50);
 
             migrationBuilder.AddColumn<int>(
-                name: "BillNumber",
+                name: "BillId",
                 table: "Bills",
                 type: "int",
                 nullable: false,

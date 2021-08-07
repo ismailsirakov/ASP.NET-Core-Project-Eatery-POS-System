@@ -158,6 +158,39 @@ namespace EateryPOSSystem.Data.Migrations
                     b.ToTable("Measurements");
                 });
 
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.OrderProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MeasurementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MeasurementName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,3)");
+
+                    b.Property<int>("StoreProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoreProductName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderProducts");
+                });
+
             modelBuilder.Entity("EateryPOSSystem.Data.Models.PaymentType", b =>
                 {
                     b.Property<int>("Id")
@@ -319,6 +352,9 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<int>("BillId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
@@ -408,7 +444,7 @@ namespace EateryPOSSystem.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BillNumber")
+                    b.Property<int>("BillId")
                         .HasColumnType("int");
 
                     b.Property<int>("StoreId")

@@ -10,7 +10,7 @@
         <div class="border">
             <h5>Сметка номер @Model.Id</h5>
             <h5>Сервитьор: @Model.UserName</h5>
-            <h5>Дата и час на отваряне:</h5>
+            <h6>Дата и час на отваряне:</h6>
             <h6>@Model.OpenDateTime.ToString()</h6>
         </div>
         <ul class="list-group border-0">
@@ -25,23 +25,21 @@
             }
         </ul>
         <div class="border">
-            <div>
+            <div class="m-1">
                 <div class="text-right m-2">
                     <h6>Общо @Model.TotalSum.ToString("#,##0.00") лв.</h6>
+                    @{
+                        var vat = Model.TotalSum / 6m;
+                    }
+                    <h6>Включено ДДС(20%) @vat.ToString("#,##0.00") лв.</h6>
                 </div>
-                <div class="text-left">
-                    <h6 class="text-danger">Неприключена сметка</h6>
-                </div>
+                <h6>Начин на плащане: @Model.PaymentTypeName</h6>
+                <h6>Дата и час на приключване:</h6>
+                <h6>@Model.CloseDateTime.ToString()</h6>
             </div>
         </div>
         <div class="m-2">
-            <a asp-controller="Seller" asp-action="Table" class="btn btn-outline-secondary btn-block">Назад</a>
-        </div>
-        <div class="m-2">
-            <a asp-controller="Seller" asp-action="AddSoldProductToBill" class="btn btn-outline-primary btn-block">Нова поръчка</a>
-        </div>
-        <div class="m-2">
-            <a asp-controller="Bill" asp-action="CloseBill" class="btn btn-outline-success btn-block">Приключи сметка</a>
+            <a asp-controller="Seller" asp-action="ChooseStore" class="btn btn-outline-secondary btn-block">Затвори</a>
         </div>
     </div>
 </div>

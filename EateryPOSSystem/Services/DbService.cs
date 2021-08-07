@@ -52,6 +52,12 @@ namespace EateryPOSSystem.Services
             data.SaveChanges();
         }
 
+        public void AddOrderProduct(OrderProduct orderProduct)
+        {
+            data.OrderProducts.Add(orderProduct);
+            data.SaveChanges();
+        }
+
         public void AddPaymentType(PaymentType paymentType)
         {
             data.PaymentTypes.Add(paymentType);
@@ -106,6 +112,11 @@ namespace EateryPOSSystem.Services
             data.SaveChanges();
         }
 
+        public void AddStoreTable(StoreTable table)
+        {
+            data.StoreTables.Add(table);
+            data.SaveChanges();
+        }
         public void AddTempWarehouseReceipt(TempWarehouseReceipt tempWarehouseReceipt)
         {
             data.TempWarehouseReceipts.Add(tempWarehouseReceipt);
@@ -208,6 +219,22 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
+        public IEnumerable<OrderProductServiceModel> GetOrderProducts()
+            => data.OrderProducts
+            .Select(op => new OrderProductServiceModel
+            {
+                Id = op.Id,
+                BillId = op.BillId,
+                StoreProductId = op.StoreProductId,
+                StoreProductName = op.StoreProductName,
+                MeasurementId = op.MeasurementId,
+                MeasurementName = op.MeasurementName,
+                Quantity = op.Quantity,
+                Price = op.Price
+            })
+            .ToList();
+        
+
         public IEnumerable<ProductTypeServiceModel> GetProductTypes()
             => data.ProductTypes
             .Select(pt => new ProductTypeServiceModel
@@ -254,12 +281,35 @@ namespace EateryPOSSystem.Services
             })
             .ToList();
 
-        public IEnumerable<Recipe> GetRecipes()
+        public IEnumerable<RecipeServiceModel> GetRecipes()
             => data.Recipes
+            .Select(r=> new RecipeServiceModel
+            {
+                Id = r.Id,
+                Name = r.Name,
+                StoreProductId = r.StoreProductId,
+                WarehouseMaterialId = r.WarehouseMaterialMaterialId,
+                MaterialName = r.WarehouseMaterial.Material.Name,
+                WarehouseId = r.WarehouseMaterialWarehouseId,
+                MeasurementName = r.WarehouseMaterial.Material.Measurement.Name,
+                MaterialQuantity = r.MaterialQuantity
+            })
             .ToList();
 
-        public IEnumerable<SoldProduct> GetSoldProductsByBillId(int billId)
-            => data.SoldProducts.Where(sp => sp.BillId == billId);
+        public IEnumerable<SoldProductServiceModel> GetSoldProducts()
+            =>data.SoldProducts
+            .Select(sp=> new SoldProductServiceModel
+            {
+                Id = sp.Id,
+                BillId = sp.BillId,
+                StoreProductId = sp.StoreProductId,
+                StoreProductName = sp.StoreProduct.Product.Name,
+                MeasurementId = sp.MeasurementId,
+                MeasurementName = sp.Measurement.Name,
+                Quantity = sp.Quantity,
+                Price = sp.Price
+            })
+            .ToList();
         
         public IEnumerable<StoreServiceModel> GetStores()
             => data.Stores
@@ -290,7 +340,7 @@ namespace EateryPOSSystem.Services
             => data.StoreTables
             .Select(st => new TableServiceModel
             {
-                BillNumber = st.BillNumber,
+                BillId = st.BillId,
                 StoreId = st.StoreId,
                 StoreName = st.StoreName,
                 TableNumber = st.TableNumber,
@@ -357,11 +407,39 @@ namespace EateryPOSSystem.Services
         public IEnumerable<WarehouseReceipt> GetWarehouseReceipts()
             => data.WarehouseReceipts.ToList();
 
+        public void RemoveOrderProductById(int orderProductId)
+        {
+            data.OrderProducts.Remove(data.OrderProducts.Find(orderProductId));
+
+            data.SaveChanges();
+        }
+
+        public void RemoveBillFromTable(int billId)
+        {
+            var billOnTable = data.StoreTables.FirstOrDefault(st => st.BillId == billId);
+
+            data.StoreTables.Remove(billOnTable);
+
+            data.SaveChanges();
+        }
+
+        public void RemoveOrderProductsFromBill(int billId)
+        {
+            data.OrderProducts
+            .RemoveRange(data.OrderProducts.Where(op => op.BillId == billId));
+
+            data.SaveChanges();
+        }
+
         public void RemoveTempWarehouseReceiptsRangeByReceiptNumber(int receiptNumber)
-            => data.TempWarehouseReceipts
+        {
+            data.TempWarehouseReceipts
             .RemoveRange(data.TempWarehouseReceipts.Where(twr => twr.ReceiptNumber == receiptNumber));
 
-        public void UpdateWareHouseMaterialQuantity(int warehouseId, int materialId, decimal quantity)
+            data.SaveChanges();
+        }
+
+        public void UpdateWarehouseMaterialQuantity(int warehouseId, int materialId, decimal quantity)
         {
             data.WarehouseMaterials
             .FirstOrDefault(wm => wm.WarehouseId == warehouseId & wm.MaterialId == materialId).Quantity = quantity;

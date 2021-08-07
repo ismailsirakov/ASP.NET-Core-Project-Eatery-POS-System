@@ -5,6 +5,15 @@ namespace EateryPOSSystem.Services.Interfaces
 
     public interface IBillService
     {
+
+        void AddNewBillToTable(int userId, int storeId, int tableNumber, int billId);
+
+        void RemoveBillFromTable(int billId);
+
         IEnumerable<SoldProductServiceModel> SoldProductsByBillId(int billId);
+
+        IEnumerable<OrderProductServiceModel> OrderProductsByBillId(int billId);
+
+        int NewBill(int userId);
     }
 }

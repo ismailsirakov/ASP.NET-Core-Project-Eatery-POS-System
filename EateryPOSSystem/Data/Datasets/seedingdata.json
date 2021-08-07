@@ -212,5 +212,211 @@
       "CityId": 1,
       "AddressId": 7
     }
+  ],
+  "Products": [
+    {
+      "Name": "Кола 250мл.",
+      "ProductTypeId": 2
+    },
+    {
+      "Name": "Фанта 250мл.",
+      "ProductTypeId": 2
+    },
+    {
+      "Name": "Лимонада 250мл.",
+      "ProductTypeId": 2
+    },
+    {
+      "Name": "Омлет с кашкавал",
+      "ProductTypeId": 1
+    },
+    {
+      "Name": "Кафе Еспресо",
+      "ProductTypeId": 1
+    }
+  ],
+
+  "StoreProducts": [
+    {
+      "StoreId": 3,
+      "ProductId": 1,
+      "MeasurementId": 1,
+      "Price": 4.25,
+      "Quantity": 1
+    },
+    {
+      "StoreId": 3,
+      "ProductId": 2,
+      "MeasurementId": 1,
+      "Price": 4.25,
+      "Quantity": 1
+    },
+    {
+      "StoreId": 3,
+      "ProductId": 3,
+      "MeasurementId": 1,
+      "Price": 3.25,
+      "Quantity": 1
+    },
+    {
+      "StoreId": 3,
+      "ProductId": 4,
+      "MeasurementId": 1,
+      "Price": 6.5,
+      "Quantity": 1
+    },
+    {
+      "StoreId": 3,
+      "ProductId": 5,
+      "MeasurementId": 1,
+      "Price": 4,
+      "Quantity": 1
+    }
+  ],
+
+  "WarehouseReceipts": [
+    {
+      "ReceiptNumber": 1,
+      "WarehouseId": 5,
+      "MaterialId": 11,
+      "UnitPrice": 0.32,
+      "Quantity": 100,
+      "ProviderId": 4,
+      "UserId": 1,
+      "DocumentNumber": 23564,
+      "DocumentTypeId": 1,
+      "DocumentDate": "03.08.2021",
+      "DateTime": "03.08.2021"
+    },
+    {
+      "ReceiptNumber": 1,
+      "WarehouseId": 5,
+      "MaterialId": 14,
+      "UnitPrice": 0.3,
+      "Quantity": 100,
+      "ProviderId": 4,
+      "UserId": 1,
+      "DocumentNumber": 23564,
+      "DocumentTypeId": 1,
+      "DocumentDate": "03.08.2021",
+      "DateTime": "03.08.2021"
+    },
+    {
+      "ReceiptNumber": 1,
+      "WarehouseId": 5,
+      "MaterialId": 13,
+      "UnitPrice": 0.26,
+      "Quantity": 100,
+      "ProviderId": 4,
+      "UserId": 1,
+      "DocumentNumber": 23564,
+      "DocumentTypeId": 1,
+      "DocumentDate": "03.08.2021",
+      "DateTime": "03.08.2021"
+    },
+    {
+      "ReceiptNumber": 1,
+      "WarehouseId": 5,
+      "MaterialId": 1,
+      "UnitPrice": 15.45,
+      "Quantity": 10,
+      "ProviderId": 4,
+      "UserId": 1,
+      "DocumentNumber": 23564,
+      "DocumentTypeId": 1,
+      "DocumentDate": "03.08.2021",
+      "DateTime": "03.08.2021"
+    },
+    {
+      "ReceiptNumber": 1,
+      "WarehouseId": 5,
+      "MaterialId": 10,
+      "UnitPrice": 0.04,
+      "Quantity": 100,
+      "ProviderId": 4,
+      "UserId": 1,
+      "DocumentNumber": 23564,
+      "DocumentTypeId": 1,
+      "DocumentDate": "03.08.2021",
+      "DateTime": "03.08.2021"
+    },
+    {
+      "ReceiptNumber": 2,
+      "WarehouseId": 2,
+      "MaterialId": 3,
+      "UnitPrice": 14.5,
+      "Quantity": 10,
+      "ProviderId": 4,
+      "UserId": 1,
+      "DocumentNumber": 23565,
+      "DocumentTypeId": 1,
+      "DocumentDate": "03.08.2021",
+      "DateTime": "03.08.2021"
+    },
+    {
+      "ReceiptNumber": 2,
+      "WarehouseId": 2,
+      "MaterialId": 8,
+      "UnitPrice": 0.15,
+      "Quantity": 100,
+      "ProviderId": 4,
+      "UserId": 1,
+      "DocumentNumber": 23565,
+      "DocumentTypeId": 1,
+      "DocumentDate": "03.08.2021",
+      "DateTime": "03.08.2021"
+    }
+  ],
+
+  "Recipes": [
+    {
+      "Name": "Кола 250мл.",
+      "StoreProductId": 1,
+      "WarehouseMaterialWarehouseId": 5,
+      "WarehouseMaterialMaterialId": 11,
+      "MaterialQuantity": 1
+    },
+    {
+      "Name": "Фанта 250мл.",
+      "StoreProductId": 2,
+      "WarehouseMaterialWarehouseId": 5,
+      "WarehouseMaterialMaterialId": 14,
+      "MaterialQuantity": 1
+    },
+    {
+      "Name": "Лимонада 250мл.",
+      "StoreProductId": 3,
+      "WarehouseMaterialWarehouseId": 5,
+      "WarehouseMaterialMaterialId": 13,
+      "MaterialQuantity": 1
+    },
+    {
+      "Name": "Омлет с кашкавал",
+      "StoreProductId": 4,
+      "WarehouseMaterialWarehouseId": 2,
+      "WarehouseMaterialMaterialId": 3,
+      "MaterialQuantity": 0.1
+    },
+    {
+      "Name": "Омлет с кашкавал",
+      "StoreProductId": 4,
+      "WarehouseMaterialWarehouseId": 2,
+      "WarehouseMaterialMaterialId": 8,
+      "MaterialQuantity": 3
+    },
+    {
+      "Name": "Кафе Еспресо",
+      "StoreProductId": 5,
+      "WarehouseMaterialWarehouseId": 5,
+      "WarehouseMaterialMaterialId": 1,
+      "MaterialQuantity": 0.01
+    },
+    {
+      "Name": "Кафе Еспресо",
+      "StoreProductId": 5,
+      "WarehouseMaterialWarehouseId": 5,
+      "WarehouseMaterialMaterialId": 10,
+      "MaterialQuantity": 2
+    }
   ]
 }

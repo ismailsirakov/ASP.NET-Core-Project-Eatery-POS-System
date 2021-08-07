@@ -17,9 +17,13 @@ namespace EateryPOSSystem
             CreateMap<PaymentTypeDTO, PaymentType>();
             CreateMap<PositionDTO, Position>();
             CreateMap<ProductTypeDTO, ProductType>();
+            CreateMap<ProductDTO, Product>();
             CreateMap<ProviderDTO, Provider>();
+            CreateMap<RecipeDTO, Recipe>();
             CreateMap<StoreDTO, Store>();
+            CreateMap<StoreProductDTO, StoreProduct>();
             CreateMap<WarehouseDTO, Warehouse>();
+            CreateMap<WarehouseReceiptDTO, WarehouseReceipt>();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace EateryPOSSystem.Data.Migrations
                     TableNumber = table.Column<int>(type: "int", nullable: false),
                     StoreId = table.Column<int>(type: "int", nullable: false),
                     StoreName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BillNumber = table.Column<int>(type: "int", nullable: false),
+                    BillId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

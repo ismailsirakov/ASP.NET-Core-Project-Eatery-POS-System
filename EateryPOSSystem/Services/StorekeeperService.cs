@@ -186,7 +186,7 @@ namespace EateryPOSSystem.Services
 
                 currentWarehouseMaterialPrice = (currentTotalAmount + receipt.Quantity * receipt.UnitPrice) / currentWarehouseMaterialQuantity;
 
-                dbService.UpdateWareHouseMaterialQuantity(currentWarehouseId, materialId, currentWarehouseMaterialQuantity);
+                dbService.UpdateWarehouseMaterialQuantity(currentWarehouseId, materialId, currentWarehouseMaterialQuantity);
 
                 dbService.UpdateWarehouseMaterialPrice(currentWarehouseId, materialId, currentWarehouseMaterialPrice);
             }
@@ -222,11 +222,11 @@ namespace EateryPOSSystem.Services
 
             toWarehouseMaterial.Price = toWarehouseMaterialTotalAmount / toWarehouseMaterial.Quantity;
 
-            dbService.UpdateWareHouseMaterialQuantity(fromWarehouseMaterial.WarehouseId,
+            dbService.UpdateWarehouseMaterialQuantity(fromWarehouseMaterial.WarehouseId,
                                                         fromWarehouseMaterial.MaterialId,
                                                         fromWarehouseMaterial.Quantity);
 
-            dbService.UpdateWareHouseMaterialQuantity(toWarehouseMaterial.WarehouseId,
+            dbService.UpdateWarehouseMaterialQuantity(toWarehouseMaterial.WarehouseId,
                                                         toWarehouseMaterial.MaterialId,
                                                         toWarehouseMaterial.Quantity);
 
@@ -293,6 +293,9 @@ namespace EateryPOSSystem.Services
             return warehouseMaterialServiceModels;
         }
 
+        public int GetLastTempWarehouseReceiptNumber()
+            => dbService.GetTempWarehouseReceipts().OrderBy(r => r.Id).Last().ReceiptNumber;
+
         public IEnumerable<TransferServiceModel> GetTransferedMaterials(int transferNumber)
             => dbService.GetTransfers()
                 .Where(t => t.Number == transferNumber)
@@ -325,6 +328,21 @@ namespace EateryPOSSystem.Services
                 AddProvider(provider.Name, provider.Number, provider.CityId, provider.AddressId);
             }
 
+            foreach (var wr in inputData.warehouseReceipts)
+            {
+                AddTempWarehouseReceipt(wr.ReceiptNumber,
+                                        wr.ProviderId,
+                                        wr.DocumentTypeId,
+                                        wr.DocumentNumber,
+                                        wr.DocumentDate,
+                                        wr.WarehouseId,
+                                        wr.Quantity,
+                                        wr.UnitPrice,
+                                        wr.MaterialId);
+            }
+            
+            AddReceiptsMaterialsToWarehouse(AddWarehouseReceiptListByReceiptNumber(1, 0));
+            AddReceiptsMaterialsToWarehouse(AddWarehouseReceiptListByReceiptNumber(2, 1));
         }
     }
 }

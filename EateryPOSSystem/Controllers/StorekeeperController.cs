@@ -2,24 +2,21 @@
 {
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
-    using EateryPOSSystem.Data;
     using EateryPOSSystem.Models.Storekeeper;
     using EateryPOSSystem.Services.Interfaces;
-    using static ControllerConstants;
     using EateryPOSSystem.Services.Models;
+
+    using static ControllerConstants;
 
     public class StorekeeperController : Controller
     {
-        private readonly EateryPOSDbContext data;
-        private readonly IStorekeeperService storekeeper;
+        private readonly IStorekeeperService storekeeperService;
         private readonly IDbService dbService;
 
-        public StorekeeperController(EateryPOSDbContext data,
-                                     IStorekeeperService storekeeper,
+        public StorekeeperController(IStorekeeperService storekeeperService,
                                      IDbService dbService)
         {
-            this.data = data;
-            this.storekeeper = storekeeper;
+            this.storekeeperService = storekeeperService;
             this.dbService = dbService;
         }
 
@@ -29,7 +26,7 @@
         [HttpPost]
         public IActionResult AddAddress(AddAddressFormModel address)
         {
-            var addressExists = storekeeper.IsAddressExist(address.AddressDetail);
+            var addressExists = storekeeperService.IsAddressExist(address.AddressDetail);
 
             if (addressExists)
             {
@@ -43,7 +40,7 @@
                 return View(address);
             }
 
-            storekeeper.AddAddress(address.AddressDetail);
+            storekeeperService.AddAddress(address.AddressDetail);
 
             return RedirectToAction("Index", "Home");
         }
@@ -125,7 +122,7 @@
 
         public IActionResult AddMaterialToWarehouse_2(AddMaterialToWarehouseFormModel_1 warehouseMaterial)
         {
-            var addedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId,
+            var addedMaterials = storekeeperService.GetAddedMaterials(warehouseMaterial.ProviderId,
                                                                warehouseMaterial.DocumentNumber);
 
             var newWarehouseMaterial = new AddMaterialToWarehouseFormModel_2
@@ -150,7 +147,7 @@
         {
             warehouseMaterial.Materials = dbService.GetMaterials();
 
-            warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(warehouseMaterial.ProviderId,
+            warehouseMaterial.AddedMaterials = storekeeperService.GetAddedMaterials(warehouseMaterial.ProviderId,
                                                                              warehouseMaterial.DocumentNumber);
 
             var materialExist = warehouseMaterial
@@ -173,17 +170,15 @@
 
             if (!warehouseMaterial.AddedMaterials.Any())
             {
-                if (storekeeper.DbTempWarehouseReceiptsEmpty())
+                if (storekeeperService.DbTempWarehouseReceiptsEmpty())
                 {
                     receiptNumber = 1;
                 }
                 else
                 {
-                    receiptNumber = data.TempWarehouseReceipts
-                                        .OrderBy(t => t.Id)
-                                        .Last()
-                                        .ReceiptNumber + 1;
+                    receiptNumber = storekeeperService.GetLastTempWarehouseReceiptNumber() + 1;
                 }
+                
             }
             else
             {
@@ -201,7 +196,7 @@
                 var unitPrice = warehouseMaterial.UnitPrice;
                 var materialId = warehouseMaterial.MaterialId;
 
-                storekeeper.AddTempWarehouseReceipt(receiptNumber,
+                storekeeperService.AddTempWarehouseReceipt(receiptNumber,
                                                     providerId, 
                                                     documentTypeId,
                                                     documentNumber,
@@ -211,7 +206,7 @@
                                                     unitPrice,
                                                     materialId);
 
-                warehouseMaterial.AddedMaterials = storekeeper.GetAddedMaterials(providerId,
+                warehouseMaterial.AddedMaterials = storekeeperService.GetAddedMaterials(providerId,
                                                                                  documentNumber);
 
                 return View(warehouseMaterial);
@@ -219,7 +214,7 @@
 
             if (saveButton != null)
             {
-                var lastWarehouseReceiptInDb = storekeeper.LastWarehouseReceiptInDb();
+                var lastWarehouseReceiptInDb = storekeeperService.LastWarehouseReceiptInDb();
 
                 var lastReceiptNumberInDb = 0;
 
@@ -228,11 +223,11 @@
                     lastReceiptNumberInDb = lastWarehouseReceiptInDb.ReceiptNumber;
                 }
 
-                var warehouseReceiptList = storekeeper
+                var warehouseReceiptList = storekeeperService
                     .AddWarehouseReceiptListByReceiptNumber(receiptNumber,
                                                             lastReceiptNumberInDb);
 
-                storekeeper.AddReceiptsMaterialsToWarehouse(warehouseReceiptList);
+                storekeeperService.AddReceiptsMaterialsToWarehouse(warehouseReceiptList);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -256,7 +251,7 @@
 
             material.Measurements = dbService.GetMeasurements();
 
-            var materialExists = storekeeper.IsMaterialWhitNameExist(material.Name);
+            var materialExists = storekeeperService.IsMaterialWhitNameExist(material.Name);
 
             if (materialExists)
             {
@@ -270,7 +265,7 @@
                 return View(material);
             }
 
-            storekeeper.AddMaterial(material.Name, material.MeasurementId);
+            storekeeperService.AddMaterial(material.Name, material.MeasurementId);
 
             return RedirectToAction("Index", "Home");
         }
@@ -292,7 +287,7 @@
             provider.Cities = dbService.GetCities();
             provider.Addresses = dbService.GetAddresses();
 
-            var providerlExists = storekeeper.IsProviderExist(provider.Name);
+            var providerlExists = storekeeperService.IsProviderExist(provider.Name);
 
             if (providerlExists)
             {
@@ -306,7 +301,7 @@
                 return View(provider);
             }
 
-            storekeeper.AddProvider(provider.Name, provider.Number, provider.CityId, provider.AddressId);
+            storekeeperService.AddProvider(provider.Name, provider.Number, provider.CityId, provider.AddressId);
 
             return RedirectToAction("Index", "Home");
         }
@@ -327,7 +322,7 @@
             transfer.TransferToWarehouseName = dbService.GetWarehouses()
                 .FirstOrDefault(w => w.Id == transfer.TransferToWarehouseId).Name;
 
-            transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
+            transfer.TransferedMaterials = storekeeperService.GetTransferedMaterials(transfer.TransferNumber);
 
             transfer.Warehouses = dbService.GetWarehouses();
 
@@ -376,7 +371,7 @@
             transfer.WarehouseMaterials = dbService.GetWarehouseMaterials()
                 .Where(wm => wm.WarehouseId == transfer.TransferFromWarehouseId);
 
-            transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
+            transfer.TransferedMaterials = storekeeperService.GetTransferedMaterials(transfer.TransferNumber);
 
             return View(transfer);
         }
@@ -393,7 +388,7 @@
             transfer.QuantityInWarehouse = transfer.WarehouseMaterials
                 .FirstOrDefault(w => w.MaterialId == transfer.TransferedMaterialId).Quantity;
 
-            transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
+            transfer.TransferedMaterials = storekeeperService.GetTransferedMaterials(transfer.TransferNumber);
 
             if (endButton != null)
             {
@@ -410,7 +405,7 @@
             transfer.WarehouseMaterials = dbService.GetWarehouseMaterials()
                 .Where(wm => wm.WarehouseId == transfer.TransferFromWarehouseId);
 
-            transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
+            transfer.TransferedMaterials = storekeeperService.GetTransferedMaterials(transfer.TransferNumber);
 
             if (!transfer.WarehouseMaterials.Any(wm=>wm.MaterialId == transfer.TransferedMaterialId))
             {
@@ -436,14 +431,14 @@
                     UserId = 1 // transfer.UserId                    
                 };
 
-                storekeeper.AddTransfer(newTransfer);
+                storekeeperService.AddTransfer(newTransfer);
 
-                storekeeper.TransferMaterial(newTransfer);
+                storekeeperService.TransferMaterial(newTransfer);
 
                 transfer.WarehouseMaterials = dbService.GetWarehouseMaterials()
                 .Where(wm => wm.WarehouseId == transfer.TransferFromWarehouseId);
 
-                transfer.TransferedMaterials = storekeeper.GetTransferedMaterials(transfer.TransferNumber);
+                transfer.TransferedMaterials = storekeeperService.GetTransferedMaterials(transfer.TransferNumber);
 
                 return View(transfer);
             }
@@ -453,7 +448,7 @@
 
         public IActionResult ImportStorekeeperData()
         {
-            storekeeper.ImportStorekeeperData();
+            storekeeperService.ImportStorekeeperData();
 
             return RedirectToAction("Index", "Home");
         }

@@ -51,7 +51,7 @@
                     b.Property<DateTime>("BillCloseDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("BillNumber")
+                    b.Property<int>("BillId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("BillOpenDateTime")

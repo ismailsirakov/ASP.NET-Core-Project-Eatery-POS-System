@@ -1,14 +1,19 @@
 namespace EateryPOSSystem.Services
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using AutoMapper;
+    using EateryPOSSystem.Data.DataTransferObjects;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Services.Models;
+    using Newtonsoft.Json;
 
     public class ProductionService : IProductionService
     {
         private readonly IDbService dbService;
+        private IMapper mapper;
 
         public ProductionService(IDbService dbService)
         {
@@ -37,6 +42,23 @@ namespace EateryPOSSystem.Services
 
         public bool IsWarehouseMaterialExist(int warehouseId, int materialId)
             => dbService.GetWarehouseMaterials().Any(wm=> wm.WarehouseId == warehouseId &wm.MaterialId == materialId);
+
+        public decimal CalculateCostOfProduct(int storeProductId)
+        {
+            var recipes = GetRecipesByStorProductId(storeProductId);
+
+            var cost = 0m;
+
+            foreach (var recipe in recipes)
+            {
+                var materialPrice = GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId)
+                    .FirstOrDefault(m => m.MaterialId == recipe.WarehouseMaterialId)
+                    .Price;
+                cost += materialPrice * recipe.MaterialQuantity;
+            }
+
+            return cost;
+        }
 
         public void AddRecipe(string recipeName,
                                 int storeProductId,
@@ -81,7 +103,55 @@ namespace EateryPOSSystem.Services
             dbService.AddStoreProduct(storeProduct);
         }
 
+        public void DecreaseMaterialsUsedInStoreProduct(int storeProductId, decimal soldProductQuantity)
+        {
+            var recipes = GetRecipesByStorProductId(storeProductId);
+
+            foreach (var recipe in recipes)
+            {
+                var quantityInWarehouse = GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId)
+                    .FirstOrDefault(wm => wm.MaterialId == recipe.WarehouseMaterialId).Quantity;
+
+                var quantity = quantityInWarehouse - recipe.MaterialQuantity * soldProductQuantity;
+
+                dbService.UpdateWarehouseMaterialQuantity(recipe.WarehouseId, recipe.WarehouseMaterialId, quantity);
+            }
+        }
+
         public IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterialsByWarehouseId(int warehouseId)
             => dbService.GetWarehouseMaterials().Where(wm => wm.WarehouseId == warehouseId);
+
+        public IEnumerable<RecipeServiceModel> GetRecipesByStorProductId(int storeProductId)
+            => dbService.GetRecipes().Where(r => r.StoreProductId == storeProductId);
+
+        public void ImportProductionData()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<EateryPOSSystemProfile>());
+            mapper = config.CreateMapper();
+
+            var inputJson = File.ReadAllText(".\\Data\\Datasets\\seedingdata.json");
+
+            var dtoInput = JsonConvert.DeserializeObject<InputDTO>(inputJson);
+            var inputData = mapper.Map<Input>(dtoInput);
+
+            foreach (var product in inputData.Products)
+            {
+                AddProduct(product.Name, product.ProductTypeId);
+            }
+
+            foreach (var storeProduct in inputData.StoreProducts)
+            {
+                AddProductToStore(storeProduct.ProductId,
+                                  storeProduct.StoreId,
+                                  storeProduct.MeasurementId,
+                                  storeProduct.Quantity,
+                                  storeProduct.Price);
+            }
+
+            foreach (var recipe in inputData.Recipes)
+            {
+                AddRecipe(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId, recipe.MaterialQuantity);
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ namespace EateryPOSSystem.Models.Seller
 
     public class TableFormModel
     {
-        public int Id { get; set; }
 
         public int StoreId { get; set; }
 
@@ -13,7 +12,7 @@ namespace EateryPOSSystem.Models.Seller
 
         public int TableNumber { get; set; }
 
-        public int BillNumber { get; set; }
+        public int BillId { get; set; }
 
         public decimal BillTotal { get; set; }
 

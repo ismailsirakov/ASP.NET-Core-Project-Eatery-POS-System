@@ -1,76 +1,179 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
+    using System;
+    using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Models.Bill;
-    using System.Collections.Generic;
-    using EateryPOSSystem.Services.Models;
-    using System;
+    using static ControllerConstants;
 
     public class BillController : Controller
     {
         private readonly IBillService billService;
-        public BillController(IBillService billService)
+        private readonly IDbService dbService;
+        public BillController(IBillService billService, IDbService dbService)
         {
             this.billService = billService;
+            this.dbService = dbService;
         }
 
         public IActionResult Details()
         {
+            var billId = (int)TempData["BillId"];
+
+            var billl = dbService.GetBillById(billId);
+
+            var userName = "Admin";
+
+            var soldProducts = billService.SoldProductsByBillId(billId).ToList();
+
+            var totalSum = 0m;
+
+            foreach (var soldProduct in soldProducts)
+            {
+                totalSum += soldProduct.Quantity * soldProduct.Price;
+            }
+
             var bill = new BillViewModel
             {
-                Id = 35644,
-                UserName = "PESHO",
-                PaymentTypeName = "В брой",
-                OpenDateTime = DateTime.UtcNow,
-                CloseDateTime = DateTime.UtcNow.AddMinutes(25),
-                Closed = false,
-                SoldProducts = new List<SoldProductServiceModel>
-                {
-                    new SoldProductServiceModel
-                    {
-                        BillId = 123,
-                        StoreProductName = "Kola 250ml",
-                        Quantity = 2m,
-                        Price = 3.5m,
-                        MeasurementName = "br."
-                    },
-                    new SoldProductServiceModel
-                    {
-                        BillId = 123,
-                        StoreProductName = "Fanta 250ml",
-                        Quantity = 3m,
-                        Price = 3.2m,
-                        MeasurementName = "br."
-                    },
-                    new SoldProductServiceModel
-                    {
-                        BillId = 123,
-                        StoreProductName = "Kafe",
-                        Quantity = 6m,
-                        Price = 4.5m,
-                        MeasurementName = "br."
-                    },
-                    new SoldProductServiceModel
-                    {
-                        BillId = 123,
-                        StoreProductName = "Krema",
-                        Quantity = 4m,
-                        Price = 0.5m,
-                        MeasurementName = "br."
-                    }
-                },
-                TotalSum = 42.25m
+                Id = billId,
+                UserName = userName,
+                OpenDateTime = billl.OpenDateTime,
+                SoldProducts = soldProducts,
+                TotalSum = totalSum
             };
+
+            TempData["BillId"] = billId;
 
             return View(bill);
         }
 
-        public IActionResult Add()
+        public IActionResult New()
         {
+            var userId = 1;
+            
+            var billId = billService.NewBill(userId);
 
+            var storeId = (int)TempData["StoreId"];
 
-            return View();
+            var tableNumber = (int)TempData["TableNumber"];
+
+            billService.AddNewBillToTable(userId, storeId, tableNumber, billId);
+
+            TempData["BillId"] = billId;            
+
+            return RedirectToAction("AddSoldProductToBill", "Seller");
+        }
+
+        public IActionResult CloseBill()
+        {
+            var billId = (int)TempData["BillId"];
+
+            var billl = dbService.GetBillById(billId);
+
+            var userName = "Admin";
+
+            var soldProducts = billService.SoldProductsByBillId(billId).ToList();
+
+            var paymentTypes = dbService.GetPaymentTypes();
+
+            var totalSum = 0m;
+
+            foreach (var soldProduct in soldProducts)
+            {
+                totalSum += soldProduct.Quantity * soldProduct.Price;
+            }
+
+            var bill = new CloseBillFormModel
+            {
+                BillId = billId,
+                UserName = userName,
+                OpenDateTime = billl.OpenDateTime,
+                SoldProducts = soldProducts,
+                PaymentTypes = paymentTypes,
+                TotalSum = totalSum
+            };
+
+            TempData["BillId"] = billId;
+
+            return View(bill);
+        }
+
+        [HttpPost]
+        public IActionResult CloseBill(CloseBillFormModel bill)
+        {
+            var billId = (int)TempData["BillId"];
+
+            var billInDb = dbService.GetBillById(billId);
+
+            var userName = "Admin";
+
+            var soldProducts = billService.SoldProductsByBillId(billId).ToList();
+
+            var paymentTypes = dbService.GetPaymentTypes();
+
+            var totalSum = 0m;
+
+            foreach (var soldProduct in soldProducts)
+            {
+                totalSum += soldProduct.Quantity * soldProduct.Price;
+            }
+
+            bill.BillId = billId;
+
+            bill.UserName = userName;
+
+            bill.OpenDateTime = billInDb.OpenDateTime;
+
+            bill.SoldProducts = soldProducts;
+
+            bill.PaymentTypes = paymentTypes;
+
+            bill.TotalSum = totalSum;            
+
+            TempData["BillId"] = billId;
+
+            if (!paymentTypes.Any(pt=>pt.Id == bill.PaymentTypeId))
+            {
+                ModelState.AddModelError(nameof(bill.PaymentTypeId), notExistingModelInDB);
+
+                return View(bill);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(bill);
+            }
+
+            billInDb.PaymentTypeId = bill.PaymentTypeId;
+
+            billInDb.Closed = true;
+
+            billInDb.CloseDateTime = DateTime.UtcNow;
+
+            billService.RemoveBillFromTable(billInDb.Id);
+
+            return RedirectToAction("ClosedBillDetails","Bill", billInDb);
+        }
+
+        public IActionResult ClosedBillDetails(BillViewModel bill)
+        {
+            bill.SoldProducts = billService.SoldProductsByBillId(bill.Id).ToList();
+
+            var totalSum = 0m;
+
+            foreach (var soldProduct in bill.SoldProducts)
+            {
+                totalSum += soldProduct.Quantity * soldProduct.Price;
+            }
+
+            bill.TotalSum = totalSum;
+
+            bill.PaymentTypeName = dbService.GetPaymentTypes().FirstOrDefault(pt=>pt.Id == bill.PaymentTypeId).Name;
+
+            bill.UserName = "Admin";
+
+            return View(bill);
         }
     }
 }

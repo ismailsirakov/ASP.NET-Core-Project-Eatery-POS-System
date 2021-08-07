@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EateryPOSSystem.Data.Migrations
 {
     [DbContext(typeof(EateryPOSDbContext))]
-    [Migration("20210730115912_AddingTransferEntity")]
-    partial class AddingTransferEntity
+    [Migration("20210807090306_AddingCostPropToSoldProductEntity")]
+    partial class AddingCostPropToSoldProductEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,7 +48,7 @@ namespace EateryPOSSystem.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CloseDateTime")
+                    b.Property<DateTime?>("CloseDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Closed")
@@ -57,7 +57,7 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<DateTime>("OpenDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentTypeId")
+                    b.Property<int?>("PaymentTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -158,6 +158,39 @@ namespace EateryPOSSystem.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Measurements");
+                });
+
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.OrderProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MeasurementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MeasurementName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,3)");
+
+                    b.Property<int>("StoreProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoreProductName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.PaymentType", b =>
@@ -320,6 +353,9 @@ namespace EateryPOSSystem.Data.Migrations
 
                     b.Property<int>("BillId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -854,8 +890,7 @@ namespace EateryPOSSystem.Data.Migrations
                     b.HasOne("EateryPOSSystem.Data.Models.PaymentType", "PaymentType")
                         .WithMany("Bills")
                         .HasForeignKey("PaymentTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EateryPOSSystem.Data.Models.User", "User")
                         .WithMany("Bills")

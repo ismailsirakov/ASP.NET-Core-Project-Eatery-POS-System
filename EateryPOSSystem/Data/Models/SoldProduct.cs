@@ -18,6 +18,9 @@ namespace EateryPOSSystem.Data.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Cost { get; set; }
+
         [Column(TypeName = "decimal(18,3)")]
         public decimal Quantity { get; set; }
 

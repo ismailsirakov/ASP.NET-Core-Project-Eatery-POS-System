@@ -1,9 +1,11 @@
 ﻿namespace EateryPOSSystem.Services
 {
-    using EateryPOSSystem.Services.Interfaces;
-    using EateryPOSSystem.Services.Models;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using EateryPOSSystem.Data.Models;
+    using EateryPOSSystem.Services.Interfaces;
+    using EateryPOSSystem.Services.Models;
 
     public class BillService : IBillService
     {
@@ -15,18 +17,41 @@
         }
 
         public IEnumerable<SoldProductServiceModel> SoldProductsByBillId(int billId)
-            => dbService.GetSoldProductsByBillId(billId)
-                .Select(sp => new SoldProductServiceModel
-                {
-                    Id = sp.Id,
-                    BillId = sp.BillId,
-                    StoreProductId = sp.StoreProductId,
-                    StoreProductName = sp.StoreProduct.Product.Name,
-                    MeasurementName = sp.Measurement.Name,
-                    Quantity = sp.Quantity,
-                    Price = sp.Price
-                })
-                .ToList();
-        
+            => dbService.GetSoldProducts().Where(sp=>sp.BillId == billId).ToList();
+
+        public IEnumerable<OrderProductServiceModel> OrderProductsByBillId(int billId)
+            => dbService.GetOrderProducts().Where(sp => sp.BillId == billId).ToList();
+
+        public int NewBill(int userId)
+        {
+            var newBill = new Bill
+            {
+                OpenDateTime = DateTime.UtcNow,
+                UserId = userId
+            };
+
+            dbService.AddBill(newBill);
+
+            return newBill.Id;
+        }
+
+        public void AddNewBillToTable(int userId, int storeId, int tableNumber, int billId)
+        {
+            var storeName = dbService.GetStores().FirstOrDefault(s => s.Id == storeId).Name;
+
+            var tableWithNewBill = new StoreTable
+            {
+                StoreId = storeId,
+                StoreName = storeName,
+                TableNumber = tableNumber,
+                UserId = userId,
+                BillId = billId
+            };
+
+            dbService.AddStoreTable(tableWithNewBill);
+        }
+
+        public void RemoveBillFromTable(int billId)
+            => dbService.RemoveBillFromTable(billId);
     }
 }

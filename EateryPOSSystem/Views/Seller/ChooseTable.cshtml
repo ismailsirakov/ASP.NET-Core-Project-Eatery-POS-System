@@ -16,7 +16,15 @@
                 <div class="row">
                     @for (int i = row * 5 + 1; i <= (row + 1) * 5; i++)
                     {
-                        <button class="btn btn-outline-primary btn-lg col-2 m-2 text-center" type="submit" name="tableNumber" value="@i">@i</button>
+                        if (Model.TablesWithOpenBills.Any(t => t.TableNumber == i))
+                        {
+                            <button class="btn btn-outline-danger btn-lg col-2 m-2 text-center" type="submit" name="tableNumber" value="@i">@i</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-success btn-lg col-2 m-2 text-center" type="submit" name="tableNumber" value="@i">@i</button>
+                        }
+
                         if (i >= Model.TablesInStore)
                         {
                             break;
