@@ -1,22 +1,22 @@
 ﻿@model TableFormModel
 
 @{
-    ViewData["Title"] = "Table with bills";
+    ViewData["Title"] = "Table With Bills";
 }
 
 <div class="row">
-    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6">
         <form method="post">
             <h2 class="text-center font-weight-bold text-primary">Отворени сметки</h2>
             <h5 class="text-center embed-responsive">Обект: @Model.StoreName</h5>
             <h5 class="text-center embed-responsive">Маса № @Model.TableNumber</h5>
-            <div class="border m-2 h-100">
+            <div class="border m-2 h-100 text-center">
                 @foreach (var bill in Model.OpenBills)
                 {
-                    <button class="btn btn-outline-primary col-12 m-1 text-center" type="submit" name="billIdToView" value="@bill.Id">@bill.UserName - сметка № @bill.Id - @bill.TotalSum.ToString("#,###0.00") лв.</button>
+                    <button class="btn btn-outline-primary col-11 m-1 text-center" type="submit" name="billIdToView" value="@bill.Id">@bill.UserName - сметка № @bill.Id - @bill.TotalSum.ToString("#,###0.00") лв.</button>
                 }
             </div>
-            <div class="border m-2">
+            <div class="border m-2 text-center">
                 <button class="btn btn-outline-primary text-center" type="submit" name="newBill" value="New bill">Нова сметка</button>
             </div>
 

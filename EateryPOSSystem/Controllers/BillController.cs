@@ -3,10 +3,13 @@
     using System;
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Models.Bill;
+    using EateryPOSSystem.Infrastructure;
     using static ControllerConstants;
 
+    [Authorize]
     public class BillController : Controller
     {
         private readonly IBillService billService;
@@ -23,7 +26,7 @@
 
             var billl = dbService.GetBillById(billId);
 
-            var userName = "Admin";
+            var userName = User.Identity.Name;
 
             var soldProducts = billService.SoldProductsByBillId(billId).ToList();
 
@@ -34,7 +37,7 @@
                 totalSum += soldProduct.Quantity * soldProduct.Price;
             }
 
-            var bill = new BillViewModel
+            var bill = new CloseBillFormModel
             {
                 Id = billId,
                 UserName = userName,
@@ -50,7 +53,7 @@
 
         public IActionResult New()
         {
-            var userId = 1;
+            var userId = User.GetId();
             
             var billId = billService.NewBill(userId);
 
@@ -71,7 +74,7 @@
 
             var billl = dbService.GetBillById(billId);
 
-            var userName = "Admin";
+            var userName = User.Identity.Name;
 
             var soldProducts = billService.SoldProductsByBillId(billId).ToList();
 
@@ -86,7 +89,7 @@
 
             var bill = new CloseBillFormModel
             {
-                BillId = billId,
+                Id = billId,
                 UserName = userName,
                 OpenDateTime = billl.OpenDateTime,
                 SoldProducts = soldProducts,
@@ -106,7 +109,7 @@
 
             var billInDb = dbService.GetBillById(billId);
 
-            var userName = "Admin";
+            var userName = User.Identity.Name;
 
             var soldProducts = billService.SoldProductsByBillId(billId).ToList();
 
@@ -119,7 +122,7 @@
                 totalSum += soldProduct.Quantity * soldProduct.Price;
             }
 
-            bill.BillId = billId;
+            bill.Id = billId;
 
             bill.UserName = userName;
 
@@ -156,7 +159,7 @@
             return RedirectToAction("ClosedBillDetails","Bill", billInDb);
         }
 
-        public IActionResult ClosedBillDetails(BillViewModel bill)
+        public IActionResult ClosedBillDetails(CloseBillFormModel bill)
         {
             bill.SoldProducts = billService.SoldProductsByBillId(bill.Id).ToList();
 
@@ -169,9 +172,11 @@
 
             bill.TotalSum = totalSum;
 
-            bill.PaymentTypeName = dbService.GetPaymentTypes().FirstOrDefault(pt=>pt.Id == bill.PaymentTypeId).Name;
+            bill.PaymentTypeName = dbService.GetPaymentTypes()
+                                            .FirstOrDefault(pt=>pt.Id == bill.PaymentTypeId)
+                                            .Name;
 
-            bill.UserName = "Admin";
+            bill.UserName = User.Identity.Name;
 
             return View(bill);
         }

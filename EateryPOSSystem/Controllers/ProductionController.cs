@@ -2,10 +2,13 @@
 {
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using EateryPOSSystem.Models.Production;
     using EateryPOSSystem.Services.Interfaces;
     using static ControllerConstants;
+    using static WebConstants;
 
+    [Authorize]
     public class ProductionController : Controller
     {
         private readonly IDbService dbService;
@@ -19,14 +22,18 @@
         }
 
         public IActionResult AddProduct()
-            => View(new AddProductFormModel { ProductTypes = dbService.GetProductTypes() });
+            => View(new AddProductFormModel
+                        {
+                            ProductTypes = dbService.GetProductTypes()
+                        });
 
         [HttpPost]
         public IActionResult AddProduct(AddProductFormModel product)
         {
             product.ProductTypes = dbService.GetProductTypes();
 
-            var productTypeExist = product.ProductTypes.Any(p => p.Id == product.ProductTypeId);
+            var productTypeExist = product.ProductTypes
+                                          .Any(p => p.Id == product.ProductTypeId);
 
             if (!productTypeExist)
             {
@@ -37,7 +44,7 @@
 
             if (dbService.GetProducts().Any(p => p.Name == product.Name))
             {
-                ModelState.AddModelError(nameof(product.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(product.Name), existingProductInDB);
 
                 return View(product);
             }
@@ -48,6 +55,8 @@
             }
 
             productionService.AddProduct(product.Name, product.ProductTypeId);
+
+            TempData[GlobalMessageKey] = $"В база данни успешно се добави продукт '{product.Name}'.";
 
             return RedirectToAction("Index", "Home");
         }
@@ -90,7 +99,7 @@
 
             if (productionService.IsProductExistInStore(storeProduct.ProductId, storeProduct.StoreId))
             {
-                ModelState.AddModelError(nameof(storeProduct.StoreId), existingModelInDB);
+                ModelState.AddModelError(nameof(storeProduct.StoreId), existingProductInStoreInDB);
 
                 return View(storeProduct);
             }
@@ -101,10 +110,16 @@
             }
 
             productionService.AddProductToStore(storeProduct.ProductId,
-                                    storeProduct.StoreId,
-                                    storeProduct.MeasurementId,
-                                    storeProduct.Quantity,
-                                    storeProduct.Price);
+                                                storeProduct.StoreId,
+                                                storeProduct.MeasurementId,
+                                                storeProduct.Quantity,
+                                                storeProduct.Price);
+
+            var storeName = storeProduct.Stores.FirstOrDefault(s=>s.Id == storeProduct.StoreId).Name;
+
+            var productName = storeProduct.Products.FirstOrDefault(p => p.Id == storeProduct.ProductId).Name;
+
+            TempData[GlobalMessageKey] = $"В {storeName} успешно се добави продукт '{productName}'.";
 
             return RedirectToAction("Index", "Home");
         }
@@ -136,9 +151,13 @@
                 return View(recipe);
             }
 
-            var storeName = recipe.StoreProducts.FirstOrDefault(p => p.Id == recipe.StoreProductId).StoreName;
+            var storeName = recipe.StoreProducts
+                                  .FirstOrDefault(p => p.Id == recipe.StoreProductId)
+                                  .StoreName;
 
-            var productName = recipe.StoreProducts.FirstOrDefault(p => p.Id == recipe.StoreProductId).ProductName;
+            var productName = recipe.StoreProducts
+                                    .FirstOrDefault(p => p.Id == recipe.StoreProductId)
+                                    .ProductName;
 
             recipe.RecipeInfo = $"Име на рецепта: {recipe.Name} - За продукт: {productName} - За обект: {storeName}";
 
@@ -148,6 +167,7 @@
         public IActionResult AddRecipeSecondPage(AddRecipeFormModel recipe)
         {
             recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+
             recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
             return View(recipe);
@@ -156,18 +176,22 @@
         [HttpPost]
         public IActionResult AddRecipeSecondPage(string addButton, string saveButton, AddRecipeFormModel recipe)
         {
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
-            if (saveButton != null)
+            if (saveButton != null && recipe.AddedMaterialsToRecipe.Any())
             {
+                TempData[GlobalMessageKey] = $"В база данни успешно се добави рецепта с име '{recipe.Name}'.";
+
                 return RedirectToAction("Index", "Home");
             }
 
             recipe.WarehouseMaterialWarehouseId = recipe.WarehouseId;
 
             recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
-            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
 
-            if (!productionService.IsWarehouseMaterialExist(recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId))
+
+            if (!productionService.IsWarehouseMaterialExist(recipe.WarehouseMaterialWarehouseId,
+                                                            recipe.WarehouseMaterialMaterialId))
             {
                 ModelState.AddModelError(nameof(recipe.WarehouseMaterialMaterialId), notExistingModelInDB);
                 return View(recipe);
@@ -178,24 +202,30 @@
                 return View(recipe);
             }
 
-
             if (addButton != null)
             {
-                if (productionService.IsMaterialInRecipeExist(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialMaterialId))
+                if (productionService.IsMaterialInRecipeExist(recipe.Name,
+                                                              recipe.StoreProductId,
+                                                              recipe.WarehouseMaterialMaterialId))
                 {
                     ModelState.AddModelError(nameof(recipe.MaterialQuantity), existingMaterialInRecipe);
 
                     return View(recipe);
                 }
 
-                productionService.AddRecipe(recipe.Name, recipe.StoreProductId, recipe.WarehouseMaterialWarehouseId, recipe.WarehouseMaterialMaterialId, recipe.MaterialQuantity);
+                productionService.AddRecipe(recipe.Name,
+                                            recipe.StoreProductId,
+                                            recipe.WarehouseMaterialWarehouseId,
+                                            recipe.WarehouseMaterialMaterialId,
+                                            recipe.MaterialQuantity);
 
-                recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
+                recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name,
+                                                                                    recipe.StoreProductId);
 
                 return View(recipe);
             }
 
-            return View(recipe);
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult ImportProductionData()

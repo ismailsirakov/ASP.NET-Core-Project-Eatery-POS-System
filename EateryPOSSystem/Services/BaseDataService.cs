@@ -18,25 +18,6 @@
             this.dbService = dbService;
         }
 
-        public bool IsCityExist(string cityName)
-            => dbService.GetCities().Any(c => c.Name == cityName);
-
-        public void AddCity(string cityName, int? postalCode)
-        {
-            if (IsCityExist(cityName))
-            {
-                return;
-            }
-
-            var city = new City
-            {
-                Name = cityName,
-                PostalCode = postalCode
-            };
-
-            dbService.AddCity(city);
-        }
-
         public bool IsDocumentTypeExist(string documentTypeName)
             => dbService.GetDocumentTypes().Any(dt => dt.Name == documentTypeName);
 
@@ -107,21 +88,6 @@
             };
 
             dbService.AddPosition(position);
-            
-            if (positionName == "Администратор")
-            {
-                var user = new User
-                {
-                    FirstName = "Admin",
-                    LastName = "Administrator",
-                    UserName = "Admin",
-                    Password = "AdminPass",
-                    PositionId = position.Id
-                };
-
-                dbService.AddUser(user);
-            }
-
         }
 
         public bool IsProductTypeExist(string productTypeName)
@@ -187,14 +153,9 @@
 
             var inputJson = File.ReadAllText(".\\Data\\Datasets\\seedingdata.json");
 
-            var dtoInput = JsonConvert.DeserializeObject<InputDTO>(inputJson);
+            var dtoInput = JsonConvert.DeserializeObject<ImportDTO>(inputJson);
 
-            var inputData = mapper.Map<Input>(dtoInput);
-
-            foreach (var city in inputData.Cities)
-            {
-                AddCity(city.Name, city.PostalCode);
-            }
+            var inputData = mapper.Map<Import>(dtoInput);
 
             foreach (var documentType in inputData.DocumentTypes)
             {

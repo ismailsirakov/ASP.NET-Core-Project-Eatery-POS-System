@@ -6,7 +6,7 @@ namespace EateryPOSSystem.Services.Interfaces
     public interface IBillService
     {
 
-        void AddNewBillToTable(int userId, int storeId, int tableNumber, int billId);
+        void AddNewBillToTable(string userId, int storeId, int tableNumber, int billId);
 
         void RemoveBillFromTable(int billId);
 
@@ -14,6 +14,6 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<OrderProductServiceModel> OrderProductsByBillId(int billId);
 
-        int NewBill(int userId);
+        int NewBill(string userId);
     }
 }

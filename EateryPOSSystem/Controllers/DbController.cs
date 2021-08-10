@@ -1,8 +1,11 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using EateryPOSSystem.Services.Interfaces;
+    using EateryPOSSystem.Infrastructure;
 
+    [Authorize]
     public class DbController : Controller
     {
         private readonly IBaseDataService baseData;
@@ -27,7 +30,7 @@
 
         public IActionResult ImportStorekeeperData()
         {
-            storekeeperService.ImportStorekeeperData();
+            storekeeperService.ImportStorekeeperData(User.GetId());
 
             return RedirectToAction("Index", "Home");
         }

@@ -1,57 +1,44 @@
 ﻿@model CloseBillFormModel
 
 @{
-    ViewData["Title"] = "Close bill";
+    ViewData["Title"] = "Close Bill";
 }
 
-<div class="row">
-    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
-        <h2 class="text-center font-weight-bold text-primary">Детайли на сметка</h2>
-        <div class="border">
-            <h5>Сметка номер @Model.BillId</h5>
-            <h5>Сервитьор: @Model.UserName</h5>
-            <h5>Дата и час на отваряне:</h5>
-            <h6>@Model.OpenDateTime.ToString()</h6>
-        </div>
-        <ul class="list-group border-0">
-            @foreach (var soldProduct in Model.SoldProducts)
-            {
-                var sum = @soldProduct.Quantity * @soldProduct.Price;
-
-                <li class="list-group-item d-flex justify-content-between align-items-center border-top-0">
-                    @soldProduct.StoreProductName - @soldProduct.Quantity @soldProduct.MeasurementName  x @soldProduct.Price.ToString("#,##0.00")
-                    <span class="badge badge-pill">@sum.ToString("#,##0.00")</span>
-                </li>
-            }
-        </ul>
-        <div class="border">
-            <div>
-                <div class="text-right m-2">
-                    <h6>Общо @Model.TotalSum.ToString("#,##0.00") лв.</h6>
-                </div>
-                <div class="text-left">
-                    <h6 class="text-danger">Неприключена сметка</h6>
+<form method="post">
+    <div class="row">
+        <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6">
+            <partial name="_BillPartial" model="@Model" />
+            <div class="border">
+                <div>
+                    <div class="text-right m-2">
+                        <h6>Общо @Model.TotalSum.ToString("#,##0.00") лв.</h6>
+                    </div>
+                    <div class="text-left">
+                        <h6 class="text-danger">Неприключена сметка</h6>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="m-2">
-            <a asp-controller="Seller" asp-action="Table" class="btn btn-outline-secondary btn-block">Назад</a>
-        </div>
-        <form method="post">
-            <div class="form-group">
-                <label asp-for="PaymentTypeId">Избери тип плащане</label>
-                <select asp-for="PaymentTypeId">
+            <div class="m-2">
+                <a asp-controller="Seller" asp-action="Table" class="btn btn-outline-secondary btn-block">Назад</a>
+            </div>
+            <div class="form-group text-center">
+                <div>
+                    <label asp-for="PaymentTypeId">Избери тип плащане</label>
+                </div>
+                <div>
+                    <select asp-for="PaymentTypeId">
 
-                    @foreach (var paymentType in Model.PaymentTypes)
-                    {
-                        <option value="@paymentType.Id">@paymentType.Name</option>
-                    }
-                </select>
+                        @foreach (var paymentType in Model.PaymentTypes)
+                        {
+                            <option value="@paymentType.Id">@paymentType.Name</option>
+                        }
+                    </select>
+                </div>
                 <span asp-validation-for="PaymentTypeId" class="small text-danger"></span>
             </div>
             <div class="text-center">
                 <input class="btn btn-outline-success" type="submit" value="Приключи" />
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>

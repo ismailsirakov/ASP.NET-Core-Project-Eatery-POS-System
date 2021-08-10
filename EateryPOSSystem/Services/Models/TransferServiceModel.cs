@@ -22,6 +22,6 @@ namespace EateryPOSSystem.Services.Models
 
         public decimal Quantity { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

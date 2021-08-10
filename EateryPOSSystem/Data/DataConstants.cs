@@ -34,12 +34,12 @@ namespace EateryPOSSystem.Data
         public const int StoreNameMaxLength = 50;
         public const int UserFirstNameMinLength = 2;
         public const int UserFirstNameMaxLength = 30;
-        public const int UserLastNameMinLength = 2;
+        public const int UserLastNameMinLength = 5;
         public const int UserLastNameMaxLength = 30;
         public const int UsernameMinLength = 5;
         public const int UsernameMaxLength = 50;
-        public const int UserPasswordMinLength = 5;
-        public const int UserPasswordMaxLength = 50;
+        public const int UserPasswordMinLength = 6;
+        public const int UserPasswordMaxLength = 100;
         public const int WarehouseNameMinLength = 5;
         public const int WarehouseNameMaxLength = 30;
     }

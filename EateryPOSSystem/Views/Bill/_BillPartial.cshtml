@@ -1,0 +1,21 @@
+﻿@model CloseBillFormModel
+
+<h2 class="text-center font-weight-bold text-primary">Детайли на сметка</h2>
+<div class="border">
+    <h5>Сметка номер @Model.Id</h5>
+    <h5>Сервитьор: @Model.UserName</h5>
+    <h5>Дата и час на отваряне:</h5>
+    <h6>@Model.OpenDateTime.ToString()</h6>
+</div>
+<ul class="list-group border-0">
+    @foreach (var soldProduct in Model.SoldProducts)
+    {
+        var sum = @soldProduct.Quantity * @soldProduct.Price;
+
+        <li class="list-group-item d-flex justify-content-between align-items-center border-top-0">
+            @soldProduct.StoreProductName - @soldProduct.Quantity @soldProduct.MeasurementName  x @soldProduct.Price.ToString("#,##0.00")
+            <span class="badge badge-pill">@sum.ToString("#,##0.00")</span>
+        </li>
+    }
+</ul>
+

@@ -2,22 +2,25 @@
 {
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using EateryPOSSystem.Models.Storekeeper;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Services.Models;
-
+    using EateryPOSSystem.Infrastructure;
     using static ControllerConstants;
+    using static WebConstants;
 
+    [Authorize]
     public class StorekeeperController : Controller
     {
-        private readonly IStorekeeperService storekeeperService;
         private readonly IDbService dbService;
+        private readonly IStorekeeperService storekeeperService;
 
-        public StorekeeperController(IStorekeeperService storekeeperService,
-                                     IDbService dbService)
+        public StorekeeperController(IDbService dbService,
+                                     IStorekeeperService storekeeperService)
         {
-            this.storekeeperService = storekeeperService;
             this.dbService = dbService;
+            this.storekeeperService = storekeeperService;
         }
 
         public IActionResult AddAddress()
@@ -30,7 +33,7 @@
 
             if (addressExists)
             {
-                ModelState.AddModelError(nameof(address.AddressDetail), existingModelInDB);
+                ModelState.AddModelError(nameof(address.AddressDetail), existingAddressInDB);
 
                 return View(address);
             }
@@ -42,9 +45,58 @@
 
             storekeeperService.AddAddress(address.AddressDetail);
 
+            if ((string)TempData["redirectFrom"] == "AddProvider")
+            {
+                var newProvider = new AddProviderFormModel
+                {
+                    Cities = dbService.GetCities(),
+                    Addresses = dbService.GetAddresses()
+                };
+
+                return RedirectToAction("AddProvider", "Storekeeper", newProvider);
+            }
+
+            TempData[GlobalMessageKey] = $"В база данни успешно се добави адрес '{address.AddressDetail}'.";
+
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult AddCity() => View();
+
+        [HttpPost]
+        public IActionResult AddCity(AddCityFormModel city)
+        {
+            var cityExists = storekeeperService.IsCityExist(city.Name);
+
+            if (cityExists)
+            {
+                ModelState.AddModelError(nameof(city.Name), existingCityInDB);
+
+                return View(city);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(city);
+            }
+
+            storekeeperService.AddCity(city.Name, city.PostalCode);
+
+            if ((string)TempData["redirectFrom"] == "AddProvider")
+            {
+                var newProvider = new AddProviderFormModel
+                {
+                    Cities = dbService.GetCities(),
+                    Addresses = dbService.GetAddresses()
+                };
+
+                return RedirectToAction("AddProvider", "Storekeeper", newProvider);
+            }
+
+            TempData[GlobalMessageKey] = $"В база данни успешно се добави град '{city.Name}'.";
+
+            return RedirectToAction("Index", "Home");
+        }
         public IActionResult AddMaterialToWarehouse_1()
         {
             var newAddMaterialToWarehouseModel = new AddMaterialToWarehouseFormModel_1
@@ -123,7 +175,9 @@
         public IActionResult AddMaterialToWarehouse_2(AddMaterialToWarehouseFormModel_1 warehouseMaterial)
         {
             var addedMaterials = storekeeperService.GetAddedMaterials(warehouseMaterial.ProviderId,
-                                                               warehouseMaterial.DocumentNumber);
+                                                                      warehouseMaterial.DocumentNumber);
+
+            var materials = dbService.GetMaterials();
 
             var newWarehouseMaterial = new AddMaterialToWarehouseFormModel_2
             {
@@ -133,7 +187,7 @@
                 DocumentNumber = warehouseMaterial.DocumentNumber,
                 DocumentDate = warehouseMaterial.DocumentDate,
                 WarehouseId = warehouseMaterial.WarehouseId,
-                Materials = dbService.GetMaterials(),
+                Materials = materials,
                 AddedMaterials = addedMaterials
             };
 
@@ -148,7 +202,7 @@
             warehouseMaterial.Materials = dbService.GetMaterials();
 
             warehouseMaterial.AddedMaterials = storekeeperService.GetAddedMaterials(warehouseMaterial.ProviderId,
-                                                                             warehouseMaterial.DocumentNumber);
+                                                                                    warehouseMaterial.DocumentNumber);
 
             var materialExist = warehouseMaterial
                 .Materials
@@ -195,19 +249,21 @@
                 var quantity = warehouseMaterial.Quantity;
                 var unitPrice = warehouseMaterial.UnitPrice;
                 var materialId = warehouseMaterial.MaterialId;
+                var userId = warehouseMaterial.UserId;
 
                 storekeeperService.AddTempWarehouseReceipt(receiptNumber,
-                                                    providerId, 
-                                                    documentTypeId,
-                                                    documentNumber,
-                                                    documentDate,
-                                                    warehouseId,
-                                                    quantity,
-                                                    unitPrice,
-                                                    materialId);
+                                                           providerId, 
+                                                           documentTypeId,
+                                                           documentNumber,
+                                                           documentDate,
+                                                           warehouseId,
+                                                           quantity,
+                                                           unitPrice,
+                                                           materialId,
+                                                           userId);
 
                 warehouseMaterial.AddedMaterials = storekeeperService.GetAddedMaterials(providerId,
-                                                                                 documentNumber);
+                                                                                        documentNumber);
 
                 return View(warehouseMaterial);
             }
@@ -224,10 +280,12 @@
                 }
 
                 var warehouseReceiptList = storekeeperService
-                    .AddWarehouseReceiptListByReceiptNumber(receiptNumber,
-                                                            lastReceiptNumberInDb);
+                                            .AddWarehouseReceiptListByReceiptNumber(receiptNumber,
+                                                                                    lastReceiptNumberInDb);
 
                 storekeeperService.AddReceiptsMaterialsToWarehouse(warehouseReceiptList);
+
+                TempData[GlobalMessageKey] = $"В база данни успешно се добавиха материали със стокова разписка № {receiptNumber}.";
 
                 return RedirectToAction("Index", "Home");
             }
@@ -255,7 +313,7 @@
 
             if (materialExists)
             {
-                ModelState.AddModelError(nameof(material.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(material.Name), existingMaterialInDB);
 
                 return View(material);
             }
@@ -266,6 +324,8 @@
             }
 
             storekeeperService.AddMaterial(material.Name, material.MeasurementId);
+
+            TempData[GlobalMessageKey] = $"В база данни успешно се добави материал '{material.Name}'.";
 
             return RedirectToAction("Index", "Home");
         }
@@ -278,6 +338,8 @@
                 Addresses = dbService.GetAddresses()
             };
 
+            TempData["RedirectFrom"] = "AddProvider";
+
             return View(newProvider);
         }
 
@@ -285,13 +347,14 @@
         public IActionResult AddProvider(AddProviderFormModel provider)
         {
             provider.Cities = dbService.GetCities();
+
             provider.Addresses = dbService.GetAddresses();
 
-            var providerlExists = storekeeperService.IsProviderExist(provider.Name);
+            var providerExists = storekeeperService.IsProviderExist(provider.Name);
 
-            if (providerlExists)
+            if (providerExists)
             {
-                ModelState.AddModelError(nameof(provider.Name), existingModelInDB);
+                ModelState.AddModelError(nameof(provider.Name), existingProviderInDB);
 
                 return View(provider);
             }
@@ -301,7 +364,14 @@
                 return View(provider);
             }
 
-            storekeeperService.AddProvider(provider.Name, provider.Number, provider.CityId, provider.AddressId);
+            storekeeperService.AddProvider(provider.Name,
+                                           provider.Number,
+                                           provider.CityId, 
+                                           provider.AddressId);
+
+            TempData["RedirectFrom"] = string.Empty;
+
+            TempData[GlobalMessageKey] = $"В база данни успешно се добави доставчик '{provider.Name}' с № {provider.Number}.";
 
             return RedirectToAction("Index", "Home");
         }
@@ -317,7 +387,8 @@
         public IActionResult TransferMaterialsFirstPage(TransferMaterialsFormModel transfer)
         {
             transfer.TransferFromWarehouseName = dbService.GetWarehouses()
-                .FirstOrDefault(w => w.Id == transfer.TransferFromWarehouseId).Name;
+                                                    .FirstOrDefault(w => w.Id == transfer.TransferFromWarehouseId)
+                                                    .Name;
 
             transfer.TransferToWarehouseName = dbService.GetWarehouses()
                 .FirstOrDefault(w => w.Id == transfer.TransferToWarehouseId).Name;
@@ -342,7 +413,7 @@
 
             if (transfer.TransferFromWarehouseId == transfer.TransferToWarehouseId)
             {
-                ModelState.AddModelError(nameof(transfer.TransferToWarehouseId), fromWarehouseAndToWarehouseAreTheSame);
+                ModelState.AddModelError(nameof(transfer.TransferToWarehouseId), warehouseCannotTransferToItself);
 
                 return View(transfer);
             }
@@ -392,6 +463,8 @@
 
             if (endButton != null)
             {
+                TempData[GlobalMessageKey] = $"Успешно трансфериране на материали между складове.";
+
                 return RedirectToAction("Index","Home");
             }
 
@@ -428,7 +501,7 @@
                     ToWarehouseId = transfer.TransferToWarehouseId,
                     MaterialId = transfer.TransferedMaterialId,
                     Quantity = transfer.QuantityToTransfer,
-                    UserId = 1 // transfer.UserId                    
+                    UserId = transfer.UserId                    
                 };
 
                 storekeeperService.AddTransfer(newTransfer);
@@ -448,7 +521,7 @@
 
         public IActionResult ImportStorekeeperData()
         {
-            storekeeperService.ImportStorekeeperData();
+            storekeeperService.ImportStorekeeperData(User.GetId());
 
             return RedirectToAction("Index", "Home");
         }

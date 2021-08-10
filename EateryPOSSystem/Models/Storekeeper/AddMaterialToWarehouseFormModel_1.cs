@@ -20,7 +20,7 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public string ReceiptInfo { get; set; }
 
-        public int UserId { get; init; }
+        public string UserId { get; init; }
 
         public IEnumerable<ProviderServiceModel> Providers { get; set; }
 

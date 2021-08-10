@@ -8,7 +8,7 @@ namespace EateryPOSSystem
     {
         public EateryPOSSystemProfile()
         {
-            CreateMap<InputDTO, Input>();
+            CreateMap<ImportDTO, Import>();
             CreateMap<AddressDTO, Address>();
             CreateMap<CityDTO, City>();
             CreateMap<DocumentTypeDTO, DocumentType>();

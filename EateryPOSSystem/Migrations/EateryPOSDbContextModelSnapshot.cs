@@ -4,16 +4,14 @@ using EateryPOSSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace EateryPOSSystem.Data.Migrations
+namespace EateryPOSSystem.Migrations
 {
     [DbContext(typeof(EateryPOSDbContext))]
-    [Migration("20210728181115_RemoveUniqueRestrictionFromRecipeName")]
-    partial class RemoveUniqueRestrictionFromRecipeName
+    partial class EateryPOSDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +46,7 @@ namespace EateryPOSSystem.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CloseDateTime")
+                    b.Property<DateTime?>("CloseDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Closed")
@@ -57,11 +55,11 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<DateTime>("OpenDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentTypeId")
+                    b.Property<int?>("PaymentTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -158,6 +156,39 @@ namespace EateryPOSSystem.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Measurements");
+                });
+
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.OrderProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MeasurementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MeasurementName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,3)");
+
+                    b.Property<int>("StoreProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoreProductName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.PaymentType", b =>
@@ -285,9 +316,6 @@ namespace EateryPOSSystem.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("MaterialId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("MaterialQuantity")
                         .HasColumnType("decimal(18,3)");
 
@@ -296,14 +324,20 @@ namespace EateryPOSSystem.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("StoreProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WarehouseMaterialMaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WarehouseMaterialWarehouseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MaterialId");
+                    b.HasIndex("StoreProductId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("WarehouseMaterialWarehouseId", "WarehouseMaterialMaterialId");
 
                     b.ToTable("Recipes");
                 });
@@ -317,6 +351,9 @@ namespace EateryPOSSystem.Data.Migrations
 
                     b.Property<int>("BillId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -400,6 +437,33 @@ namespace EateryPOSSystem.Data.Migrations
                     b.ToTable("StoreProducts");
                 });
 
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.StoreTable", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoreName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TableNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StoreTables");
+                });
+
             modelBuilder.Entity("EateryPOSSystem.Data.Models.TempWarehouseReceipt", b =>
                 {
                     b.Property<int>("Id")
@@ -431,8 +495,8 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("WarehouseId")
                         .HasColumnType("int");
@@ -442,44 +506,120 @@ namespace EateryPOSSystem.Data.Migrations
                     b.ToTable("TempWarehouseReceipts");
                 });
 
-            modelBuilder.Entity("EateryPOSSystem.Data.Models.User", b =>
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.Transfer", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("FromWarehouseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,3)");
+
+                    b.Property<int>("ToWarehouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromWarehouseId");
+
+                    b.HasIndex("MaterialId");
+
+                    b.HasIndex("ToWarehouseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transfers");
+                });
+
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("PositionId")
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("PositionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("PositionId");
 
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("POSSystemUsers");
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.Warehouse", b =>
@@ -560,8 +700,8 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("WarehouseId")
                         .HasColumnType("int");
@@ -630,71 +770,6 @@ namespace EateryPOSSystem.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -786,14 +861,12 @@ namespace EateryPOSSystem.Data.Migrations
                     b.HasOne("EateryPOSSystem.Data.Models.PaymentType", "PaymentType")
                         .WithMany("Bills")
                         .HasForeignKey("PaymentTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EateryPOSSystem.Data.Models.User", "User")
                         .WithMany("Bills")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("PaymentType");
 
@@ -843,21 +916,21 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.Recipe", b =>
                 {
-                    b.HasOne("EateryPOSSystem.Data.Models.Material", "Material")
+                    b.HasOne("EateryPOSSystem.Data.Models.StoreProduct", "StoreProduct")
                         .WithMany("Recipes")
-                        .HasForeignKey("MaterialId")
+                        .HasForeignKey("StoreProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EateryPOSSystem.Data.Models.Product", "Product")
+                    b.HasOne("EateryPOSSystem.Data.Models.WarehouseMaterial", "WarehouseMaterial")
                         .WithMany("Recipes")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("WarehouseMaterialWarehouseId", "WarehouseMaterialMaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Material");
+                    b.Navigation("StoreProduct");
 
-                    b.Navigation("Product");
+                    b.Navigation("WarehouseMaterial");
                 });
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.SoldProduct", b =>
@@ -898,7 +971,7 @@ namespace EateryPOSSystem.Data.Migrations
                     b.HasOne("EateryPOSSystem.Data.Models.Product", "Product")
                         .WithMany("StoreProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EateryPOSSystem.Data.Models.Store", "Store")
@@ -914,13 +987,46 @@ namespace EateryPOSSystem.Data.Migrations
                     b.Navigation("Store");
                 });
 
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.Transfer", b =>
+                {
+                    b.HasOne("EateryPOSSystem.Data.Models.Warehouse", "FromWarehouse")
+                        .WithMany("TransfersFrom")
+                        .HasForeignKey("FromWarehouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EateryPOSSystem.Data.Models.Material", "Material")
+                        .WithMany("Transfers")
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EateryPOSSystem.Data.Models.Warehouse", "ToWarehouse")
+                        .WithMany("TransfersTo")
+                        .HasForeignKey("ToWarehouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EateryPOSSystem.Data.Models.User", "User")
+                        .WithMany("Transfers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("FromWarehouse");
+
+                    b.Navigation("Material");
+
+                    b.Navigation("ToWarehouse");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EateryPOSSystem.Data.Models.User", b =>
                 {
                     b.HasOne("EateryPOSSystem.Data.Models.Position", "Position")
                         .WithMany("Users")
                         .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Position");
                 });
@@ -967,8 +1073,7 @@ namespace EateryPOSSystem.Data.Migrations
                     b.HasOne("EateryPOSSystem.Data.Models.User", "User")
                         .WithMany("WarehouseReceipts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EateryPOSSystem.Data.Models.Warehouse", "Warehouse")
                         .WithMany("WarehouseReceipts")
@@ -998,7 +1103,7 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("EateryPOSSystem.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1007,7 +1112,7 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("EateryPOSSystem.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1022,7 +1127,7 @@ namespace EateryPOSSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("EateryPOSSystem.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1031,7 +1136,7 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("EateryPOSSystem.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1060,7 +1165,7 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.Material", b =>
                 {
-                    b.Navigation("Recipes");
+                    b.Navigation("Transfers");
 
                     b.Navigation("WarehouseMaterials");
 
@@ -1088,8 +1193,6 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.Product", b =>
                 {
-                    b.Navigation("Recipes");
-
                     b.Navigation("StoreProducts");
                 });
 
@@ -1110,6 +1213,8 @@ namespace EateryPOSSystem.Data.Migrations
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.StoreProduct", b =>
                 {
+                    b.Navigation("Recipes");
+
                     b.Navigation("SoldProducts");
                 });
 
@@ -1117,14 +1222,25 @@ namespace EateryPOSSystem.Data.Migrations
                 {
                     b.Navigation("Bills");
 
+                    b.Navigation("Transfers");
+
                     b.Navigation("WarehouseReceipts");
                 });
 
             modelBuilder.Entity("EateryPOSSystem.Data.Models.Warehouse", b =>
                 {
+                    b.Navigation("TransfersFrom");
+
+                    b.Navigation("TransfersTo");
+
                     b.Navigation("WarehouseMaterials");
 
                     b.Navigation("WarehouseReceipts");
+                });
+
+            modelBuilder.Entity("EateryPOSSystem.Data.Models.WarehouseMaterial", b =>
+                {
+                    b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618
         }

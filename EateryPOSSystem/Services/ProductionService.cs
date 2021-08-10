@@ -36,9 +36,9 @@ namespace EateryPOSSystem.Services
             => dbService.GetStoreProducts()
             .Any(m => m.Id == storeProductlId);
 
-        public bool IsMaterialInRecipeExist(string recipeName, int storeProductId, int WarehouseMaterialId)
+        public bool IsMaterialInRecipeExist(string recipeName, int storeProductId, int warehouseMaterialId)
             => dbService.GetRecipes()
-            .Any(r => r.Name == recipeName & r.StoreProductId == storeProductId);
+            .Any(r => r.Name == recipeName && r.StoreProductId == storeProductId && r.WarehouseMaterialId == warehouseMaterialId);
 
         public bool IsWarehouseMaterialExist(int warehouseId, int materialId)
             => dbService.GetWarehouseMaterials().Any(wm=> wm.WarehouseId == warehouseId &wm.MaterialId == materialId);
@@ -131,8 +131,8 @@ namespace EateryPOSSystem.Services
 
             var inputJson = File.ReadAllText(".\\Data\\Datasets\\seedingdata.json");
 
-            var dtoInput = JsonConvert.DeserializeObject<InputDTO>(inputJson);
-            var inputData = mapper.Map<Input>(dtoInput);
+            var dtoInput = JsonConvert.DeserializeObject<ImportDTO>(inputJson);
+            var inputData = mapper.Map<Import>(dtoInput);
 
             foreach (var product in inputData.Products)
             {

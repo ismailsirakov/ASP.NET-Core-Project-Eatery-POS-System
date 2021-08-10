@@ -25,7 +25,7 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public decimal QuantityToTransfer { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public IEnumerable<WarehouseServiceModel> Warehouses { get; set; }
 

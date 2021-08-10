@@ -129,12 +129,6 @@ namespace EateryPOSSystem.Services
             data.SaveChanges();
         }
 
-        public void AddUser(User user)
-        {
-            data.POSSystemUsers.Add(user);
-            data.SaveChanges();
-        }
-
         public void AddWarehouse(Warehouse warehouse)
         {
             data.Warehouses.Add(warehouse);
@@ -368,6 +362,9 @@ namespace EateryPOSSystem.Services
                 UserId = t.UserId
             })
             .ToList();
+
+        public string GetUserUserName(string userId)
+            => data.Users.FirstOrDefault(u => u.Id == userId).UserName;
 
         public IEnumerable<int> GetWarehouseMaterialIdsByWarehouseId(int warehouseId)
             => data.WarehouseMaterials

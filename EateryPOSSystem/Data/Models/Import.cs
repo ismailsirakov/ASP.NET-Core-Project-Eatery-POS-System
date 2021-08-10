@@ -4,7 +4,7 @@ namespace EateryPOSSystem.Data.Models
     using System.ComponentModel.DataAnnotations.Schema;
 
     [NotMapped]
-    public class Input
+    public class Import
     {
         public IEnumerable<Address> Addresses { get; set; }
 

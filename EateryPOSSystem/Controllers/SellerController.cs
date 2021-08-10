@@ -2,12 +2,14 @@
 {
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using EateryPOSSystem.Models.Seller;
     using EateryPOSSystem.Services.Interfaces;
-    using static ControllerConstants;
     using EateryPOSSystem.Models.Bill;
     using EateryPOSSystem.Services.Models;
+    using static ControllerConstants;
 
+    [Authorize]
     public class SellerController : Controller
     {
         private readonly IBillService billService;
@@ -53,7 +55,8 @@
 
         public IActionResult ChooseTable(ChooseTableFormModel chosenStore)
         {
-            chosenStore.TablesWithOpenBills = dbService.GetTablesWithOpenBills().Where(t=>t.StoreName == chosenStore.StoreName);
+            chosenStore.TablesWithOpenBills = dbService.GetTablesWithOpenBills()
+                                                       .Where(t=>t.StoreName == chosenStore.StoreName);
 
             return View(chosenStore);
         }
@@ -61,11 +64,14 @@
         [HttpPost]
         public IActionResult ChooseTable(ChooseTableFormModel chosenStoreTables, int tableNumber)
         {
-            chosenStoreTables.TablesWithOpenBills = dbService.GetTablesWithOpenBills().Where(t => t.StoreName == chosenStoreTables.StoreName);
+            chosenStoreTables.TablesWithOpenBills = dbService.GetTablesWithOpenBills()
+                                                             .Where(t => t.StoreName == chosenStoreTables.StoreName);
 
             if (chosenStoreTables.Id == 0)
             {
-                chosenStoreTables.Id = dbService.GetStores().FirstOrDefault(s => s.Name == chosenStoreTables.StoreName).Id;
+                chosenStoreTables.Id = dbService.GetStores()
+                                                .FirstOrDefault(s => s.Name == chosenStoreTables.StoreName)
+                                                .Id;
             }
 
             var table = new TableFormModel
@@ -83,11 +89,14 @@
             if (table.StoreId == 0 && table.TableNumber == 0)
             {
                 table.StoreId = (int)TempData["StoreId"];
+
                 table.TableNumber = (int)TempData["TableNumber"];
+
                 table.StoreName = (string)TempData["StoreName"];
             }
 
-            table.OpenBills = sellerService.GetOpenBillsByStoreAndTableNumber(table.StoreId, table.TableNumber);
+            table.OpenBills = sellerService.GetOpenBillsByStoreAndTableNumber(table.StoreId,
+                                                                              table.TableNumber);
 
             TempData["StoreId"] = table.StoreId;
 
@@ -99,12 +108,17 @@
         }
 
         [HttpPost]
-        public IActionResult Table(TableFormModel table, int billIdToView, string goBack, string newBill)
+        public IActionResult Table(TableFormModel table,
+                                   int billIdToView,
+                                   string goBack,
+                                   string newBill)
         {
             if (table.StoreId == 0 && table.StoreName == null && table.TableNumber == 0)
             {
                 table.StoreId = (int)TempData["StoreId"];
+
                 table.TableNumber = (int)TempData["TableNumber"];
+
                 table.StoreName = (string)TempData["StoreName"];
             }
 
@@ -118,7 +132,9 @@
                     table.StoreId = (int)TempData["StoreId"];
                 }
 
-                var tablesInStore = dbService.GetStores().FirstOrDefault(s => s.Name == table.StoreName).TablesInStore;
+                var tablesInStore = dbService.GetStores()
+                                             .FirstOrDefault(s => s.Name == table.StoreName)
+                                             .TablesInStore;
 
                 var chosenStore = new ChooseTableFormModel
                 {
@@ -131,7 +147,8 @@
                 return RedirectToAction("ChooseTable", "Seller", chosenStore);
             }
 
-            table.OpenBills = sellerService.GetOpenBillsByStoreAndTableNumber(table.StoreId, table.TableNumber);
+            table.OpenBills = sellerService.GetOpenBillsByStoreAndTableNumber(table.StoreId,
+                                                                              table.TableNumber);
 
             if (table.StoreId == 0)
             {
@@ -301,7 +318,8 @@
 
                     sellerService.AddSoldProductToBill(soldProduct);
 
-                    productionService.DecreaseMaterialsUsedInStoreProduct(orderProduct.StoreProductId, orderProduct.Quantity);
+                    productionService.DecreaseMaterialsUsedInStoreProduct(orderProduct.StoreProductId,
+                                                                          orderProduct.Quantity);
                 }
 
                 sellerService.RemoveOrderProductsFromBill(bill.BillId);
@@ -309,12 +327,8 @@
                 return RedirectToAction("ChooseStore", "Seller");
             }
 
-            if (true)
-            {
-
-            }
-
-            var currentStore = dbService.GetStores().FirstOrDefault(s => s.Id == bill.StoreId);
+            var currentStore = dbService.GetStores()
+                                        .FirstOrDefault(s => s.Id == bill.StoreId);
 
             var store = new ChooseTableFormModel
             {

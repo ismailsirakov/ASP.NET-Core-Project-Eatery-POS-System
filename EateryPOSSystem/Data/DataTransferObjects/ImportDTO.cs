@@ -2,7 +2,7 @@ namespace EateryPOSSystem.Data.DataTransferObjects
 {
     using System.Collections.Generic;
 
-    public class InputDTO
+    public class ImportDTO
     {
         public IEnumerable<AddressDTO> Addresses { get; set; }
         public IEnumerable<CityDTO> Cities { get; set; }

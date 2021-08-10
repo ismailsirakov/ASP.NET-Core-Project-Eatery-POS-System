@@ -31,7 +31,7 @@ namespace EateryPOSSystem.Models.Storekeeper
 
         public decimal Quantity { get; init; }
 
-        public int UserId { get; init; }
+        public string UserId { get; init; }
 
         public IEnumerable<MaterialServiceModel> Materials { get; set; }
 

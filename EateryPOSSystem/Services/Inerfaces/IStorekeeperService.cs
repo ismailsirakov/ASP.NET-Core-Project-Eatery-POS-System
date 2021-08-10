@@ -15,12 +15,22 @@ namespace EateryPOSSystem.Services.Interfaces
 
         bool IsProviderExist(string poviderName);
 
+        bool IsCityExist(string cityName);
+
         IEnumerable<WarehouseReceipt> AddWarehouseReceiptListByReceiptNumber(int receiptNumber, int lastReceiptNumberInDb);
 
         IEnumerable<WarehouseMaterialServiceModel> GetAddedMaterials(int providerId, int documentNumber);
 
         IEnumerable<TransferServiceModel> GetTransferedMaterials(int transferNumber);
         void AddAddress(string addressDetail);
+
+        void AddCity(string cityName, int? postalCode);
+
+        void AddMaterial(string materialName, int measurementId);
+
+        void AddProvider(string poviderName, int number, int cityId, int addressId);
+
+        void AddReceiptsMaterialsToWarehouse(IEnumerable<WarehouseReceipt> warehouseReceiptList);
 
         void AddTempWarehouseReceipt(int receiptNumber,
                                     int providerId,
@@ -30,17 +40,12 @@ namespace EateryPOSSystem.Services.Interfaces
                                     int warehouseId,
                                     decimal quantity,
                                     decimal unitPrice,
-                                    int materialId);
-
-        void AddMaterial(string materialName, int measurementId);
-
-        void AddProvider(string poviderName, int number, int cityId, int addressId);
-
-        void AddReceiptsMaterialsToWarehouse(IEnumerable<WarehouseReceipt> warehouseReceiptList);
+                                    int materialId,
+                                    string userId);
 
         void AddTransfer(TransferServiceModel transfer);
 
-        void ImportStorekeeperData();
+        void ImportStorekeeperData(string userId);
 
         void TransferMaterial(TransferServiceModel transfer);
 

@@ -11,6 +11,7 @@ namespace EateryPOSSystem.Services
     using EateryPOSSystem.Services.Models;
     using EateryPOSSystem.Data.DataTransferObjects;
 
+
     public class StorekeeperService : IStorekeeperService
     {
         private readonly IDbService dbService;
@@ -38,6 +39,25 @@ namespace EateryPOSSystem.Services
             };
 
             dbService.AddAddress(address);
+        }
+
+        public bool IsCityExist(string cityName)
+            => dbService.GetCities().Any(c => c.Name == cityName);
+
+        public void AddCity(string cityName, int? postalCode)
+        {
+            if (IsCityExist(cityName))
+            {
+                return;
+            }
+
+            var city = new City
+            {
+                Name = cityName,
+                PostalCode = postalCode
+            };
+
+            dbService.AddCity(city);
         }
 
         public bool IsProviderExist(string poviderName)
@@ -82,7 +102,7 @@ namespace EateryPOSSystem.Services
             dbService.AddMaterial(material);
         }
 
-        public void AddTempWarehouseReceipt(int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId)
+        public void AddTempWarehouseReceipt(int receiptNumber, int providerId, int documentTypeId, int documentNumber, DateTime documentDate, int warehouseId, decimal quantity, decimal unitPrice, int materialId, string userId)
         {
             var tempWarehouseReceipt = new TempWarehouseReceipt
             {
@@ -94,7 +114,8 @@ namespace EateryPOSSystem.Services
                 WarehouseId = warehouseId,
                 MaterialId = materialId,
                 Quantity = quantity,
-                UnitPrice = unitPrice
+                UnitPrice = unitPrice,
+                UserId = userId
             };
 
             dbService.AddTempWarehouseReceipt(tempWarehouseReceipt);
@@ -137,7 +158,7 @@ namespace EateryPOSSystem.Services
                         MaterialId = twr.MaterialId,
                         Quantity = twr.Quantity,
                         UnitPrice = twr.UnitPrice,
-                        UserId = 1,
+                        UserId = twr.UserId,
                         DateTime = DateTime.UtcNow
                     })
                     .ToList();
@@ -303,19 +324,24 @@ namespace EateryPOSSystem.Services
 
         
 
-        public void ImportStorekeeperData()
+        public void ImportStorekeeperData(string userId)
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<EateryPOSSystemProfile>());
             mapper = config.CreateMapper();
 
             var inputJson = File.ReadAllText(".\\Data\\Datasets\\seedingdata.json");
 
-            var dtoInput = JsonConvert.DeserializeObject<InputDTO>(inputJson);
-            var inputData = mapper.Map<Input>(dtoInput);
+            var dtoInput = JsonConvert.DeserializeObject<ImportDTO>(inputJson);
+            var inputData = mapper.Map<Import>(dtoInput);
 
             foreach (var address in inputData.Addresses)
             {
                 AddAddress(address.AddressDetails);
+            }
+
+            foreach (var city in inputData.Cities)
+            {
+                AddCity(city.Name, city.PostalCode);
             }
 
             foreach (var material in inputData.Materials)
@@ -338,7 +364,8 @@ namespace EateryPOSSystem.Services
                                         wr.WarehouseId,
                                         wr.Quantity,
                                         wr.UnitPrice,
-                                        wr.MaterialId);
+                                        wr.MaterialId,
+                                        userId);
             }
             
             AddReceiptsMaterialsToWarehouse(AddWarehouseReceiptListByReceiptNumber(1, 0));

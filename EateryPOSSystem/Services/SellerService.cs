@@ -1,11 +1,11 @@
 namespace EateryPOSSystem.Services
 {
-    using EateryPOSSystem.Data.Models;
-    using EateryPOSSystem.Services.Interfaces;
-    using EateryPOSSystem.Services.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using EateryPOSSystem.Data.Models;
+    using EateryPOSSystem.Services.Interfaces;
+    using EateryPOSSystem.Services.Models;
 
     public class SellerService : ISellerService
     {
@@ -33,7 +33,7 @@ namespace EateryPOSSystem.Services
 
                 var bill = dbService.GetBillById(billId);
 
-                var userName = "Admin";
+                var userName = dbService.GetUserUserName(bill.UserId);
 
                 var billTotalSum = 0m;
 

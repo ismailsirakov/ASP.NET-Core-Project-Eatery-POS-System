@@ -8,7 +8,6 @@
     <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
         <form method="post">
             <h2 class="text-center font-weight-bold text-primary">Добави доствчик</h2>
-
             <div class="form-group">
                 <label asp-for="Name">Име на доставчик</label>
                 <input asp-for="Name" class="form-control">
@@ -28,7 +27,7 @@
                     }
                 </select>
                 <span>
-                    <a asp-controller="BaseData" asp-action="AddCity" class="btn btn-sm btn-outline-primary">Добави нов град</a>
+                    <a asp-controller="Storekeeper" asp-action="AddCity" class="btn btn-sm btn-outline-primary">Добави нов град</a>
                 </span>
             </div>
             <div class="form-group">
@@ -40,7 +39,7 @@
                     }
                 </select>
                 <span>
-                    <a asp-controller="StoreKeeper" asp-action="AddAddress" class="btn btn-sm btn-outline-primary">Добави нов адрес</a>
+                    <a asp-controller="Storekeeper" asp-action="AddAddress" class="btn btn-sm btn-outline-primary">Добави нов адрес</a>
                 </span>
             </div>
             <div class="text-center">

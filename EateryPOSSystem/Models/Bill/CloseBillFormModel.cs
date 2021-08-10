@@ -6,9 +6,9 @@ namespace EateryPOSSystem.Models.Bill
 
     public class CloseBillFormModel
     {
-        public int BillId { get; set; }
+        public int Id { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public string UserName { get; set; }
 
@@ -17,6 +17,10 @@ namespace EateryPOSSystem.Models.Bill
         public decimal TotalSum { get; set; }
 
         public int PaymentTypeId { get; set; }
+
+        public string PaymentTypeName { get; set; }
+
+        public DateTime CloseDateTime { get; set; }
 
         public IEnumerable<SoldProductServiceModel> SoldProducts { get; set; }
 

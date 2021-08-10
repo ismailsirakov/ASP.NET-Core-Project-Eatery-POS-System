@@ -12,6 +12,6 @@ namespace EateryPOSSystem.Data.Models
 
         public int BillId { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

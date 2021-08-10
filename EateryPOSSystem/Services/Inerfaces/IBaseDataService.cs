@@ -2,9 +2,6 @@ namespace EateryPOSSystem.Services.Interfaces
 {
     public interface IBaseDataService
     {
-        bool IsCityExist(string cityName);
-
-        void AddCity(string cityName, int? postalCode);
 
         bool IsDocumentTypeExist(string documentTypeName);
 

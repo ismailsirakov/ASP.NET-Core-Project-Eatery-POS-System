@@ -44,8 +44,6 @@ namespace EateryPOSSystem.Services.Interfaces
 
         void AddTransfer(Transfer transfer);
 
-        void AddUser(User user);
-
         void AddWarehouse(Warehouse warehouse);
 
         void AddWarehouseMaterial(WarehouseMaterial warehouseMaterial);
@@ -91,6 +89,8 @@ namespace EateryPOSSystem.Services.Interfaces
         IEnumerable<TempWarehouseReceipt> GetTempWarehouseReceipts();
 
         IEnumerable<TransferServiceModel> GetTransfers();
+
+        string GetUserUserName(string userId);
 
         IEnumerable<WarehouseServiceModel> GetWarehouses();
 

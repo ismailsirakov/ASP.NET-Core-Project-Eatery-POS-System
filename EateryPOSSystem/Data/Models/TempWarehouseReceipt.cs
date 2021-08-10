@@ -29,6 +29,6 @@ namespace EateryPOSSystem.Data.Models
         [Column(TypeName = "decimal(18,3)")]
         public decimal Quantity { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

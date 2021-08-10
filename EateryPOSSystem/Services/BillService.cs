@@ -22,7 +22,7 @@
         public IEnumerable<OrderProductServiceModel> OrderProductsByBillId(int billId)
             => dbService.GetOrderProducts().Where(sp => sp.BillId == billId).ToList();
 
-        public int NewBill(int userId)
+        public int NewBill(string userId)
         {
             var newBill = new Bill
             {
@@ -35,7 +35,7 @@
             return newBill.Id;
         }
 
-        public void AddNewBillToTable(int userId, int storeId, int tableNumber, int billId)
+        public void AddNewBillToTable(string userId, int storeId, int tableNumber, int billId)
         {
             var storeName = dbService.GetStores().FirstOrDefault(s => s.Id == storeId).Name;
 

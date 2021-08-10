@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class EateryPOSDbContext : IdentityDbContext
+    public class EateryPOSDbContext : IdentityDbContext<User>
     {
 
         public EateryPOSDbContext(DbContextOptions<EateryPOSDbContext> options)
@@ -29,8 +29,6 @@
         public DbSet<PaymentType> PaymentTypes { get; init; }
 
         public DbSet<Position> Positions { get; init; }
-
-        public DbSet<User> POSSystemUsers { get; init; }
 
         public DbSet<Product> Products { get; init; }
 
@@ -245,10 +243,6 @@
                 .HasForeignKey(x => x.PositionId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
-
-            modelBuilder.Entity<User>()
-                .HasIndex(x => x.UserName)
-                .IsUnique();
 
             modelBuilder.Entity<Warehouse>()
                 .HasIndex(x => x.Name)
