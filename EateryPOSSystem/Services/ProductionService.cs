@@ -114,7 +114,7 @@ namespace EateryPOSSystem.Services
 
         public void DecreaseMaterialsUsedInStoreProduct(int storeProductId, decimal soldProductQuantity)
         {
-            var recipes = GetRecipesByStorProductId(storeProductId);
+            var recipes = GetRecipesByStorProductId(storeProductId).ToList();
 
             foreach (var recipe in recipes)
             {
