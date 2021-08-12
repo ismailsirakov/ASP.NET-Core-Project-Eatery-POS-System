@@ -4,11 +4,11 @@ namespace EateryPOSSystem.Services
     using System.IO;
     using System.Linq;
     using AutoMapper;
+    using Newtonsoft.Json;
     using EateryPOSSystem.Data.DataTransferObjects;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Services.Models;
-    using Newtonsoft.Json;
 
     public class ProductionService : IProductionService
     {
@@ -27,6 +27,9 @@ namespace EateryPOSSystem.Services
         public bool IsMaterialWithIdExist(int materialId)
             => dbService.GetMaterials()
             .Any(m => m.Id == materialId);
+
+        public bool IsProductExist(string productName)
+            => dbService.GetProducts().Any(p => p.Name == productName);
 
         public bool IsProductWithIdExist(int productlId)
             => dbService.GetProducts()
@@ -78,8 +81,14 @@ namespace EateryPOSSystem.Services
             dbService.AddRecipe(recipe);
         }
 
+
         public void AddProduct(string productName, int productTypeId)
         {
+            if (IsProductExist(productName))
+            {
+                return;
+            }
+
             var product = new Product
             {
                 Name = productName,

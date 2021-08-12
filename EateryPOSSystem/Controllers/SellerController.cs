@@ -9,7 +9,7 @@
     using EateryPOSSystem.Services.Models;
     using static ControllerConstants;
 
-    [Authorize]
+    [Authorize(Roles = "Administrator, Seller")]
     public class SellerController : Controller
     {
         private readonly IBillService billService;
@@ -32,7 +32,7 @@
         {
             var table = new ChooseStoreFormModel
             {
-                Stores = dbService.GetStores()
+                Stores = dbService.GetStores().ToList()
             };
 
             return View(table);
@@ -41,7 +41,7 @@
         [HttpPost]
         public IActionResult ChooseStore(ChooseStoreFormModel store)
         {
-            var stores = dbService.GetStores();
+            var stores = dbService.GetStores().ToList();
 
             var chosenStore = new ChooseTableFormModel
             {
@@ -56,7 +56,8 @@
         public IActionResult ChooseTable(ChooseTableFormModel chosenStore)
         {
             chosenStore.TablesWithOpenBills = dbService.GetTablesWithOpenBills()
-                                                       .Where(t=>t.StoreName == chosenStore.StoreName);
+                                                       .Where(t=>t.StoreName == chosenStore.StoreName)
+                                                       .ToList();
 
             return View(chosenStore);
         }
@@ -65,7 +66,8 @@
         public IActionResult ChooseTable(ChooseTableFormModel chosenStoreTables, int tableNumber)
         {
             chosenStoreTables.TablesWithOpenBills = dbService.GetTablesWithOpenBills()
-                                                             .Where(t => t.StoreName == chosenStoreTables.StoreName);
+                                                             .Where(t => t.StoreName == chosenStoreTables.StoreName)
+                                                             .ToList();
 
             if (chosenStoreTables.Id == 0)
             {
@@ -95,8 +97,8 @@
                 table.StoreName = (string)TempData["StoreName"];
             }
 
-            table.OpenBills = sellerService.GetOpenBillsByStoreAndTableNumber(table.StoreId,
-                                                                              table.TableNumber);
+            table.OpenBills = sellerService.GetOpenBillsByStoreAndTableNumber(table.StoreId, table.TableNumber)
+                                           .ToList();
 
             TempData["StoreId"] = table.StoreId;
 
@@ -148,7 +150,7 @@
             }
 
             table.OpenBills = sellerService.GetOpenBillsByStoreAndTableNumber(table.StoreId,
-                                                                              table.TableNumber);
+                                                                              table.TableNumber).ToList();
 
             if (table.StoreId == 0)
             {
@@ -197,8 +199,8 @@
             {
                 BillId = billId,
                 StoreId = storeId,
-                OrderProducts = billService.OrderProductsByBillId(billId),
-                StoreProducts = sellerService.GetStoreProductsByStoreId(storeId)
+                OrderProducts = billService.OrderProductsByBillId(billId).ToList(),
+                StoreProducts = sellerService.GetStoreProductsByStoreId(storeId).ToList()
             };
 
             TempData["BillId"] = billId;
@@ -216,11 +218,11 @@
         {
             bill.BillId = (int)TempData["BillId"];
 
-            bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId);
+            bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId).ToList();
 
             bill.StoreId = (int)TempData["StoreId"];
 
-            bill.StoreProducts = sellerService.GetStoreProductsByStoreId(bill.StoreId);
+            bill.StoreProducts = sellerService.GetStoreProductsByStoreId(bill.StoreId).ToList();
 
             if (addButton != null)
             {
@@ -262,9 +264,9 @@
 
                 sellerService.AddOrderProductToBill(orderProduct);
 
-                bill.StoreProducts = sellerService.GetStoreProductsByStoreId(bill.StoreId);
+                bill.StoreProducts = sellerService.GetStoreProductsByStoreId(bill.StoreId).ToList();
 
-                bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId);
+                bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId).ToList();
 
                 TempData["BillId"] = bill.BillId;
 
@@ -286,9 +288,9 @@
 
                 sellerService.RemoveOrderProductById(bill.OrderProductId);
 
-                bill.StoreProducts = sellerService.GetStoreProductsByStoreId(bill.StoreId);
+                bill.StoreProducts = sellerService.GetStoreProductsByStoreId(bill.StoreId).ToList();
 
-                bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId);
+                bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId).ToList();
 
                 TempData["BillId"] = bill.BillId;
 
@@ -299,7 +301,7 @@
 
             if (endOrderButton != null)
             {
-                bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId);
+                bill.OrderProducts = billService.OrderProductsByBillId(bill.BillId).ToList();
 
                 foreach (var orderProduct in bill.OrderProducts)
                 {

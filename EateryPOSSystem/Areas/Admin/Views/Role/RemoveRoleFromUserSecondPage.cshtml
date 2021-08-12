@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using EateryPOSSystem.Data.Models
+
+@inject UserManager<User> UserManager
+
+@model AddRemoveRoleFromUserFormModel
+
+@{
+    ViewData["Title"] = "Remove Role From User";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center font-weight-bold text-primary">Изтрий роля на потребител</h2>
+            <h6 class="text-center">Роли на потребител '@Model.UserName'</h6>
+
+            <div class="form-group">
+                <label asp-for="RoleName">Избери роля за изтриване</label>
+                <select asp-for="RoleName" class="form-control">
+                    @foreach (var role in Model.RolesNames)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <span asp-validation-for="RoleName" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Изтрий" />
+            </div>
+        </form>
+    </div>
+</div>

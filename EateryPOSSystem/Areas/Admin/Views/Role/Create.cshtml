@@ -1,0 +1,21 @@
+﻿@model RoleFormModel
+
+@{
+    ViewData["Title"] = "Add Role";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center font-weight-bold text-primary">Добави роля</h2>
+            <div class="form-group">
+                <label asp-for="Name">Име на роля</label>
+                <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Добави" />
+            </div>
+        </form>
+    </div>
+</div>

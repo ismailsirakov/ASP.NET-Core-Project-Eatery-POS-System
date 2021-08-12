@@ -7,7 +7,7 @@
     using static ControllerConstants;
     using static WebConstants;
 
-    [Authorize]
+    [Authorize(Roles = "Administrator, Seller")]
     public class BaseDataController : Controller
     {
         private readonly IBaseDataService baseDataService;
@@ -194,13 +194,6 @@
             baseDataService.AddWarehouse(warehouse.Name);
 
             TempData[GlobalMessageKey] = $"В база данни успешно се добави склад '{warehouse.Name}'.";
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult ImportBaseData()
-        {
-            baseDataService.ImportBaseData();
 
             return RedirectToAction("Index", "Home");
         }

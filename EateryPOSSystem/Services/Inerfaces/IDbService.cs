@@ -90,6 +90,8 @@ namespace EateryPOSSystem.Services.Interfaces
 
         IEnumerable<TransferServiceModel> GetTransfers();
 
+        IEnumerable<UserServiceModel> GetUsers();
+
         string GetUserUserName(string userId);
 
         IEnumerable<WarehouseServiceModel> GetWarehouses();

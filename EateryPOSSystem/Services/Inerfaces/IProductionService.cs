@@ -9,6 +9,8 @@ namespace EateryPOSSystem.Services.Interfaces
 
         bool IsMaterialWithIdExist(int materialId);
 
+        bool IsProductExist(string productName);
+
         bool IsProductExistInStore(int productId, int storeId);
 
         bool IsProductWithIdExist(int productId);

@@ -153,8 +153,7 @@ namespace EateryPOSSystem.Services
             {
                 Id = a.Id,
                 AddressDetails = a.AddressDetails
-            })
-            .ToList();
+            });
 
         public IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int storeProductId)
             => data.Recipes
@@ -168,8 +167,7 @@ namespace EateryPOSSystem.Services
                 MaterialName = r.WarehouseMaterial.Material.Name,
                 MeasurementName = r.WarehouseMaterial.Material.Measurement.Name,
                 MaterialQuantity = r.MaterialQuantity
-            })
-            .ToList();
+            });
 
         public Bill GetBillById(int billId)
             => data.Bills.FirstOrDefault(b => b.Id == billId);
@@ -181,8 +179,7 @@ namespace EateryPOSSystem.Services
                 Id = c.Id,
                 Name = c.Name,
                 PostalCode = c.PostalCode
-            })
-            .ToList();
+            });
 
         public IEnumerable<DocumentTypeServiceModel> GetDocumentTypes()
             => data.DocumentTypes
@@ -190,8 +187,7 @@ namespace EateryPOSSystem.Services
             {
                 Id = dt.Id,
                 Name = dt.Name
-            })
-            .ToList();
+            });
 
         public IEnumerable<MaterialServiceModel> GetMaterials()
             => data.Materials
@@ -201,8 +197,7 @@ namespace EateryPOSSystem.Services
                 Name = m.Name,
                 MeasurementId = m.Measurement.Id,
                 MeasurementName = m.Measurement.Name
-            })
-            .ToList();
+            });
 
         public IEnumerable<MeasurementServiceModel> GetMeasurements()
             => data.Measurements
@@ -210,8 +205,7 @@ namespace EateryPOSSystem.Services
             {
                 Id = m.Id,
                 Name = m.Name
-            })
-            .ToList();
+            });
 
         public IEnumerable<OrderProductServiceModel> GetOrderProducts()
             => data.OrderProducts
@@ -225,8 +219,7 @@ namespace EateryPOSSystem.Services
                 MeasurementName = op.MeasurementName,
                 Quantity = op.Quantity,
                 Price = op.Price
-            })
-            .ToList();
+            });
         
 
         public IEnumerable<ProductTypeServiceModel> GetProductTypes()
@@ -235,8 +228,7 @@ namespace EateryPOSSystem.Services
             {
                 Id = pt.Id,
                 Name = pt.Name
-            })
-            .ToList();
+            });
 
         public IEnumerable<ProductServiceModel> GetProducts()
             => data.Products
@@ -244,8 +236,7 @@ namespace EateryPOSSystem.Services
             {
                 Id = p.Id,
                 Name = p.Name
-            })
-            .ToList();
+            });
 
         public IEnumerable<ProviderServiceModel> GetProviders()
             => data.Providers
@@ -254,8 +245,7 @@ namespace EateryPOSSystem.Services
                 Id = p.Id,
                 Name = p.Name,
                 Number = p.Number
-            })
-            .ToList();
+            });
 
         public IEnumerable<PositionServiceModel> GetPositions()
             => data.Positions
@@ -272,8 +262,7 @@ namespace EateryPOSSystem.Services
             {
                 Id = m.Id,
                 Name = m.Name
-            })
-            .ToList();
+            });
 
         public IEnumerable<RecipeServiceModel> GetRecipes()
             => data.Recipes
@@ -287,8 +276,7 @@ namespace EateryPOSSystem.Services
                 WarehouseId = r.WarehouseMaterialWarehouseId,
                 MeasurementName = r.WarehouseMaterial.Material.Measurement.Name,
                 MaterialQuantity = r.MaterialQuantity
-            })
-            .ToList();
+            });
 
         public IEnumerable<SoldProductServiceModel> GetSoldProducts()
             =>data.SoldProducts
@@ -302,8 +290,7 @@ namespace EateryPOSSystem.Services
                 MeasurementName = sp.Measurement.Name,
                 Quantity = sp.Quantity,
                 Price = sp.Price
-            })
-            .ToList();
+            });
         
         public IEnumerable<StoreServiceModel> GetStores()
             => data.Stores
@@ -312,8 +299,7 @@ namespace EateryPOSSystem.Services
                 Id = s.Id,
                 Name = s.Name,
                 TablesInStore = s.TablesInStore
-            })
-            .ToList();
+            });
 
         public IEnumerable<StoreProductServiceModel> GetStoreProducts()
             => data.StoreProducts
@@ -327,8 +313,7 @@ namespace EateryPOSSystem.Services
                 MeasurementId = sp.MeasurementId,
                 Quantity = sp.Quantity,
                 Price = sp.Price
-            })
-            .ToList();
+            });
 
         public IEnumerable<TableServiceModel> GetTablesWithOpenBills()
             => data.StoreTables
@@ -339,8 +324,7 @@ namespace EateryPOSSystem.Services
                 StoreName = st.StoreName,
                 TableNumber = st.TableNumber,
                 UserId = st.UserId
-            })
-            .ToList();
+            });
 
         public IEnumerable<TempWarehouseReceipt> GetTempWarehouseReceipts()
             => data.TempWarehouseReceipts.ToList();
@@ -360,8 +344,16 @@ namespace EateryPOSSystem.Services
                 MeasurementName = t.Material.Measurement.Name,
                 Quantity = t.Quantity,
                 UserId = t.UserId
-            })
-            .ToList();
+            });
+
+        public IEnumerable<UserServiceModel> GetUsers()
+            => data.Users.Select(u => new UserServiceModel
+            {
+                UserId = u.Id,
+                UserName = u.UserName,
+                FirstName = u.FirstName,
+                LastName = u.LastName
+            });
 
         public string GetUserUserName(string userId)
             => data.Users.FirstOrDefault(u => u.Id == userId).UserName;
@@ -369,8 +361,7 @@ namespace EateryPOSSystem.Services
         public IEnumerable<int> GetWarehouseMaterialIdsByWarehouseId(int warehouseId)
             => data.WarehouseMaterials
             .Where(wm => wm.WarehouseId == warehouseId)
-            .Select(wm => wm.MaterialId)
-            .ToList();
+            .Select(wm => wm.MaterialId);
 
         public IEnumerable<WarehouseMaterialServiceModel> GetWarehouseMaterials()
             => data.WarehouseMaterials
@@ -385,8 +376,7 @@ namespace EateryPOSSystem.Services
                 MeasurementName = wm.Material.Measurement.Name,
                 Quantity = wm.Quantity,
                 Price = wm.Price
-            })
-            .ToList();
+            });
 
         public WarehouseMaterial GetWarehouseMaterialByWarehouseIdAndMaterialId(int warehouseId, int materialId)
             => data.WarehouseMaterials
@@ -398,11 +388,10 @@ namespace EateryPOSSystem.Services
             {
                 Id = w.Id,
                 Name = w.Name
-            })
-            .ToList();
+            });
 
         public IEnumerable<WarehouseReceipt> GetWarehouseReceipts()
-            => data.WarehouseReceipts.ToList();
+            => data.WarehouseReceipts;
 
         public void RemoveOrderProductById(int orderProductId)
         {

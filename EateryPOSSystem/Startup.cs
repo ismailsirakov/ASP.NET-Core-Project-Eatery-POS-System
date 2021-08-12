@@ -1,10 +1,5 @@
 namespace EateryPOSSystem
 {
-    using EateryPOSSystem.Data;
-    using EateryPOSSystem.Data.Models;
-    using EateryPOSSystem.Infrastructure;
-    using EateryPOSSystem.Services;
-    using EateryPOSSystem.Services.Interfaces;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -13,6 +8,11 @@ namespace EateryPOSSystem
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using EateryPOSSystem.Data;
+    using EateryPOSSystem.Data.Models;
+    using EateryPOSSystem.Infrastructure;
+    using EateryPOSSystem.Services;
+    using EateryPOSSystem.Services.Interfaces;
 
     public class Startup
     {
@@ -33,7 +33,6 @@ namespace EateryPOSSystem
             services
                 .AddDefaultIdentity<User>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = false;
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
@@ -83,6 +82,9 @@ namespace EateryPOSSystem
                 .UseAuthorization()
                 .UseEndpoints(endpoints =>
                 {
+                    endpoints.MapControllerRoute(
+                        name: "Areas",
+                        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                     endpoints.MapDefaultControllerRoute();
                     endpoints.MapRazorPages();
                 });

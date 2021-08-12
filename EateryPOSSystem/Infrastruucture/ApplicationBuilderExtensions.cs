@@ -8,7 +8,7 @@ namespace EateryPOSSystem.Infrastructure
     using Microsoft.Extensions.DependencyInjection;
     using EateryPOSSystem.Data;
     using EateryPOSSystem.Data.Models;
-    using static WebConstants;
+    using static Areas.Admin.AdminConstants;
 
     public static class ApplicationBuilderExtensions
     {
@@ -51,14 +51,14 @@ namespace EateryPOSSystem.Infrastructure
 
                     const string adminEmail = "admin@eaterypos.com";
 
-                    const string adminPassword = "administrator12";
+                    const string adminPassword = "admin12";
 
                     var user = new User
                     {
                         Email = adminEmail,
-                        UserName = "Administrator",
-                        FirstName = "admin",
-                        LastName = "administrator"
+                        UserName = adminEmail,
+                        FirstName = "Admin",
+                        LastName = "admin"
                     };
 
                     await userManager.CreateAsync(user, adminPassword);

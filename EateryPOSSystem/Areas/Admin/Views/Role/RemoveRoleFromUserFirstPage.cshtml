@@ -1,0 +1,26 @@
+﻿@model AddRemoveRoleFromUserFormModel
+
+@{
+    ViewData["Title"] = "Remove Role From User";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center font-weight-bold text-primary">Изтрий роля на потребител</h2>
+            <div class="form-group">
+                <label asp-for="UserId">Избери потребител</label>
+                <select asp-for="UserId" class="form-control">
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value="@user.UserId">@user.UserName - @user.FirstName @user.LastName</option>
+                    }
+                </select>
+                <span asp-validation-for="UserId" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Избери" />
+            </div>
+        </form>
+    </div>
+</div>

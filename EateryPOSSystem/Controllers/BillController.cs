@@ -9,7 +9,7 @@
     using EateryPOSSystem.Infrastructure;
     using static ControllerConstants;
 
-    [Authorize]
+    [Authorize(Roles ="Administrator, Seller")]
     public class BillController : Controller
     {
         private readonly IBillService billService;

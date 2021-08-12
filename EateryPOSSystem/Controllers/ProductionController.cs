@@ -8,7 +8,7 @@
     using static ControllerConstants;
     using static WebConstants;
 
-    [Authorize]
+    [Authorize(Roles = "Administrator, Accountant")]
     public class ProductionController : Controller
     {
         private readonly IDbService dbService;
@@ -30,7 +30,7 @@
         [HttpPost]
         public IActionResult AddProduct(AddProductFormModel product)
         {
-            product.ProductTypes = dbService.GetProductTypes();
+            product.ProductTypes = dbService.GetProductTypes().ToList(); ;
 
             var productTypeExist = product.ProductTypes
                                           .Any(p => p.Id == product.ProductTypeId);
@@ -75,7 +75,7 @@
         [HttpPost]
         public IActionResult AddProductToStore(AddProductToStoreFormModel storeProduct)
         {
-            storeProduct.Measurements = dbService.GetMeasurements();
+            storeProduct.Measurements = dbService.GetMeasurements().ToList();
 
             if (!storeProduct
                 .Measurements
@@ -86,7 +86,7 @@
                 return View(storeProduct);
             }
 
-            storeProduct.Stores = dbService.GetStores();
+            storeProduct.Stores = dbService.GetStores().ToList(); ;
 
             if (!storeProduct
                 .Stores
@@ -128,9 +128,9 @@
         {
             var recipe = new AddRecipeFormModel
             {
-                StoreProducts = dbService.GetStoreProducts(),
-                Warehouses = dbService.GetWarehouses()
-            };
+                StoreProducts = dbService.GetStoreProducts().ToList(),
+                Warehouses = dbService.GetWarehouses().ToList()
+        };
 
             return View(recipe);
         }
@@ -138,7 +138,7 @@
         [HttpPost]
         public IActionResult AddRecipeFirstPage(AddRecipeFormModel recipe)
         {
-            recipe.StoreProducts = dbService.GetStoreProducts();
+            recipe.StoreProducts = dbService.GetStoreProducts().ToList();
 
             if (!productionService.IsStoreProductWithIdExist(recipe.StoreProductId))
             {
@@ -166,9 +166,9 @@
 
         public IActionResult AddRecipeSecondPage(AddRecipeFormModel recipe)
         {
-            recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId).ToList();
 
-            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId).ToList();
 
             return View(recipe);
         }
@@ -176,7 +176,7 @@
         [HttpPost]
         public IActionResult AddRecipeSecondPage(string addButton, string saveButton, AddRecipeFormModel recipe)
         {
-            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId);
+            recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name, recipe.StoreProductId).ToList();
 
             if (saveButton != null && recipe.AddedMaterialsToRecipe.Any())
             {
@@ -187,7 +187,7 @@
 
             recipe.WarehouseMaterialWarehouseId = recipe.WarehouseId;
 
-            recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId);
+            recipe.WarehouseMaterials = productionService.GetWarehouseMaterialsByWarehouseId(recipe.WarehouseId).ToList();
 
 
             if (!productionService.IsWarehouseMaterialExist(recipe.WarehouseMaterialWarehouseId,
@@ -220,17 +220,10 @@
                                             recipe.MaterialQuantity);
 
                 recipe.AddedMaterialsToRecipe = dbService.GetAddedMaterialsToRecipe(recipe.Name,
-                                                                                    recipe.StoreProductId);
+                                                                                    recipe.StoreProductId).ToList();
 
                 return View(recipe);
             }
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult ImportProductionData()
-        {
-            productionService.ImportProductionData();
 
             return RedirectToAction("Index", "Home");
         }
