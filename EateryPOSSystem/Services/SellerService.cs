@@ -33,7 +33,9 @@ namespace EateryPOSSystem.Services
 
                 var bill = dbService.GetBillById(billId);
 
-                var userName = dbService.GetUserUserName(bill.UserId);
+                var user = dbService.GetUsers().FirstOrDefault(u => u.UserId == bill.UserId);
+
+                var userBadge = user.FirstName + " " + user.LastName;
 
                 var billTotalSum = 0m;
 
@@ -47,7 +49,7 @@ namespace EateryPOSSystem.Services
                     Id = billId,
                     TotalSum = billTotalSum,
                     UserId = bill.UserId,
-                    UserName = userName
+                    UserName = userBadge
                 };
 
                 openBills.Add(openBill);

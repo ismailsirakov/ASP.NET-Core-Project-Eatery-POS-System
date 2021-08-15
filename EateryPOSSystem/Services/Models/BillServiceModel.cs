@@ -11,6 +11,8 @@ namespace EateryPOSSystem.Services.Models
 
         public string UserName { get; set; }
 
+        public string UserBadge { get; set; }
+
         public DateTime OpenDateTime { get; set; }
 
         public decimal TotalSum { get; set; }

@@ -1,5 +1,4 @@
 ﻿@model CloseBillFormModel
-
 @{
     ViewData["Title"] = "Bill Details";
 }
@@ -20,11 +19,14 @@
         <div class="m-2">
             <a asp-controller="Seller" asp-action="Table" class="btn btn-outline-secondary btn-block">Назад</a>
         </div>
-        <div class="m-2">
-            <a asp-controller="Seller" asp-action="AddSoldProductToBill" class="btn btn-outline-primary btn-block">Нова поръчка</a>
-        </div>
-        <div class="m-2">
-            <a asp-controller="Bill" asp-action="CloseBill" class="btn btn-outline-success btn-block">Приключи сметка</a>
-        </div>
+        @if (Model.UserId == ClaimsPrincipalExtensions.GetId(User))
+        {
+            <div class="m-2">
+                <a asp-controller="Seller" asp-action="AddSoldProductToBill" class="btn btn-outline-primary btn-block">Нова поръчка</a>
+            </div>
+            <div class="m-2">
+                <a asp-controller="Bill" asp-action="CloseBill" class="btn btn-outline-success btn-block">Приключи сметка</a>
+            </div>
+        }
     </div>
 </div>

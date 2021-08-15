@@ -170,6 +170,12 @@
             {
                 ModelState.AddModelError(nameof(table.BillId), notExistingModelInDB);
 
+                TempData["StoreId"] = table.StoreId;
+
+                TempData["StoreName"] = table.StoreName;
+
+                TempData["TableNumber"] = table.TableNumber;
+
                 return View(table);
             }
 

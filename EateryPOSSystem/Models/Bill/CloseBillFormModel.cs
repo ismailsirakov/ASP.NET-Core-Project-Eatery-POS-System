@@ -10,7 +10,7 @@ namespace EateryPOSSystem.Models.Bill
 
         public string UserId { get; set; }
 
-        public string UserName { get; set; }
+        public string UserBadge { get; set; }
 
         public DateTime OpenDateTime { get; set; }
 

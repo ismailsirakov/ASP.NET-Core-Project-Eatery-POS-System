@@ -24,9 +24,11 @@
         {
             var billId = (int)TempData["BillId"];
 
-            var billl = dbService.GetBillById(billId);
+            var currentBill = dbService.GetBillById(billId);
 
-            var userName = User.Identity.Name;
+            var user = dbService.GetUsers().FirstOrDefault(u=>u.UserId == currentBill.UserId);
+
+            var userBadge = user.FirstName + " " + user.LastName;
 
             var soldProducts = billService.SoldProductsByBillId(billId).ToList();
 
@@ -40,8 +42,9 @@
             var bill = new CloseBillFormModel
             {
                 Id = billId,
-                UserName = userName,
-                OpenDateTime = billl.OpenDateTime,
+                UserId = currentBill.UserId,
+                UserBadge = userBadge,
+                OpenDateTime = currentBill.OpenDateTime,
                 SoldProducts = soldProducts,
                 TotalSum = totalSum
             };
@@ -72,9 +75,11 @@
         {
             var billId = (int)TempData["BillId"];
 
-            var billl = dbService.GetBillById(billId);
+            var currentBill = dbService.GetBillById(billId);
 
-            var userName = User.Identity.Name;
+            var user = dbService.GetUsers().FirstOrDefault(u => u.UserId == currentBill.UserId);
+
+            var userBadge = user.FirstName + " " + user.LastName;
 
             var soldProducts = billService.SoldProductsByBillId(billId).ToList();
 
@@ -90,8 +95,9 @@
             var bill = new CloseBillFormModel
             {
                 Id = billId,
-                UserName = userName,
-                OpenDateTime = billl.OpenDateTime,
+                UserId = currentBill.UserId,
+                UserBadge = userBadge,
+                OpenDateTime = currentBill.OpenDateTime,
                 SoldProducts = soldProducts,
                 PaymentTypes = paymentTypes,
                 TotalSum = totalSum
@@ -107,9 +113,11 @@
         {
             var billId = (int)TempData["BillId"];
 
-            var billInDb = dbService.GetBillById(billId);
+            var currentBill = dbService.GetBillById(billId);
 
-            var userName = User.Identity.Name;
+            var user = dbService.GetUsers().FirstOrDefault(u => u.UserId == currentBill.UserId);
+
+            var userBadge = user.FirstName + " " + user.LastName;
 
             var soldProducts = billService.SoldProductsByBillId(billId).ToList();
 
@@ -124,9 +132,11 @@
 
             bill.Id = billId;
 
-            bill.UserName = userName;
+            bill.UserId = currentBill.UserId;
 
-            bill.OpenDateTime = billInDb.OpenDateTime;
+            bill.UserBadge = userBadge;
+
+            bill.OpenDateTime = currentBill.OpenDateTime;
 
             bill.SoldProducts = soldProducts;
 
@@ -148,15 +158,15 @@
                 return View(bill);
             }
 
-            billInDb.PaymentTypeId = bill.PaymentTypeId;
+            currentBill.PaymentTypeId = bill.PaymentTypeId;
 
-            billInDb.Closed = true;
+            currentBill.Closed = true;
 
-            billInDb.CloseDateTime = DateTime.UtcNow;
+            currentBill.CloseDateTime = DateTime.UtcNow;
 
-            billService.RemoveBillFromTable(billInDb.Id);
+            billService.RemoveBillFromTable(currentBill.Id);
 
-            return RedirectToAction("ClosedBillDetails","Bill", billInDb);
+            return RedirectToAction("ClosedBillDetails","Bill", currentBill);
         }
 
         public IActionResult ClosedBillDetails(CloseBillFormModel bill)
@@ -175,8 +185,13 @@
             bill.PaymentTypeName = dbService.GetPaymentTypes()
                                             .FirstOrDefault(pt=>pt.Id == bill.PaymentTypeId)
                                             .Name;
+            var currentBill = dbService.GetBillById(bill.Id);
 
-            bill.UserName = User.Identity.Name;
+            var user = dbService.GetUsers().FirstOrDefault(u => u.UserId == currentBill.UserId);
+
+            var userBadge = user.FirstName + " " + user.LastName;
+
+            bill.UserBadge = userBadge;
 
             return View(bill);
         }

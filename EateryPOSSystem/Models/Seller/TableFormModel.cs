@@ -18,6 +18,8 @@ namespace EateryPOSSystem.Models.Seller
 
         public string BillUserName { get; set; }
 
+        public string BillUserBadge { get; set; }
+
         public IEnumerable<BillServiceModel> OpenBills { get; set; }
     }
 }
