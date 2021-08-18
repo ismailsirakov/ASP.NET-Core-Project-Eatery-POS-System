@@ -5,7 +5,6 @@ namespace EateryPOSSystem.Services.Interfaces
 
     public interface IBillService
     {
-
         void AddNewBillToTable(string userId, int storeId, int tableNumber, int billId);
 
         void RemoveBillFromTable(int billId);

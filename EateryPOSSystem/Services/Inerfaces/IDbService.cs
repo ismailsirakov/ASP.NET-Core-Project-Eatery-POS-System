@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Services.Interfaces
 {
+    using System;
     using System.Collections.Generic;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Models;
@@ -53,6 +54,8 @@ namespace EateryPOSSystem.Services.Interfaces
         IEnumerable<RecipeServiceModel> GetAddedMaterialsToRecipe(string recipeName, int productId);
 
         IEnumerable<AddressServiceModel> GetAddresses();
+
+        IEnumerable<BillServiceModel> GetBillsByDate(DateTime dateTime);
 
         Bill GetBillById(int billId);
 

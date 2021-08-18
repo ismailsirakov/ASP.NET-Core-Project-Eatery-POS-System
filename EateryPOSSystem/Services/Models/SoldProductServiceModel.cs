@@ -1,3 +1,5 @@
+using System;
+
 namespace EateryPOSSystem.Services.Models
 {
     public class SoldProductServiceModel
@@ -12,6 +14,8 @@ namespace EateryPOSSystem.Services.Models
 
         public decimal Price { get; set; }
 
+        public decimal Total { get; set; }
+
         public decimal Cost { get; set; }
 
         public decimal Quantity { get; set; }
@@ -20,6 +24,6 @@ namespace EateryPOSSystem.Services.Models
 
         public string MeasurementName { get; set; }
 
-        
+        public DateTime DateTime { get; set; }
     }
 }

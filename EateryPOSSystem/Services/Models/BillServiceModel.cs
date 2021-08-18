@@ -17,9 +17,11 @@ namespace EateryPOSSystem.Services.Models
 
         public decimal TotalSum { get; set; }
 
-        public int PaymentTypeId { get; set; }
+        public string PaymentTypeName { get; set; }
 
-        public DateTime CloseDateTime { get; set; }
+        public int? PaymentTypeId { get; set; }
+
+        public DateTime? CloseDateTime { get; set; }
 
         public bool Closed { get; set; }
 

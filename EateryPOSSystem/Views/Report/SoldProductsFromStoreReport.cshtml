@@ -1,0 +1,85 @@
+﻿@model SoldProductsFormModel
+
+@{
+    ViewData["Title"] = "Sold Products";
+}
+
+@if (Model.Cumilative)
+{
+    <h2 class="text-center font-weight-bold text-primary">Продадени продукти от обект '@Model.StoreName'(с натрупване)</h2>
+}
+else
+{
+    <h2 class="text-center font-weight-bold text-primary">Продадени продукти от обект '@Model.StoreName'(детайлно)</h2>
+}
+<div class="offset-1 col-10">
+    <h6>От дата: @Model.FromDate.ToString("d")</h6>
+    <h6>До дата: @Model.ToDate.ToString("d")</h6>
+</div>
+<table class="table table-sm table-bordered offset-1 col-10">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            @if (!Model.Cumilative)
+            {
+                <th scope="col">Сметка №</th>
+                <th scope="col">Дата на продажба</th>
+            }
+            <th scope="col">Наименование на продукта</th>
+            <th scope="col" class="text-center">Мерна ед.</th>
+            <th scope="col" class="text-right">Колич.</th>
+            <th scope="col" class="text-right">Ед. цена</th>
+            <th scope="col" class="text-right">Стойност</th>
+            <th scope="col" class="text-right">Себест-ст</th>
+        </tr>
+    </thead>
+    @{
+        var row = 1;
+        var amount = 0m;
+        var total = 0m;
+        var totalCost = 0m;
+    }
+<tbody>
+    @foreach (var soldProduct in Model.SoldProducts)
+    {
+        amount = soldProduct.Price * soldProduct.Quantity;
+        total += amount;
+        totalCost += soldProduct.Cost;
+        <tr>
+            <th scope="row">@row</th>
+            @if (!Model.Cumilative)
+            {
+                <td>@soldProduct.BillId</td>
+                <td>@soldProduct.DateTime</td>
+            }
+            <td>@soldProduct.StoreProductName</td>
+            <td class="text-center">@soldProduct.MeasurementName</td>
+            <td class="text-right">@soldProduct.Quantity.ToString("#,##0.000")</td>
+            <td class="text-right">@soldProduct.Price.ToString("#,##0.00")</td>
+            <td class="text-right">@amount.ToString("#,##0.00")</td>
+            <td class="text-right">@soldProduct.Cost.ToString("#,##0.00")</td>
+        </tr>
+        row++;
+    }
+    <tr>
+        <th scope="row"></th>
+        @if (!Model.Cumilative)
+        {
+            <td></td>
+            <td></td>
+        }
+        <td class="text-right font-weight-bold"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="text-right font-weight-bold">@total.ToString("#,##0.00")</td>
+        <td class="text-right font-weight-bold">@totalCost.ToString("#,##0.00")</td>
+    </tr>
+</tbody>
+</table>
+@if (!Model.SoldProducts.Any())
+{
+    <div class="alert alert-primary" role="alert">
+        Няма продадени продукти в този период.
+    </div>
+}

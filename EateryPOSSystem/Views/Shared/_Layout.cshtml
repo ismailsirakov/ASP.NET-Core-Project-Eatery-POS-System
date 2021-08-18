@@ -66,17 +66,32 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Администратор
+                                Справки
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Import" asp-action="BaseData">Импорт базови данни</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Import" asp-action="StorekeeperData">Импорт доставчици,адреси</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Import" asp-action="ProductionData">Импорт продукти,рецепти</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="Create">Добави нова роля</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="AddRoleToUser">Добави роля на потребител</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="RemoveRoleFromUserFirstPage">Изтрий роля на потребител</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="MaterialsInWarehouseFirstPage">Материални наличности</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="BuyedMaterialsByProviderFirstPage">Закупени материали</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="SoldProductsFromStore">Продадени продукти</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="BillsForDate">Сметки за дата</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="Recipe">Рецепти</a>
                             </div>
                         </li>
+                        @if (ClaimsPrincipalExtensions.IsAdmin(User))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Админ
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Import" asp-action="BaseData">Импорт основни данни</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Import" asp-action="StorekeeperData">Импорт доставчици,материали</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Import" asp-action="ProductionData">Импорт продукти,рецепти</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="Create">Нова роля</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="AddRoleToUser">Добави роля на потребител</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="RemoveRoleFromUserFirstPage">Изтрий роля на потребител</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

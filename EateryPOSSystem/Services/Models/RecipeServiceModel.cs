@@ -1,6 +1,5 @@
 namespace EateryPOSSystem.Services.Models
 {
-    using System.Collections.Generic;
 
     public class RecipeServiceModel
     {
@@ -10,7 +9,13 @@ namespace EateryPOSSystem.Services.Models
 
         public int StoreProductId { get; set; }
 
+        public string StoreName { get; set; }
+
+        public string StoreProductName { get; set; }
+
         public int WarehouseId { get; set; }
+
+        public string WarehouseName { get; set; }
 
         public int WarehouseMaterialId { get; set; }
 

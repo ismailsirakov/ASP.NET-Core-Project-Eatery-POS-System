@@ -1,0 +1,35 @@
+﻿@model RecipeFormModel
+
+@{
+    ViewData["Title"] = "Recipe";
+}
+
+<h2 class="text-center font-weight-bold text-primary">Рецепта '@Model.RecipeName'</h2>
+<h6 class="text-center">за продукт '@Model.ProductName' в обект '@Model.StoreName'</h6>
+<table class="table table-sm table-bordered offset-2 col-8">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Наименование на материала</th>
+            <th scope="col">От склад</th>
+            <th scope="col" class="text-center">Мерна ед.</th>
+            <th scope="col" class="text-right">Количество</th>
+        </tr>
+    </thead>
+    @{
+        var row = 1;
+    }
+    <tbody>
+        @foreach (var recipe in Model.Recipes)
+        {
+            <tr>
+                <th scope="row">@row</th>
+                <td>@recipe.MaterialName</td>
+                <td>@recipe.WarehouseName</td>
+                <td class="text-center">@recipe.MeasurementName</td>
+                <td class="text-right">@recipe.MaterialQuantity.ToString("#,##0.000")</td>
+            </tr>
+            row++;
+        }
+    </tbody>
+</table>

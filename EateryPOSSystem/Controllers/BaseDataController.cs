@@ -7,7 +7,7 @@
     using static ControllerConstants;
     using static WebConstants;
 
-    [Authorize(Roles = "Administrator, Seller")]
+    [Authorize(Roles = "Administrator, Storekeeper, Accountant")]
     public class BaseDataController : Controller
     {
         private readonly IBaseDataService baseDataService;

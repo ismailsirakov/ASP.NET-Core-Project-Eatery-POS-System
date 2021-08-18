@@ -35,5 +35,7 @@
         public const string warehouseCannotTransferToItself = "Склад не може да трансферира към себе си.";
 
         public const string greaterQuantityThenExistInWarehouse = "Трансферираното количество не може да надвишава количеството в склада.";
+
+        public const string fromDateIsAfterToDate = "Началото на периода не може да е след края на периода.";
     }
 }

@@ -1,0 +1,71 @@
+﻿@model BuyedMaterialsFormModel
+
+@{
+    ViewData["Title"] = "Buyed Materials";
+}
+
+<h2 class="text-center font-weight-bold text-primary">Закупени материали</h2>
+<h6>От дата: @Model.FromDate.ToString("d")</h6>
+<h6>До дата @Model.ToDate.ToString("d")</h6>
+<table class="table table-sm table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col" class="text-center">Наименование на доставчик</th>
+            <th scope="col" class="text-center">Тип документ</th>
+            <th scope="col" class="text-center">Номер на документ</th>
+            <th scope="col" class="text-center">Дата на документ</th>
+            <th scope="col" class="text-center">Наименование на материала</th>
+            <th scope="col" class="text-center">Мерна ед.</th>
+            <th scope="col" class="text-center">Количество</th>
+            <th scope="col" class="text-center">Ед. цена</th>
+            <th scope="col" class="text-center">Стойност</th>
+        </tr>
+    </thead>
+    @{
+        var row = 1;
+        var amount = 0m;
+        var total = 0m;
+    }
+<tbody>
+    @foreach (var receipt in Model.Receipts)
+    {
+        amount = receipt.Price * receipt.Quantity;
+        total += amount;
+        <tr>
+            <th scope="row">@row</th>
+            <td>@receipt.ProviderName</td>
+            <td>@receipt.DocumentTypeName</td>
+            <td>@receipt.DocumentNumber</td>
+            <td>@receipt.DocumentDate.ToString("d")</td>
+            <td>@receipt.MaterialName</td>
+            <td class="text-center">@receipt.MeasurementName</td>
+            <td class="text-right">@receipt.Quantity.ToString("#,##0.000")</td>
+            <td class="text-right">@receipt.Price.ToString("#,##0.00")</td>
+            <td class="text-right">@amount.ToString("#,##0.00")</td>
+        </tr>
+        row++;
+    }
+    @if (Model.Receipts.Any())
+    {
+        <tr>
+            <th scope="row"></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-center font-weight-bold">Общо</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-right font-weight-bold">@total.ToString("#,##0.00")</td>
+        </tr>
+    }
+</tbody>
+</table>
+@if (!Model.Receipts.Any())
+{
+    <div class="alert alert-primary" role="alert">
+        Няма закупени материални в този период.
+    </div>
+}

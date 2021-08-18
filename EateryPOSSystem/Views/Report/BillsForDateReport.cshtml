@@ -1,0 +1,88 @@
+﻿@model BillsForDateFormModel
+
+@{
+    ViewData["Title"] = "Bills For Date";
+}
+
+@if (Model.Closed)
+{
+    <h2 class="text-center font-weight-bold text-primary">Затворени сметки за @Model.DateTime.ToString("d")</h2>
+}
+else
+{
+    <h2 class="text-center font-weight-bold text-primary">Отворени сметки за @Model.DateTime.ToString("d")</h2>
+}
+<table class="table table-sm table-bordered offset-1 col-10">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Сметка №</th>
+            <th scope="col" class="text-center">Потребител</th>
+            <th scope="col" class="text-right">Дата и час на отваряне</th>
+            <th scope="col" class="text-right">Сума</th>
+            @if (Model.Closed)
+            {
+                <th scope="col" class="text-right">Начин на плащане</th>
+                <th scope="col" class="text-right">Дата и час на приключване</th>
+            }
+        </tr>
+    </thead>
+    @{
+        var row = 1;
+        var total = 0m;
+        var totalCash = 0m;
+    }
+<tbody>
+    @foreach (var bill in Model.Bills)
+    {
+        <tr>
+            <th scope="row">@row</th>
+            <td>@bill.Id</td>
+            <td>@bill.UserBadge</td>
+            <td class="text-center">@bill.OpenDateTime.ToString()</td>
+            <td class="text-right">@bill.TotalSum.ToString("#,##0.00")</td>
+            @if (Model.Closed)
+            {
+                if (bill.PaymentTypeId == 1)
+                {
+                    totalCash += bill.TotalSum;
+                }
+                <td>@bill.PaymentTypeName</td>
+                <td class="text-center">@bill.CloseDateTime</td>
+            }
+        </tr>
+        total += bill.TotalSum;
+        row++;
+    }
+    <tr>
+        <th scope="row"></th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="text-center font-weight-bold">@total.ToString("#,##0.00")</td>
+        @if (Model.Closed)
+        {
+            <td class="text-center font-weight-bold">Общо</td>
+            <td></td>
+        }
+    </tr>
+    <tr>
+        <th scope="row"></th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="text-center font-weight-bold">@totalCash.ToString("#,##0.00")</td>
+        @if (Model.Closed)
+        {
+            <td class="text-center font-weight-bold">Общо в брой</td>
+            <td></td>
+        }
+    </tr>
+</tbody>
+</table>
+@if (!Model.Bills.Any())
+{
+    <div class="alert alert-primary" role="alert">
+        Няма клиентски сметки за тази дата.
+    </div>
+}

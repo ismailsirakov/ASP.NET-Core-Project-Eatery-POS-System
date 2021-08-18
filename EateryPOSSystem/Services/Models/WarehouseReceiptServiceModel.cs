@@ -1,8 +1,15 @@
 namespace EateryPOSSystem.Services.Models
 {
-    public class WarehouseMaterialServiceModel
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
+    public class WarehouseReceiptServiceModel
     {
         public int Id { get; set; }
+
+        public int ProviderId { get; set; }
+
+        public string ProviderName { get; set; }
 
         public int ReceiptNumber { get; set; }
 
@@ -17,6 +24,15 @@ namespace EateryPOSSystem.Services.Models
         public int MeasurementId { get; set; }
 
         public string MeasurementName { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime DocumentDate { get; set; }
+
+        public int DocumentTypeId { get; set; }
+
+        public string DocumentTypeName { get; set; }
+
+        public int DocumentNumber { get; set; }
 
         public decimal Quantity { get; set; }
 

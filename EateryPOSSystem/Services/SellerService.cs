@@ -49,7 +49,8 @@ namespace EateryPOSSystem.Services
                     Id = billId,
                     TotalSum = billTotalSum,
                     UserId = bill.UserId,
-                    UserName = userBadge
+                    UserName = user.UserName,
+                    UserBadge = userBadge
                 };
 
                 openBills.Add(openBill);

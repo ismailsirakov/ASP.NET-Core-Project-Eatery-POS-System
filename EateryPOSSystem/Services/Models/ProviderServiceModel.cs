@@ -7,9 +7,5 @@ namespace EateryPOSSystem.Services.Models
         public string Name { get; init; }
 
         public int Number { get; init; }
-
-        public int CityId { get; set; }
-
-        public int AddressId { get; set; }
     }
 }

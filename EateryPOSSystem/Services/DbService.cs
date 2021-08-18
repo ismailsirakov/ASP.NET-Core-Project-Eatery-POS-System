@@ -1,5 +1,6 @@
 namespace EateryPOSSystem.Services
 {
+    using System;
     using System.Linq;
     using System.Collections.Generic;
     using EateryPOSSystem.Data;
@@ -169,6 +170,21 @@ namespace EateryPOSSystem.Services
                 MaterialQuantity = r.MaterialQuantity
             });
 
+        public IEnumerable<BillServiceModel> GetBillsByDate(DateTime dateTime)
+            => data.Bills
+                   .Where(b => b.OpenDateTime.Date == dateTime.Date)
+                   .Select(b=> new BillServiceModel
+                   {
+                       Id = b.Id,
+                       OpenDateTime = b.OpenDateTime,
+                       UserName = b.User.UserName,
+                       UserBadge = b.User.FirstName + " " + b.User.LastName,
+                       PaymentTypeId = b.PaymentTypeId,
+                       CloseDateTime = b.CloseDateTime,
+                       Closed = b.Closed,
+                       UserId = b.UserId
+                   });
+
         public Bill GetBillById(int billId)
             => data.Bills.FirstOrDefault(b => b.Id == billId);
 
@@ -271,6 +287,8 @@ namespace EateryPOSSystem.Services
                 Id = r.Id,
                 Name = r.Name,
                 StoreProductId = r.StoreProductId,
+                StoreName = r.StoreProduct.Store.Name,
+                StoreProductName = r.StoreProduct.Product.Name,
                 WarehouseMaterialId = r.WarehouseMaterialMaterialId,
                 MaterialName = r.WarehouseMaterial.Material.Name,
                 WarehouseId = r.WarehouseMaterialWarehouseId,
@@ -289,7 +307,9 @@ namespace EateryPOSSystem.Services
                 MeasurementId = sp.MeasurementId,
                 MeasurementName = sp.Measurement.Name,
                 Quantity = sp.Quantity,
-                Price = sp.Price
+                Price = sp.Price,
+                DateTime = sp.DateTime,
+                Cost = sp.Cost
             });
         
         public IEnumerable<StoreServiceModel> GetStores()

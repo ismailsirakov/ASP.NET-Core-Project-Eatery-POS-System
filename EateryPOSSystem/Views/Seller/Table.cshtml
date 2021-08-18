@@ -13,7 +13,7 @@
             <div class="border m-2 h-100 text-center">
                 @foreach (var bill in Model.OpenBills)
                 {
-                    <button class="btn btn-outline-primary col-11 m-1 text-center" type="submit" name="billIdToView" value="@bill.Id">@bill.UserName - сметка № @bill.Id - @bill.TotalSum.ToString("#,###0.00") лв.</button>
+                    <button class="btn btn-outline-primary col-11 m-1 text-center" type="submit" name="billIdToView" value="@bill.Id">@bill.UserBadge - сметка № @bill.Id - @bill.TotalSum.ToString("#,###0.00") лв.</button>
                 }
             </div>
             <div class="border m-2 text-center">

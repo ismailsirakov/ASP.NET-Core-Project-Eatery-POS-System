@@ -1,0 +1,25 @@
+﻿@model MaterialInWarehouseFormModel
+
+@{
+    ViewData["Title"] = "Materials In Warehouse";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center font-weight-bold text-primary">Избери склад</h2>
+
+            <div class="form-group">
+                <select asp-for="WarehouseId" class="form-control">
+                    @foreach (var warehouse in Model.Warehouses)
+                    {
+                        <option value="@warehouse.Id">@warehouse.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Продължи" />
+            </div>
+        </form>
+    </div>
+</div>

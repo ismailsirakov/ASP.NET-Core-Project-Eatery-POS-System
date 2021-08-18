@@ -1,0 +1,40 @@
+﻿@model SoldProductsFormModel
+
+@{
+    ViewData["Title"] = "Sold Products";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-3 col-lg-6 offset-xl-4 col-xl-4">
+        <form method="post">
+            <h2 class="text-center font-weight-bold text-primary">Избери обект</h2>
+            <div class="form-group">
+                <select asp-for="StoreId" class="form-control">
+                    @foreach (var store in Model.Stores)
+                    {
+                        <option value="@store.Id">@store.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="StoreId" class="small text-danger"></span>
+            </div>
+            <div class="offset-2 col-8">
+                <label asp-for="Cumilative">Количества с натрупване</label>
+                <input type="checkbox" asp-for="Cumilative" class="custom-checkbox">
+                <span asp-validation-for="Cumilative" class="small text-danger"></span>
+            </div>
+            <div class="form-group offset-1 col-10">
+                <label asp-for="FromDate">От дата</label>
+                <input asp-for="FromDate" class="form-control">
+                <span asp-validation-for="FromDate" class="small text-danger"></span>
+            </div>
+            <div class="form-group offset-1 col-10">
+                <label asp-for="ToDate">До дата</label>
+                <input asp-for="ToDate" class="form-control">
+                <span asp-validation-for="ToDate" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Продължи" />
+            </div>
+        </form>
+    </div>
+</div>

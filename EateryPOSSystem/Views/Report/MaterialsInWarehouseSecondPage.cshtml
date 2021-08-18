@@ -1,0 +1,62 @@
+﻿@model MaterialInWarehouseFormModel
+
+@{
+    ViewData["Title"] = "Materials In Warehouse";
+}
+
+<h2 class="text-center font-weight-bold text-primary">Материални наличности в склад</h2>
+<div class="offset-2 col-8">
+    <h5>Склад: @Model.WarehouseName</h5>
+    <h6>към @DateTime.UtcNow</h6>
+</div>
+<table class="table table-sm table-bordered offset-2 col-8">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Наименование на материала</th>
+            <th scope="col" class="text-center">М. едииница</th>
+            <th scope="col" class="text-right">Количество</th>
+            <th scope="col" class="text-right">Ед. цена</th>
+            <th scope="col" class="text-right">Стойност</th>
+        </tr>
+    </thead>
+    @{
+        var row = 1;
+        var amount = 0m;
+        var total = 0m;
+    }
+    <tbody>
+        @foreach (var material in Model.MaterialsInWarehouse)
+        {
+            amount = material.Price * material.Quantity;
+            total += amount;
+            <tr>
+                <th scope="row">@row</th>
+                <td>@material.MaterialName</td>
+                <td class="text-center">@material.MeasurementName</td>
+                <td class="text-right">@material.Quantity.ToString("#,##0.000")</td>
+                <td class="text-right">@material.Price.ToString("#,##0.00")</td>
+                <td class="text-right">@amount.ToString("#,##0.00")</td>
+            </tr>
+            row++;
+        }
+        @if (Model.MaterialsInWarehouse.Any())
+        {
+            <tr>
+                <th scope="row"></th>
+                <td class="text-center font-weight-bold">Общо</td>
+                <td class="text-center"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right font-weight-bold">@total.ToString("#,##0.00")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.MaterialsInWarehouse.Any())
+{
+    <div class="alert alert-primary" role="alert">
+        Няма материални наличности в този склад.
+    </div>
+}
