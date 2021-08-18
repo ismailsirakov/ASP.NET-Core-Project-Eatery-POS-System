@@ -64,9 +64,9 @@
         {
             var storeProduct = new AddProductToStoreFormModel
             {
-                Measurements = dbService.GetMeasurements(),
-                Products = dbService.GetProducts(),
-                Stores = dbService.GetStores(),
+                Measurements = dbService.GetMeasurements().ToList(),
+                Products = dbService.GetProducts().ToList(),
+                Stores = dbService.GetStores().ToList(),
             };
 
             return View(storeProduct);
@@ -77,6 +77,10 @@
         {
             storeProduct.Measurements = dbService.GetMeasurements().ToList();
 
+            storeProduct.Products = dbService.GetProducts().ToList();
+
+            storeProduct.Stores = dbService.GetStores().ToList();
+
             if (!storeProduct
                 .Measurements
                 .Any(m => m.Id == storeProduct.MeasurementId))
@@ -86,7 +90,7 @@
                 return View(storeProduct);
             }
 
-            storeProduct.Stores = dbService.GetStores().ToList(); ;
+            storeProduct.Stores = dbService.GetStores().ToList();
 
             if (!storeProduct
                 .Stores
@@ -117,7 +121,7 @@
 
             var storeName = storeProduct.Stores.FirstOrDefault(s=>s.Id == storeProduct.StoreId).Name;
 
-            var productName = storeProduct.Products.FirstOrDefault(p => p.Id == storeProduct.ProductId).Name;
+            var productName = dbService.GetProducts().FirstOrDefault(p => p.Id == storeProduct.ProductId).Name;
 
             TempData[GlobalMessageKey] = $"В {storeName} успешно се добави продукт '{productName}'.";
 

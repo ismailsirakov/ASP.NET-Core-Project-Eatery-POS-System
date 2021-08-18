@@ -60,7 +60,7 @@
       "TablesInStore": 12
     },
     {
-      "Name": "Ресторант - Панорама",
+      "Name": "Ресторант - панорама",
       "TablesInStore": 20
     }
   ],
@@ -69,7 +69,8 @@
     { "Name": "Кухня" },
     { "Name": "Склад Бар - тераса" },
     { "Name": "Склад Бар - басейн" },
-    { "Name": "Склад Ресторант-градина" }
+    { "Name": "Склад Ресторант-градина" },
+    { "Name": "Склад Ресторант-панорама" }
   ],
   "Addresses": [
     { "AddressDetails": "ул. К.Величков 50" },
@@ -280,91 +281,195 @@
       "WarehouseId": 5,
       "MaterialId": 11,
       "UnitPrice": 0.32,
-      "Quantity": 100,
+      "Quantity": 1000,
       "ProviderId": 4,
       "UserId": "******",
       "DocumentNumber": 23564,
       "DocumentTypeId": 1,
-      "DocumentDate": "03.08.2021",
-      "DateTime": "03.08.2021"
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
     },
     {
       "ReceiptNumber": 1,
       "WarehouseId": 5,
       "MaterialId": 14,
       "UnitPrice": 0.3,
-      "Quantity": 100,
+      "Quantity": 1000,
       "ProviderId": 4,
       "UserId": "******",
       "DocumentNumber": 23564,
       "DocumentTypeId": 1,
-      "DocumentDate": "03.08.2021",
-      "DateTime": "03.08.2021"
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
     },
     {
       "ReceiptNumber": 1,
       "WarehouseId": 5,
       "MaterialId": 13,
       "UnitPrice": 0.26,
-      "Quantity": 100,
+      "Quantity": 1000,
       "ProviderId": 4,
       "UserId": "******",
       "DocumentNumber": 23564,
       "DocumentTypeId": 1,
-      "DocumentDate": "03.08.2021",
-      "DateTime": "03.08.2021"
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
     },
     {
       "ReceiptNumber": 1,
       "WarehouseId": 5,
       "MaterialId": 1,
       "UnitPrice": 15.45,
-      "Quantity": 10,
+      "Quantity": 20,
       "ProviderId": 4,
       "UserId": "******",
       "DocumentNumber": 23564,
       "DocumentTypeId": 1,
-      "DocumentDate": "03.08.2021",
-      "DateTime": "03.08.2021"
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
     },
     {
       "ReceiptNumber": 1,
       "WarehouseId": 5,
       "MaterialId": 10,
       "UnitPrice": 0.04,
-      "Quantity": 100,
+      "Quantity": 1000,
       "ProviderId": 4,
       "UserId": "******",
       "DocumentNumber": 23564,
       "DocumentTypeId": 1,
-      "DocumentDate": "03.08.2021",
-      "DateTime": "03.08.2021"
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
     },
     {
       "ReceiptNumber": 2,
       "WarehouseId": 2,
       "MaterialId": 3,
       "UnitPrice": 14.5,
-      "Quantity": 10,
+      "Quantity": 20,
       "ProviderId": 4,
       "UserId": "******",
       "DocumentNumber": 23565,
       "DocumentTypeId": 1,
-      "DocumentDate": "03.08.2021",
-      "DateTime": "03.08.2021"
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
     },
     {
       "ReceiptNumber": 2,
       "WarehouseId": 2,
       "MaterialId": 8,
       "UnitPrice": 0.15,
-      "Quantity": 100,
+      "Quantity": 1000,
       "ProviderId": 4,
       "UserId": "******",
       "DocumentNumber": 23565,
       "DocumentTypeId": 1,
-      "DocumentDate": "03.08.2021",
-      "DateTime": "03.08.2021"
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 3,
+      "WarehouseId": 2,
+      "MaterialId": 19,
+      "UnitPrice": 6,
+      "Quantity": 50,
+      "ProviderId": 4,
+      "UserId": "******",
+      "DocumentNumber": 23565,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 3,
+      "WarehouseId": 2,
+      "MaterialId": 20,
+      "UnitPrice": 6,
+      "Quantity": 50,
+      "ProviderId": 1,
+      "UserId": "******",
+      "DocumentNumber": 458,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 3,
+      "WarehouseId": 2,
+      "MaterialId": 18,
+      "UnitPrice": 3,
+      "Quantity": 50,
+      "ProviderId": 1,
+      "UserId": "******",
+      "DocumentNumber": 458,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 3,
+      "WarehouseId": 2,
+      "MaterialId": 17,
+      "UnitPrice": 3,
+      "Quantity": 50,
+      "ProviderId": 1,
+      "UserId": "******",
+      "DocumentNumber": 458,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 4,
+      "WarehouseId": 2,
+      "MaterialId": 4,
+      "UnitPrice": 8,
+      "Quantity": 50,
+      "ProviderId": 6,
+      "UserId": "******",
+      "DocumentNumber": 85689,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 4,
+      "WarehouseId": 2,
+      "MaterialId": 5,
+      "UnitPrice": 0.9,
+      "Quantity": 50,
+      "ProviderId": 6,
+      "UserId": "******",
+      "DocumentNumber": 85689,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 4,
+      "WarehouseId": 2,
+      "MaterialId": 6,
+      "UnitPrice": 7,
+      "Quantity": 20,
+      "ProviderId": 6,
+      "UserId": "******",
+      "DocumentNumber": 85689,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
+    },
+    {
+      "ReceiptNumber": 4,
+      "WarehouseId": 2,
+      "MaterialId": 7,
+      "UnitPrice": 0.8,
+      "Quantity": 20,
+      "ProviderId": 6,
+      "UserId": "******",
+      "DocumentNumber": 85689,
+      "DocumentTypeId": 1,
+      "DocumentDate": "08.03.2021",
+      "DateTime": "08.03.2021"
     }
   ],
 
