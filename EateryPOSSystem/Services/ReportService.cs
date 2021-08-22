@@ -28,7 +28,10 @@
             {
                 bill.SoldProducts = soldProductsForDate.Where(sp => sp.BillId == bill.Id).ToList();
 
-                bill.PaymentTypeName = paymentTypes.FirstOrDefault(pt => pt.Id == bill.PaymentTypeId).Name;
+                if (bill.Closed)
+                {
+                    bill.PaymentTypeName = paymentTypes.FirstOrDefault(pt => pt.Id == bill.PaymentTypeId).Name;
+                }
 
                 var total = 0m;
 

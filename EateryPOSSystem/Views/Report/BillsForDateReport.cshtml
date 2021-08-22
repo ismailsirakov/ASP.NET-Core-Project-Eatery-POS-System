@@ -32,53 +32,53 @@ else
         var total = 0m;
         var totalCash = 0m;
     }
-<tbody>
-    @foreach (var bill in Model.Bills)
-    {
+    <tbody>
+        @foreach (var bill in Model.Bills)
+        {
+            <tr>
+                <th scope="row">@row</th>
+                <td>@bill.Id</td>
+                <td>@bill.UserBadge</td>
+                <td class="text-center">@bill.OpenDateTime</td>
+                <td class="text-right">@bill.TotalSum.ToString("#,##0.00")</td>
+                @if (Model.Closed)
+                {
+                    if (bill.PaymentTypeId == 1)
+                    {
+                        totalCash += bill.TotalSum;
+                    }
+                    <td>@bill.PaymentTypeName</td>
+                    <td class="text-center">@bill.CloseDateTime</td>
+                }
+            </tr>
+            total += bill.TotalSum;
+            row++;
+        }
         <tr>
-            <th scope="row">@row</th>
-            <td>@bill.Id</td>
-            <td>@bill.UserBadge</td>
-            <td class="text-center">@bill.OpenDateTime.ToString()</td>
-            <td class="text-right">@bill.TotalSum.ToString("#,##0.00")</td>
+            <th scope="row"></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-center font-weight-bold">@total.ToString("#,##0.00")</td>
             @if (Model.Closed)
             {
-                if (bill.PaymentTypeId == 1)
-                {
-                    totalCash += bill.TotalSum;
-                }
-                <td>@bill.PaymentTypeName</td>
-                <td class="text-center">@bill.CloseDateTime</td>
+                <td class="text-center font-weight-bold">Общо</td>
+                <td></td>
             }
         </tr>
-        total += bill.TotalSum;
-        row++;
-    }
-    <tr>
-        <th scope="row"></th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="text-center font-weight-bold">@total.ToString("#,##0.00")</td>
         @if (Model.Closed)
         {
-            <td class="text-center font-weight-bold">Общо</td>
-            <td></td>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center font-weight-bold">@totalCash.ToString("#,##0.00")</td>
+                <td class="text-center font-weight-bold">Общо в брой</td>
+                <td></td>
+            </tr>
         }
-    </tr>
-    <tr>
-        <th scope="row"></th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="text-center font-weight-bold">@totalCash.ToString("#,##0.00")</td>
-        @if (Model.Closed)
-        {
-            <td class="text-center font-weight-bold">Общо в брой</td>
-            <td></td>
-        }
-    </tr>
-</tbody>
+    </tbody>
 </table>
 @if (!Model.Bills.Any())
 {
