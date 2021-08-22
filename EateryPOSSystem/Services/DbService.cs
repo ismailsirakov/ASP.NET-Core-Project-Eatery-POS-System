@@ -355,6 +355,7 @@ namespace EateryPOSSystem.Services
             {
                 Id = t.Id,
                 Number = t.Number,
+                DateTime = t.DateTime,
                 FromWarehouseId = t.FromWarehouseId,
                 FromWarehouseName = t.FromWarehouse.Name,
                 ToWarehouseId = t.ToWarehouseId,

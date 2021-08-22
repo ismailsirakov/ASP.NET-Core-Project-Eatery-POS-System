@@ -29,6 +29,19 @@
 
         public IActionResult BaseData()
         {
+            if (dbService.GetMeasurements().Any() ||
+                dbService.GetDocumentTypes().Any() ||
+                dbService.GetPaymentTypes().Any() ||
+                dbService.GetPositions().Any() ||
+                dbService.GetProductTypes().Any() ||
+                dbService.GetStores().Any() ||
+                dbService.GetWarehouses().Any())
+            {
+                TempData[GlobalMessageKey] = $"Поради наличие на дани в базата импортирането не се изпълни.";
+
+                return Redirect("/Home/Index");
+            }
+
             baseDataService.ImportBaseData();
 
             var documentTypesCount = dbService.GetDocumentTypes().Count();
@@ -55,6 +68,16 @@
 
         public IActionResult StorekeeperData()
         {
+            if (dbService.GetAddresses().Any() ||
+                dbService.GetCities().Any() ||
+                dbService.GetMaterials().Any() ||
+                dbService.GetProviders().Any())
+            {
+                TempData[GlobalMessageKey] = $"Поради наличие на дани в базата импортирането не се изпълни.";
+
+                return Redirect("/Home/Index");
+            }
+
             storekeeperService.ImportStorekeeperData(User.GetId());
 
             var addressesCount = dbService.GetAddresses().Count();
@@ -73,6 +96,15 @@
 
         public IActionResult ProductionData()
         {
+            if (dbService.GetProducts().Any() ||
+                dbService.GetStoreProducts().Any() ||
+                dbService.GetRecipes().Any())
+            {
+                TempData[GlobalMessageKey] = $"Поради наличие на дани в базата импортирането не се изпълни.";
+
+                return Redirect("/Home/Index");
+            }
+
             productionService.ImportProductionData();
 
             var productsCount = dbService.GetProducts().Count();

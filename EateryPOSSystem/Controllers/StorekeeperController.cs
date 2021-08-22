@@ -1,11 +1,13 @@
 ﻿namespace EateryPOSSystem.Controllers
 {
+    using System;
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
     using EateryPOSSystem.Models.Storekeeper;
     using EateryPOSSystem.Services.Interfaces;
     using EateryPOSSystem.Services.Models;
+    using EateryPOSSystem.Infrastructure;
     using static ControllerConstants;
     using static WebConstants;
 
@@ -258,7 +260,7 @@
                 var quantity = warehouseMaterial.Quantity;
                 var unitPrice = warehouseMaterial.UnitPrice;
                 var materialId = warehouseMaterial.MaterialId;
-                var userId = warehouseMaterial.UserId;
+                var userId = ClaimsPrincipalExtensions.GetId(User);
 
                 storekeeperService.AddTempWarehouseReceipt(receiptNumber,
                                                            providerId, 
@@ -506,11 +508,12 @@
                 var newTransfer = new TransferServiceModel
                 {
                     Number = transfer.TransferNumber,
+                    DateTime = DateTime.UtcNow,
                     FromWarehouseId = transfer.TransferFromWarehouseId,
                     ToWarehouseId = transfer.TransferToWarehouseId,
                     MaterialId = transfer.TransferedMaterialId,
                     Quantity = transfer.QuantityToTransfer,
-                    UserId = transfer.UserId                    
+                    UserId = ClaimsPrincipalExtensions.GetId(User)                   
                 };
 
                 storekeeperService.AddTransfer(newTransfer);

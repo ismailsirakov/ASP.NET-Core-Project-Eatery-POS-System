@@ -38,12 +38,12 @@
                                 Склад
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddCity">Добави град</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddMaterialToWarehouse_1">Добави материал в склад</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="TransferMaterialsFirstPage">Трансфер на материали</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddMaterial">Добави материал</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddProvider">Добави доставчик</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddCity">Добави град</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="AddAddress">Добави адрес</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Storekeeper" asp-action="TransferMaterialsFirstPage">Трансфер на материали</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -71,6 +71,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="MaterialsInWarehouseFirstPage">Материални наличности</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="BuyedMaterialsByProviderFirstPage">Закупени материали</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="TransfersBetweenDates">Трансфери</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="SoldProductsFromStore">Продадени продукти</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="BillsForDate">Сметки за дата</a>
                                 <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="Recipe">Рецепти</a>

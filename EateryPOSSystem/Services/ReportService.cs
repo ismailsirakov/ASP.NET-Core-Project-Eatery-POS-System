@@ -1,10 +1,10 @@
 ﻿namespace EateryPOSSystem.Services
 {
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
     using EateryPOSSystem.Data.Models;
     using EateryPOSSystem.Services.Interfaces;
-    using System;
-    using System.Collections.Generic;
     using EateryPOSSystem.Services.Models;
 
     public class ReportService : IReportService

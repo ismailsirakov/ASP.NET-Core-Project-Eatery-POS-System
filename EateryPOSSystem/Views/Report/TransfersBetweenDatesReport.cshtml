@@ -1,0 +1,48 @@
+﻿@model TransfersBetweenDatesFormModel
+
+@{
+    ViewData["Title"] = "Transfers Between Dates";
+}
+
+<h2 class="text-center font-weight-bold text-primary">Трансферирани материали</h2>
+<h6>От дата: @Model.FromDate.ToString("d")</h6>
+<h6>До дата @Model.ToDate.ToString("d")</h6>
+<table class="table table-sm table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col" class="text-center">Наименование на материала</th>
+            <th scope="col" class="text-center">От склад</th>
+            <th scope="col" class="text-center">Към склад</th>
+            <th scope="col" class="text-center">№ трансфер</th>
+            <th scope="col" class="text-center">Дата на трансфер</th>
+            <th scope="col" class="text-center">Мерна ед.</th>
+            <th scope="col" class="text-center">Количество</th>
+        </tr>
+    </thead>
+    @{
+    var row = 1;
+    }
+    <tbody>
+        @foreach (var transfer in Model.Transfers)
+        {
+        <tr>
+            <th scope="row">@row</th>
+            <td>@transfer.MaterialName</td>
+            <td>@transfer.FromWarehouseName</td>
+            <td>@transfer.ToWarehouseName</td>
+            <td class="text-center">@transfer.Number</td>
+            <td class="text-center">@transfer.DateTime.ToString("d")</td>
+            <td class="text-center">@transfer.MeasurementName</td>
+            <td class="text-right">@transfer.Quantity.ToString("#,##0.000")</td>
+        </tr>
+        row++;
+        }
+    </tbody>
+</table>
+@if (!Model.Transfers.Any())
+{
+<div class="alert alert-primary" role="alert">
+    Няма трансфери в този период.
+</div>
+}

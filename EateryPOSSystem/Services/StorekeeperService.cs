@@ -126,6 +126,7 @@ namespace EateryPOSSystem.Services
             var newTransfer = new Transfer
             {
                 Number = transfer.Number,
+                DateTime = transfer.DateTime,
                 FromWarehouseId = transfer.FromWarehouseId,
                 ToWarehouseId = transfer.ToWarehouseId,
                 MaterialId = transfer.MaterialId,

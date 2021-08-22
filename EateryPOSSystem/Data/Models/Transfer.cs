@@ -1,15 +1,15 @@
 namespace EateryPOSSystem.Data.Models
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using System;
     using System.ComponentModel.DataAnnotations.Schema;
-    using static Data.DataConstants;
 
     public class Transfer
     {
         public int Id { get; set; }
 
         public int Number { get; set; }
+
+        public DateTime DateTime { get; set; }
 
         public int FromWarehouseId { get; set; }
 

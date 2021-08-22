@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using EateryPOSSystem.Models.Report;
     using EateryPOSSystem.Services.Interfaces;
+    using EateryPOSSystem.Services.Models;
     using static ControllerConstants;
 
     [Authorize(Roles = "Administrator, Seller, Storekeeper, Accountant")]
@@ -12,10 +13,14 @@
     {
         private readonly IDbService dbService;
         private readonly IReportService reportService;
-        public ReportController(IDbService dbService, IReportService reportService)
+        private readonly IStorekeeperService storekeeperService;
+        public ReportController(IDbService dbService,
+                                IReportService reportService,
+                                IStorekeeperService storekeeperService)
         {
             this.dbService = dbService;
             this.reportService = reportService;
+            this.storekeeperService = storekeeperService;
         }
 
         public IActionResult MaterialsInWarehouseFirstPage()
@@ -207,6 +212,72 @@
             billsForDate.Bills = reportService.BillsForDate(billsForDate.DateTime, billsForDate.Closed).ToList();
 
             return View(billsForDate);
+        }
+
+
+        public IActionResult TransfersBetweenDates()
+        {
+            var transfersbetweenDates = new TransfersBetweenDatesFormModel
+            {
+                Materials = dbService.GetMaterials().ToList()
+            };
+
+            return View(transfersbetweenDates);
+        }
+
+        [HttpPost]
+        public IActionResult TransfersBetweenDates(TransfersBetweenDatesFormModel transfersBetweenDates)
+        {
+            transfersBetweenDates.Materials = dbService.GetMaterials().ToList();
+
+            if (!ModelState.IsValid)
+            {
+                return View(transfersBetweenDates);
+            }
+
+            var materialExist = transfersBetweenDates.Materials
+                                                     .Any(m => m.Id == transfersBetweenDates.MaterialId);
+
+            if (!materialExist && transfersBetweenDates.MaterialId != 0)
+            {
+                ModelState.AddModelError(nameof(transfersBetweenDates.MaterialId), notExistingModelInDB);
+
+                return View(transfersBetweenDates);
+            }
+
+            if (transfersBetweenDates.FromDate > transfersBetweenDates.ToDate)
+            {
+                ModelState.AddModelError(nameof(transfersBetweenDates.ToDate), fromDateIsAfterToDate);
+            }
+
+            return RedirectToAction("TransfersBetweenDatesReport", "Report",transfersBetweenDates);
+        }
+
+        public IActionResult TransfersBetweenDatesReport(TransfersBetweenDatesFormModel transfersBetweenDates)
+        {
+            var fromDate = transfersBetweenDates.FromDate;
+
+            var toDate = transfersBetweenDates.ToDate;
+
+            var materialId = transfersBetweenDates.MaterialId;
+
+            if (transfersBetweenDates.MaterialId == 0)
+            {
+            transfersBetweenDates.Transfers = dbService.GetTransfers()
+                                           .Where(t=>t.DateTime.Date >= fromDate && 
+                                                  t.DateTime.Date <= toDate)
+                                           .ToList();
+            }
+            else
+            {
+                transfersBetweenDates.Transfers = dbService.GetTransfers()
+                                           .Where(t => t.DateTime.Date >= fromDate &&
+                                                  t.DateTime.Date <= toDate &&
+                                                  t.MaterialId == materialId)
+                                           .ToList();
+            }
+
+            return View(transfersBetweenDates);
         }
     }
 }
